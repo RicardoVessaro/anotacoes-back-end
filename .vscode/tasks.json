@@ -1,0 +1,50 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build",
+			"platform": "python",
+			"dockerBuild": {
+				"tag": "ricardovessaro/anotacoes-back-end:debug",
+				"dockerfile": "${workspaceFolder}/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug",
+			"dependsOn": [
+				"docker-build"
+			],
+			"dockerRun": {
+				"env": {
+					
+					"FLASK_ENV": "development"
+				},
+				"volumes": [
+					{
+						"containerPath": "/app", "localPath": "${workspaceFolder}"
+					}
+				],
+				"ports": [
+					{
+						"containerPort": 5000,
+						"hostPort": 5000
+					}
+				]
+			},
+			"python": {
+				"args": [
+					"run",
+					"--host",
+					"0.0.0.0",
+					"--port",
+					"5000"
+				],
+				"module": "flask"
+			}
+		}
+	]
+}

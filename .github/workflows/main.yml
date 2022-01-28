@@ -27,6 +27,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ricardovessaro/conversao-temperatura:latest
-            ricardovessaro/conversao-temperatura:v${{ github.run_number }}
+            ricardovessaro/anotacoes-back-end:latest
+            ricardovessaro/anotacoes-back-end:v${{ github.run_number }}
       

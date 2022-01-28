@@ -26,7 +26,11 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
+          
+          #${{ github.run_number }}
+          
           tags: |
             ricardovessaro/anotacoes-back-end:latest
-            ricardovessaro/anotacoes-back-end:v${{ github.run_number }}
+            ricardovessaro/anotacoes-back-end:v2 
+            
       

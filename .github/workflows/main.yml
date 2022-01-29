@@ -1,0 +1,36 @@
+
+name: CI
+on:
+  push:
+    branches: [ trunk ]
+    
+  workflow_dispatch:
+
+
+jobs:
+  commit-docker-image:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          
+          #${{ github.run_number }}
+          
+          tags: |
+            ricardovessaro/anotacoes-back-end:latest
+            ricardovessaro/anotacoes-back-end:v2 
+            
+      

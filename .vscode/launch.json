@@ -1,20 +1,38 @@
 {
     "version": "0.2.0",
     "configurations": [
-      {
-        "name": "Docker: Python - Flask",
-        "type": "docker",
-        "request": "launch",
-        "preLaunchTask": "docker-run: debug",
-        "python": {
-          "pathMappings": [
-            {
-              "localRoot": "${workspaceFolder}",
-              "remoteRoot": "/app"
+        {
+            "name": "Docker: Python - Flask with Kubernetes",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "bridge-to-kubernetes.compound",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "flask"
+            },
+            "env": {
+                "GRPC_DNS_RESOLVER": "native"
             }
-          ],
-          "projectType": "flask"
+        },
+        {
+            "name": "Docker: Python - Flask",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "flask"
+            }
         }
-      }
     ]
 }

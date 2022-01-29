@@ -1,8 +1,11 @@
-from flask import Flask
+from api.api import create_flask_app
 
-app = Flask(__name__)
+api = create_flask_app()
 
 
-@app.route("/")
-def hello_world():
-    return "Hello, World!"
+@api.route("/")
+def root():
+    return "API esta rodando !!!"
+
+if __name__=='__main__':
+    api.run()

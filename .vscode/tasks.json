@@ -6,9 +6,9 @@
 			"label": "docker-build",
 			"platform": "python",
 			"dockerBuild": {
-				"tag": "ricardovessaro/anotacoes-back-end:debug",
 				"dockerfile": "${workspaceFolder}/Dockerfile",
 				"context": "${workspaceFolder}",
+				"tag": "ricardovessaro/anotacoes-back-end:debug",
 				"pull": true
 			}
 		},
@@ -19,19 +19,22 @@
 				"docker-build"
 			],
 			"dockerRun": {
+				"containerName": "container-anotacoes-back-end",
+				"image": "ricardovessaro/anotacoes-back-end:debug",
+				"remove": true,
 				"env": {
-					
 					"FLASK_ENV": "development"
 				},
 				"volumes": [
 					{
-						"containerPath": "/app", "localPath": "${workspaceFolder}"
+						"containerPath": "/app",
+						"localPath": "${workspaceFolder}"
 					}
 				],
 				"ports": [
 					{
 						"containerPort": 5000,
-						"hostPort": 5000
+						"hostPort": 5001
 					}
 				]
 			},
@@ -45,6 +48,27 @@
 				],
 				"module": "flask"
 			}
+		},
+		{
+			"label": "bridge-to-kubernetes.resource",
+			"type": "bridge-to-kubernetes.resource",
+			"resource": "anotacoes-back-end",
+			"resourceType": "service",
+			"ports": [
+				5001
+			],
+			"targetCluster": "k3d-anotacoes-cluster",
+			"targetNamespace": "default",
+			"useKubernetesServiceEnvironmentVariables": false,
+			"isolateAs": "ricardo-f7bf"
+		},
+		{
+			"label": "bridge-to-kubernetes.compound",
+			"dependsOn": [
+				"bridge-to-kubernetes.resource",
+				"docker-run: debug"
+			],
+			"dependsOrder": "sequence"
 		}
 	]
 }

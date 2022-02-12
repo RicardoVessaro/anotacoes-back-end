@@ -9,3 +9,4 @@ mongoengine==0.23.1
 Flask-Classful==0.14.2
 Flask-Cors==3.0.9
 flask-mongoengine==1.0.0
+pytest==7.0.1

@@ -2,18 +2,28 @@
 import os
 from flask import Flask
 from api.db import db
-
+from api.modules.core.blueprints.view import note_view
 def create_flask_app():
     
     api = Flask(__name__)
 
     _set_database_config(api)
 
+    _register_blueprint(api)
+
     db.init_app(api)
 
     return api
 
-def _set_database_config(flask_app):
+def _register_blueprint(flask_app: Flask):
+    _register_core_blueprint(flask_app)
+
+
+def _register_core_blueprint(flask_app: Flask):
+    flask_app.register_blueprint(note_view.note_blueprint)
+
+
+def _set_database_config(flask_app: Flask):
     MONGODB_USER = os.environ['MONGODB_USER']
     MONGODB_PASSWORD = os.environ['MONGODB_PASSWORD']
     MONGODB_DATABASE = os.environ['MONGODB_DATABASE']

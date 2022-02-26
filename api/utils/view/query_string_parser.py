@@ -1,0 +1,101 @@
+# TODO to ARQ
+
+from urllib import parse
+
+from api.utils.int_util import is_string_int
+from api.utils.float_util import is_string_float
+
+class QueryStringParser:
+
+    def __init__(self, convert_string_to_boolean=True, fields_to_boolean_to_ignore=[], convert_string_to_number=True, 
+        fields_to_number_to_ignore=[], convert_number_only_to_float=False) -> None:
+
+        self.convert_string_to_boolean = convert_string_to_boolean
+        self.fields_to_boolean_to_ignore = fields_to_boolean_to_ignore
+        self.convert_string_to_number = convert_string_to_number
+        self.fields_to_number_to_ignore = fields_to_number_to_ignore
+        self.convert_number_only_to_float = convert_number_only_to_float
+
+    def parse(self, query_string:str) -> dict:
+        parsed_query_string = parse.parse_qs(query_string)
+
+        parsed_query_string = self._decode_parsed_query_string(parsed_query_string)
+
+        for key in parsed_query_string.keys():
+
+            self._convert_string_to_boolean(parsed_query_string, key)
+
+            self._convert_string_to_number(parsed_query_string, key)
+
+            self._convert_one_item_list_to_object(parsed_query_string, key)
+
+        return parsed_query_string
+
+    def _decode_parsed_query_string(self, parsed_query_string):
+        converted_parsed_query_string = {}
+        
+        B_TRUE = [b'True', b'true']
+        B_FALSE = [b'False', b'false']
+
+        for key in parsed_query_string:
+            decoded_values = []
+
+            for value in parsed_query_string[key]: 
+                if type(value) is bytes:
+                    if value in B_TRUE:
+                        decoded_values.append('True')
+                    
+                    elif value in B_FALSE:
+                        decoded_values.append('False')
+
+                    else :
+                        decoded_values.append(value.decode())
+
+                else:
+                    decoded_values.append(value)
+
+            key_string = key 
+            if type(key) is bytes:
+                key_string = key.decode()
+
+            converted_parsed_query_string[key_string] = decoded_values
+
+        return converted_parsed_query_string
+
+    def _convert_string_to_number(self, parsed_query_string, key):
+        if self.convert_string_to_number and key not in self.fields_to_number_to_ignore:
+            number_list = []
+            for item in parsed_query_string[key]:
+                if not self.convert_number_only_to_float and is_string_int(item):
+                    number_list.append(int(item))
+
+                elif is_string_float(item):
+                    number_list.append(float(item))
+
+            if len(number_list) == len(parsed_query_string[key]):
+                parsed_query_string[key] = number_list
+
+    def _convert_string_to_boolean(self, parsed_query_string, key):
+        if self.convert_string_to_boolean:
+            TRUE = ['true', 'True']
+
+            FALSE = ['false', 'False']
+
+            if key not in self.fields_to_boolean_to_ignore:
+                value = parsed_query_string[key]
+
+                boolean_list = []
+
+                for item in value:
+                    if item in TRUE:
+                        boolean_list.append(True)
+
+                    elif item in FALSE:
+                        boolean_list.append(False)
+
+                if len(boolean_list) == len(value):
+                    parsed_query_string[key] = boolean_list
+
+    def _convert_one_item_list_to_object(self, parsed_query_string, key):
+        if len(parsed_query_string[key]) == 1:
+            parsed_query_string[key] = parsed_query_string[key][0]

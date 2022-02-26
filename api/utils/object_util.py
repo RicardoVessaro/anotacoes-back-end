@@ -1,4 +1,6 @@
 
+# TODO to ARQ
+
 NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE = "The type '{0}' is not supported."
 
 NOT_SUPPORTED_TYPES = [
@@ -13,7 +15,7 @@ def is_none_or_empty(value, verify_iterable_values=True):
         return True
 
     elif value is bool:
-        return True
+        return False
     
     elif type(value) is str:
         return is_string_none_or_empty(value)

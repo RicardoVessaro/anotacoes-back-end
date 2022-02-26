@@ -1,9 +1,7 @@
-import imp
 from api.db import db
 
+# TODO Adicionar campo humor (mood), lista com emojis (para testar enum)
 class Note(db.Document):
-
-    #_id, title, pinned, text, created_in
 
     title = db.StringField()
 

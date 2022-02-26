@@ -76,6 +76,12 @@ def test_dict_value():
         }
     }, verify_iterable_values=False)
 
+def test_boolean_value():
+    assert is_none_or_empty(None)
+    assert not is_none_or_empty(False)
+    assert not is_none_or_empty(True)
+
+
 def test_not_supported_type():
     for not_supported_type in NOT_SUPPORTED_TYPES:
 

@@ -8,7 +8,6 @@ class TestNoteService:
 
     service = NoteService()
 
-    # TODO ver se continua acessando atributo privado
     model = service._dao._model
 
     # TODO criar estrutura generica para conexao nos testes

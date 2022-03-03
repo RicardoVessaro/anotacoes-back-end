@@ -16,22 +16,46 @@ class QueryStringParser:
         self.fields_to_number_to_ignore = fields_to_number_to_ignore
         self.convert_number_only_to_float = convert_number_only_to_float
 
-    def parse(self, query_string:str) -> dict:
+    def parse_string(self, query_string:str) -> dict:
         parsed_query_string = parse.parse_qs(query_string)
 
-        parsed_query_string = self._decode_parsed_query_string(parsed_query_string)
-
-        for key in parsed_query_string.keys():
-
-            self._convert_string_to_boolean(parsed_query_string, key)
-
-            self._convert_string_to_number(parsed_query_string, key)
-
-            self._convert_one_item_list_to_object(parsed_query_string, key)
+        parsed_query_string = self._parse_query(parsed_query_string)
 
         return parsed_query_string
 
-    def _decode_parsed_query_string(self, parsed_query_string):
+    def parse_dict(self, query_dict:dict) -> dict:
+        parsed_query_string = self._transform_to_query(query_dict)
+
+        parsed_query_string = self._parse_query(parsed_query_string)
+
+        return parsed_query_string
+
+
+    def _transform_to_query(self, query_dict:dict) -> dict:
+        query = {}
+
+        for key, value in query_dict.items():
+            query[key] = value
+            
+            if not type(value) is list:
+                query[key] = [value]
+
+        return query
+
+
+    def _parse_query(self, query) -> dict:
+        query = self._decode_parsed_query_string(query)
+
+        for key in query.keys():
+            self._convert_string_to_boolean(query, key)
+
+            self._convert_string_to_number(query, key)
+
+            self._convert_one_item_list_to_object(query, key)
+            
+        return query
+
+    def _decode_parsed_query_string(self, parsed_query_string) -> dict:
         converted_parsed_query_string = {}
         
         B_TRUE = [b'True', b'true']

@@ -1,6 +1,7 @@
 from api.utils.object_util import is_none_or_empty
 
 # TODO mudar exceptions para exceptions proprias
+# TODO Tratar erros no flask
 class NoteValidator:
 
     REQUIRED_FIELD_EXCEPTION_MESSAGE = "The field '{0}' is required."

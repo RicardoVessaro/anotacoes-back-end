@@ -6,7 +6,7 @@ from api.utils import object_util
 
 class NoteDAO:
 
-    DELETE_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE = "Object with ID {0} not found."
+    OBJECT_NOT_FOUND_EXCEPTION_MESSAGE = "Object with ID {0} not found."
     PAGE_NOT_FOUND_EXCEPTION_MESSAGE = "Page {0} not found. The max number os pages is {1}."
 
     def __init__(self) -> None:
@@ -16,7 +16,7 @@ class NoteDAO:
         model = self._model(**model_data)
         model.save()
 
-        return str(model.id)
+        return model
 
     def find_by_id(self, id):
         _id = id
@@ -48,7 +48,7 @@ class NoteDAO:
         model = self.find_by_id(id)
 
         if model is None:
-            exception_message = self.DELETE_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
+            exception_message = self.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
             raise Exception(exception_message)
 
         deleted_id = model.id

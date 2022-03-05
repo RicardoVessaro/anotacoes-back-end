@@ -2,6 +2,7 @@
 import datetime
 from mongoengine import connect, disconnect
 from pytest import raises
+from api.modules.core.blueprints.data.model.note import Note
 from api.modules.core.blueprints.service.note.note_service import NoteService
 
 class TestNoteService:
@@ -19,8 +20,14 @@ class TestNoteService:
     def disconnect(self):
         disconnect()
 
+    # TODO criar estrutura gennerica para deletar documentos utilizados
+    def clean_database(self, used_documents=[]):
+        for document in used_documents:
+            document.objects().delete()
+
     def test_insert(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         title = "test_insert_TestNoteService"
 
@@ -30,7 +37,7 @@ class TestNoteService:
 	        "text": "lorem ipsum dolor sit amet",
         }
 
-        note_id = self.service.insert(note)
+        note_id = str(self.service.insert(note).id)
         note_bd = self.model.objects(title=title).first()
         assert str(note_bd.id) == note_id
         assert note_bd.created_in is not None
@@ -40,6 +47,7 @@ class TestNoteService:
 
     def test_find_by_id(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         title = "test_find_by_id_TestNoteService"
 
@@ -49,7 +57,7 @@ class TestNoteService:
 	        "text": "lorem ipsum dolor sit amet",
         }
 
-        note_id = self.service.insert(note)
+        note_id = str(self.service.insert(note).id)
         note_bd = self.service.find_by_id(note_id)
 
         assert str(note_bd.id) == note_id
@@ -60,6 +68,7 @@ class TestNoteService:
 
     def test_delete(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         title = "test_delete_NoteService"
 
@@ -70,14 +79,14 @@ class TestNoteService:
             "created_in": datetime.datetime.today()
         }
 
-        note_id = self.service.insert(note)
+        note_id = str(self.service.insert(note).id)
 
         deleted_id = self.service.delete(note_id)
 
         assert deleted_id == note_id
         assert self.service.find_by_id(deleted_id) is None
 
-        with raises(Exception, match=self.service._dao.DELETE_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+        with raises(Exception, match=self.service._dao.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
             self.service.delete(deleted_id)
 
         self.disconnect()
@@ -87,6 +96,7 @@ class TestNoteService:
         title = "test_must_remove_non_editable_fields_TestNoteService"
 
         note = {
+            "title": title,
 	        "text": "lorem ipsum dolor sit amet",
             "created_in": datetime.datetime.today()
         }
@@ -100,6 +110,7 @@ class TestNoteService:
 
     def test_update(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         note = {
 	        "title": "test_update_NoteService ",
@@ -107,7 +118,7 @@ class TestNoteService:
 	        "text": "lorem ipsum dolor sit amet",
         }
 
-        note_id = self.service.insert(note)
+        note_id = str(self.service.insert(note).id)
 
         note_to_update = {
             "title": "test_update_NoteService Updated",
@@ -131,6 +142,7 @@ class TestNoteService:
 
     def test_find(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         note1 = {
 	        "title": "test_find_NoteService 1",
@@ -153,9 +165,9 @@ class TestNoteService:
             "created_in": datetime.datetime.today()
         }
 
-        note1_id = self.service.insert(note1)
-        note2_id = self.service.insert(note2)
-        note3_id = self.service.insert(note3)
+        note1_id = str(self.service.insert(note1).id)
+        note2_id = str(self.service.insert(note2).id)
+        note3_id = str(self.service.insert(note3).id)
 
         expected_found_ids = [note1_id, note3_id]
 
@@ -177,6 +189,7 @@ class TestNoteService:
 
     def test_find_without_filter(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         note1 = {
 	        "title": "test_find_NoteService 1",
@@ -199,9 +212,9 @@ class TestNoteService:
             "created_in": datetime.datetime.today()
         }
 
-        note1_id = self.service.insert(note1)
-        note2_id = self.service.insert(note2)
-        note3_id = self.service.insert(note3)
+        note1_id = str(self.service.insert(note1).id)
+        note2_id = str(self.service.insert(note2).id)
+        note3_id = str(self.service.insert(note3).id)
 
         expected_found_ids = [note1_id, note2_id, note3_id]
 
@@ -219,6 +232,8 @@ class TestNoteService:
 
     def test_paginate(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.service.paginate()
@@ -238,6 +253,8 @@ class TestNoteService:
 
     def test_paginate_with_filter(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.service.paginate(query_filter={'pinned': False})
@@ -256,6 +273,8 @@ class TestNoteService:
     
     def test_paginate_limit_7_in_results(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.service.paginate(limit=7)
@@ -275,6 +294,8 @@ class TestNoteService:
 
     def test_paginate_limit_7_page_2_in_results(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.service.paginate(limit=7, page=2)
@@ -294,6 +315,8 @@ class TestNoteService:
 
     def test_paginate_limit_7_page_3_in_results(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.service.paginate(limit=7, page=3)
@@ -312,6 +335,8 @@ class TestNoteService:
     
     def test_paginate_must_raise_exception_when_page_is_greater_than_pages(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         with raises(Exception, match=self.service._dao.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
@@ -334,7 +359,7 @@ class TestNoteService:
                 "created_in": datetime.datetime.today()
             }
 
-            note_id = self.service.insert(note)
+            note_id = str(self.service.insert(note).id)
 
             note['id'] = note_id
     

@@ -1,9 +1,11 @@
 
-from flask import Blueprint, request, jsonify
+from mongoengine import Document
+from flask import Blueprint, make_response, request, jsonify
 from flask_classful import FlaskView, route
 from itsdangerous import json
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from api.utils.view.query_string_parser import QueryStringParser
+from api.utils.view.view_encoder import ViewEncoder
 
 
 # TODO Ver testes de integração
@@ -23,18 +25,19 @@ class NoteView(FlaskView):
     def insert(self):
         body = request.json
 
-        return jsonify(self._service.insert(body))
+        model = self._service.insert(body)
+
+        return self._to_response(model)
 
     @route('<id>', methods=['GET'])
     def find_by_id(self, id):
-        return jsonify(self._service.find_by_id(id))
+        return self._to_response(self._service.find_by_id(id))
 
-    # TODO conferir o que deve ser retornado em um update
     @route('<id>', methods=['PUT'])
     def update(self, id):
         body = request.json
 
-        return jsonify(self._service.update(id, body))
+        return self._to_response(self._service.update(id, body))
 
 
     @route('', methods=['POST', 'GET'])
@@ -45,13 +48,13 @@ class NoteView(FlaskView):
 
             parsed_query_body = QueryStringParser().parse_dict(query_body)
 
-            return jsonify(self._service.find(query_filter=parsed_query_body))
+            return self._to_response(self._service.find(query_filter=parsed_query_body))
 
         request_query_string = request.query_string
 
         parsed_query_string = QueryStringParser().parse_string(request_query_string)
 
-        return jsonify(self._service.find(query_filter=parsed_query_string))
+        return self._to_response(self._service.find(query_filter=parsed_query_string))
         
 
     @route('paginate', methods=['POST'])
@@ -70,14 +73,21 @@ class NoteView(FlaskView):
         if QUERY_PAGE in parsed_query_body:
             page = parsed_query_body.pop(QUERY_PAGE)
 
-        return jsonify(self._service.paginate(query_filter=parsed_query_body, limit=limit, page=page))
+        
+        return self._to_response(self._service.paginate(query_filter=parsed_query_body, limit=limit, page=page))
 
-
-    # TODO conferir o que deve ser retornado em um delete
     @route('<id>', methods=['DELETE'])
     def delete(self, id):
-        return jsonify(self._service.delete(id))
+        self._service.delete(id)
+
+        return self._to_response()
+
+    def _to_response(self, object=None):
+        answer = ViewEncoder().default(object)
+
+        if answer is None:
+            answer = ('', 204)
+
+        return make_response(answer)
    
-
-
 NoteView.register(note_blueprint)

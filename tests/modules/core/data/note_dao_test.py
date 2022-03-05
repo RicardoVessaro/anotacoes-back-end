@@ -30,8 +30,14 @@ class TestNoteDAO():
     def disconnect(self):
         disconnect()
 
+    # TODO criar estrutura gennerica para deletar documentos utilizados
+    def clean_database(self, used_documents=[]):
+        for document in used_documents:
+            document.objects().delete()
+
     def test_insert(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         title = "test_insert_NoteDAO"
 
@@ -42,15 +48,16 @@ class TestNoteDAO():
             "created_in": datetime.datetime.today()
         }
 
-        note_id = self.dao.insert(note)
+        inserted_note = self.dao.insert(note)
         note_bd = self.model.objects(title=title).first()
-        assert str(note_bd.id) == note_id
+        assert note_bd.id == inserted_note.id
 
         note_bd.delete()
         self.disconnect()
 
     def test_find_by_id(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         title = "test_find_by_id_NoteDAO"
 
@@ -61,7 +68,8 @@ class TestNoteDAO():
             "created_in": datetime.datetime.today()
         }
 
-        note_id = self.dao.insert(note)
+        inserted_note = self.dao.insert(note)
+        note_id = str(inserted_note.id)
 
         note_bd = self.dao.find_by_id(note_id)
         assert str(note_bd.id) == note_id
@@ -77,6 +85,7 @@ class TestNoteDAO():
 
     def test_delete(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         title = "test_delete_NoteDAO"
 
@@ -87,14 +96,15 @@ class TestNoteDAO():
             "created_in": datetime.datetime.today()
         }
 
-        note_id = self.dao.insert(note)
+        inserted_note = self.dao.insert(note)
+        note_id = str(inserted_note.id)
 
         deleted_id = self.dao.delete(note_id)
 
         assert deleted_id == note_id
         assert self.dao.find_by_id(deleted_id) is None
 
-        with raises(Exception, match=self.dao.DELETE_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+        with raises(Exception, match=self.dao.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
             self.dao.delete(deleted_id)
 
         self.disconnect()
@@ -102,6 +112,7 @@ class TestNoteDAO():
 
     def test_update(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         note = {
 	        "title": "test_update_NoteDAO",
@@ -110,7 +121,8 @@ class TestNoteDAO():
             "created_in": datetime.datetime.today()
         }
 
-        note_id = self.dao.insert(note)
+        iserted_note = self.dao.insert(note)
+        note_id = str(iserted_note.id)
 
         note_to_update = {
             "title": "test_update_NoteDAO Updated",
@@ -134,6 +146,7 @@ class TestNoteDAO():
     # TODO Com mais possibilidades com entidade especifica para testes
     def test_find(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         note1 = {
 	        "title": "test_find_NoteDAO 1",
@@ -156,9 +169,9 @@ class TestNoteDAO():
             "created_in": datetime.datetime.today()
         }
 
-        note1_id = self.dao.insert(note1)
-        note2_id = self.dao.insert(note2)
-        note3_id = self.dao.insert(note3)
+        note1_id = str(self.dao.insert(note1).id)
+        note2_id = str(self.dao.insert(note2).id)
+        note3_id = str(self.dao.insert(note3).id)
 
         expected_found_ids = [note1_id, note3_id]
 
@@ -180,6 +193,7 @@ class TestNoteDAO():
 
     def test_find_without_filter(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
 
         note1 = {
 	        "title": "test_find_NoteDAO 1",
@@ -202,9 +216,9 @@ class TestNoteDAO():
             "created_in": datetime.datetime.today()
         }
 
-        note1_id = self.dao.insert(note1)
-        note2_id = self.dao.insert(note2)
-        note3_id = self.dao.insert(note3)
+        note1_id = str(self.dao.insert(note1).id)
+        note2_id = str(self.dao.insert(note2).id)
+        note3_id = str(self.dao.insert(note3).id)
 
         expected_found_ids = [note1_id, note2_id, note3_id]
 
@@ -221,6 +235,8 @@ class TestNoteDAO():
 
     def test_paginate(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.dao.paginate()
@@ -240,6 +256,8 @@ class TestNoteDAO():
 
     def test_paginate_with_filter(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.dao.paginate(query_filter={'pinned': False})
@@ -258,6 +276,8 @@ class TestNoteDAO():
     
     def test_paginate_limit_7_in_results(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.dao.paginate(limit=7)
@@ -296,6 +316,8 @@ class TestNoteDAO():
 
     def test_paginate_limit_7_page_3_in_results(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         pagination = self.dao.paginate(limit=7, page=3)
@@ -314,6 +336,8 @@ class TestNoteDAO():
     
     def test_paginate_must_raise_exception_when_page_is_greater_than_pages(self):
         self.connect()
+        self.clean_database(used_documents=[self.model])
+
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
         with raises(Exception, match=self.dao.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
@@ -336,7 +360,7 @@ class TestNoteDAO():
                 "created_in": datetime.datetime.today()
             }
 
-            note_id = self.dao.insert(note)
+            note_id = str(self.dao.insert(note).id)
 
             note['id'] = note_id
     

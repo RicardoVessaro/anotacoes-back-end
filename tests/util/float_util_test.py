@@ -1,4 +1,4 @@
-from api.utils import float_util
+from arq.util import float_util
 
 def test_is_string_int():
 

@@ -1,5 +1,5 @@
 
-from api.utils.data.query_filter_builder import QueryFilterBuilder
+from arq.util.data.query_filter_builder import QueryFilterBuilder
 
 
 class TestQueryFilterBuilder:

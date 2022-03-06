@@ -1,6 +1,4 @@
 
-# TODO to ARQ
-
 NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE = "The type '{0}' is not supported."
 
 NOT_SUPPORTED_TYPES = [

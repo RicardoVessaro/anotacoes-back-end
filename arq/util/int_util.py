@@ -1,6 +1,4 @@
 
-# TODO to ARQ
-
 def is_string_int(value:str):
     
     try:

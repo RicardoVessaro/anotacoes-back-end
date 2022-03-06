@@ -1,5 +1,5 @@
 from pytest import raises
-from api.utils.object_util import is_none_or_empty, NOT_SUPPORTED_TYPES, NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
+from arq.util.object_util import is_none_or_empty, NOT_SUPPORTED_TYPES, NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 def test_none_value():
     assert is_none_or_empty(None)

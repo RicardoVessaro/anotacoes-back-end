@@ -1,7 +1,7 @@
 
 import json
 from dateutil.parser import isoparse
-from api.utils.view.view_encoder import ViewEncoder
+from arq.util.view.view_encoder import ViewEncoder
 from bson import ObjectId
 
 from api.modules.core.blueprints.data.model.note import Note

@@ -1,10 +1,8 @@
-# TODO Limpar banco antes de rodar cada teste
 # TODO Ver quando usar aspas simples ('') e aspas duplas ("")
-# TODO Fazer teste conectando ao banco de dados de teste
 # TODO Fazer teste com uma entidade de testes
 # TODO Rodar testes no kubernetes
 # TODO Conectar ao banco de forma automatica
-# TODO Fazer com que o banco seja limpado antes de iniciar os testes
+# TODO Fazer com que o banco seja limpados dee forma automatica antes de iniciar os testes
 # TODO Fazer com que os dados inseridos sejam cadastrados de forma automatica antes dos testes
 # TODO Fazer com que os dados cadastrados sejam excluidos apos os testes
 

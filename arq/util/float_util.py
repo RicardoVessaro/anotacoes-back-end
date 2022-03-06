@@ -1,6 +1,4 @@
 
-# TODO to ARQ
-
 def is_string_float(value:str):
     
     try:

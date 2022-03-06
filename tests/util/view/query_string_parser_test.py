@@ -1,4 +1,4 @@
-from  api.utils.view.query_string_parser import QueryStringParser
+from  arq.util.view.query_string_parser import QueryStringParser
 
 def test_query_string_parser_parsing_decode():
     to_decode_query_string = {

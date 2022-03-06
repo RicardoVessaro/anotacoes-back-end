@@ -1,7 +1,6 @@
 from arq.exception.arq_exception import ArqException
 from arq.util.object_util import is_none_or_empty
 
-# TODO Tratar erros no flask
 class ArqCRUDValidator:
 
     REQUIRED_FIELD_EXCEPTION_MESSAGE = "The field '{0}' is required."

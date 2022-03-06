@@ -1,11 +1,15 @@
 
 import os
+
 from flask import Flask
 from api.db import db
 from api.modules.core.blueprints.view import note_view
+from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception import error_handler
 def create_flask_app():
     
     api = Flask(__name__)
+    api.register_error_handler(ArqException, error_handler)
 
     _set_database_config(api)
 
@@ -33,3 +37,5 @@ def _set_database_config(flask_app: Flask):
     MONGODB_HOST = 'mongodb+srv://'+MONGODB_USER+':'+MONGODB_PASSWORD+'@'+MONGODB_ATLAS_PREFIX+'/'+MONGODB_DATABASE+'?'+MONGODB_URL_OPTIONS
 
     flask_app.config.update(**{"MONGODB_HOST": MONGODB_HOST})
+
+

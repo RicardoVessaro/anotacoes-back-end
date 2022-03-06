@@ -30,7 +30,7 @@ class ArqCRUDDAO(ArqDao):
 
         if model is None:
             exception_message = self.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
-            raise ArqException(exception_message)
+            raise ArqException(exception_message, status_code=404)
 
         deleted_id = model.id
 

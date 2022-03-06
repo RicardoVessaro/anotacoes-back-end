@@ -11,6 +11,7 @@ from mongoengine import connect, disconnect
 from bson import ObjectId
 from pytest import raises
 from api.modules.core.blueprints.service.note.note_service import NoteService
+from arq.exception.arq_exception import ArqException
 
 class TestNoteDAO():
 
@@ -102,7 +103,7 @@ class TestNoteDAO():
         assert deleted_id == note_id
         assert self.dao.find_by_id(deleted_id) is None
 
-        with raises(Exception, match=self.dao.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+        with raises(ArqException, match=self.dao.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
             self.dao.delete(deleted_id)
 
         self.disconnect()
@@ -338,7 +339,7 @@ class TestNoteDAO():
 
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
-        with raises(Exception, match=self.dao.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
+        with raises(ArqException, match=self.dao.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
             pagination = self.dao.paginate(page=4, limit=5)
 
         self.delete_notes(notes)

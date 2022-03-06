@@ -1,6 +1,7 @@
 
 from mongoengine import Document
 from bson import ObjectId
+from arq.exception.arq_exception import ArqException
 from arq.util import object_util
 from arq.util.data.query_filter_builder import QueryFilterBuilder
 
@@ -41,7 +42,7 @@ class ArqDao:
             pages += 1
 
         if page > pages:
-            raise Exception(self.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(page, pages))
+            raise ArqException(self.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(page, pages))
         
         start = page * limit - limit
         end = start + limit

@@ -1,4 +1,7 @@
 
+from arq.exception.arq_exception import ArqException
+
+
 NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE = "The type '{0}' is not supported."
 
 NOT_SUPPORTED_TYPES = [
@@ -74,4 +77,4 @@ def _is_dict_values_none_or_empty(dct: dict):
 def _validate_type(value):
     tipe = type(value) 
     if tipe in NOT_SUPPORTED_TYPES:
-        raise Exception(NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(tipe))
+        raise ArqException(NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(tipe))

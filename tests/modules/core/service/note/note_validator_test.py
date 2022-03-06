@@ -2,6 +2,8 @@ import datetime
 from api.modules.core.blueprints.service.note.note_validator import NoteValidator
 from pytest import raises
 
+from arq.exception.arq_exception import ArqException
+
 class TestNoteValidator():
 
     _validator = NoteValidator()
@@ -18,7 +20,7 @@ class TestNoteValidator():
         for required_field in self._validator.required_fields:
             poped_value = body.pop(required_field)
 
-            with raises(Exception, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
+            with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
                 self._validator.validate_insert(body)
 
             body[required_field] = poped_value
@@ -37,7 +39,7 @@ class TestNoteValidator():
 
             body[required_field] = None
 
-            with raises(Exception, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
+            with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
             
                 self._validator.validate_insert(body)
 
@@ -61,7 +63,7 @@ class TestNoteValidator():
             else: 
                 body[required_field] = None
 
-            with raises(Exception, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
+            with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
             
                 self._validator.validate_insert(body)
 
@@ -82,7 +84,7 @@ class TestNoteValidator():
 
                 body[field] = None
 
-                with raises(Exception, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(field)):
+                with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(field)):
                     self._validator.validate_update(fake_id, body)
 
                 body[field] = value

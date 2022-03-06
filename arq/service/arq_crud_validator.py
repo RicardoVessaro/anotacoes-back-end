@@ -1,6 +1,6 @@
+from arq.exception.arq_exception import ArqException
 from arq.util.object_util import is_none_or_empty
 
-# TODO mudar exceptions para exceptions proprias
 # TODO Tratar erros no flask
 class ArqCRUDValidator:
 
@@ -31,5 +31,5 @@ class ArqCRUDValidator:
                 self._raise_required_field_exception(field)
 
     def _raise_required_field_exception(self, required_field: str):
-        raise Exception(self.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field))
+        raise ArqException(self.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field))
         

@@ -1,8 +1,6 @@
 
 from arq.exception.arq_exception import ArqException
-
-
-NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE = "The type '{0}' is not supported."
+from arq.exception.arq_exception_message import NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 NOT_SUPPORTED_TYPES = [
     int, float, complex, range, set, frozenset,

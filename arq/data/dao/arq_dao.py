@@ -2,12 +2,11 @@
 from mongoengine import Document
 from bson import ObjectId
 from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util import object_util
 from arq.util.data.query_filter_builder import QueryFilterBuilder
 
 class ArqDao:
-
-    PAGE_NOT_FOUND_EXCEPTION_MESSAGE = "Page {0} not found. The max number os pages is {1}."
 
     def __init__(self, model:Document) -> None:
         self._model = model
@@ -42,7 +41,7 @@ class ArqDao:
             pages += 1
 
         if page > pages:
-            raise ArqException(self.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(page, pages))
+            raise ArqException(PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(page, pages))
         
         start = page * limit - limit
         end = start + limit

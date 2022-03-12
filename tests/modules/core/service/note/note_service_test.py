@@ -5,6 +5,7 @@ from pytest import raises
 from api.modules.core.blueprints.data.model.note import Note
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 
 class TestNoteService:
 
@@ -87,7 +88,7 @@ class TestNoteService:
         assert deleted_id == note_id
         assert self.service.find_by_id(deleted_id) is None
 
-        with raises(ArqException, match=self.service._dao.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+        with raises(ArqException, match=OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
             self.service.delete(deleted_id)
 
         self.disconnect()
@@ -340,7 +341,7 @@ class TestNoteService:
 
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
-        with raises(ArqException, match=self.service._dao.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
+        with raises(ArqException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
             pagination = self.service.paginate(page=4, limit=5)
 
         self.delete_notes(notes)

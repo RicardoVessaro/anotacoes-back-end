@@ -3,10 +3,9 @@ from arq.data.dao.arq_dao import ArqDao
 from mongoengine import Document
 
 from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 
 class ArqCRUDDAO(ArqDao):
-
-    OBJECT_NOT_FOUND_EXCEPTION_MESSAGE = "Object with ID {0} not found."
 
     def __init__(self, model:Document) -> None:
         super().__init__(model)
@@ -29,7 +28,7 @@ class ArqCRUDDAO(ArqDao):
         model = self.find_by_id(id)
 
         if model is None:
-            exception_message = self.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
+            exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
             raise ArqException(exception_message, status_code=404)
 
         deleted_id = model.id

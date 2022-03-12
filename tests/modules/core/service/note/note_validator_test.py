@@ -3,6 +3,7 @@ from api.modules.core.blueprints.service.note.note_validator import NoteValidato
 from pytest import raises
 
 from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception_message import REQUIRED_FIELD_EXCEPTION_MESSAGE
 
 class TestNoteValidator():
 
@@ -20,7 +21,7 @@ class TestNoteValidator():
         for required_field in self._validator.required_fields:
             poped_value = body.pop(required_field)
 
-            with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
+            with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
                 self._validator.validate_insert(body)
 
             body[required_field] = poped_value
@@ -39,7 +40,7 @@ class TestNoteValidator():
 
             body[required_field] = None
 
-            with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
+            with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
             
                 self._validator.validate_insert(body)
 
@@ -63,7 +64,7 @@ class TestNoteValidator():
             else: 
                 body[required_field] = None
 
-            with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
+            with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
             
                 self._validator.validate_insert(body)
 
@@ -84,7 +85,7 @@ class TestNoteValidator():
 
                 body[field] = None
 
-                with raises(ArqException, match=self._validator.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(field)):
+                with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(field)):
                     self._validator.validate_update(fake_id, body)
 
                 body[field] = value

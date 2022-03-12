@@ -1,10 +1,15 @@
+
 # TODO Ver quando usar aspas simples ('') e aspas duplas ("")
-# TODO Fazer teste com uma entidade de testes
-# TODO Rodar testes no kubernetes
-# TODO Conectar ao banco de forma automatica
+
+# TODO Ver Decorators
 # TODO Fazer com que o banco seja limpados dee forma automatica antes de iniciar os testes
 # TODO Fazer com que os dados inseridos sejam cadastrados de forma automatica antes dos testes
 # TODO Fazer com que os dados cadastrados sejam excluidos apos os testes
+
+# TODO Fazer teste com uma entidade de testes
+
+# TODO Rodar testes no kubernetes
+# TODO Conectar ao banco de forma automatica
 
 import datetime
 from mongoengine import connect, disconnect
@@ -12,6 +17,7 @@ from bson import ObjectId
 from pytest import raises
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 
 class TestNoteDAO():
 
@@ -103,7 +109,7 @@ class TestNoteDAO():
         assert deleted_id == note_id
         assert self.dao.find_by_id(deleted_id) is None
 
-        with raises(ArqException, match=self.dao.OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+        with raises(ArqException, match=OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
             self.dao.delete(deleted_id)
 
         self.disconnect()
@@ -339,7 +345,7 @@ class TestNoteDAO():
 
         notes, notes_id, pinned_notes_id = self._insert_notes()
 
-        with raises(ArqException, match=self.dao.PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
+        with raises(ArqException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
             pagination = self.dao.paginate(page=4, limit=5)
 
         self.delete_notes(notes)

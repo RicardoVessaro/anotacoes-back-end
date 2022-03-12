@@ -1,9 +1,8 @@
 from arq.exception.arq_exception import ArqException
+from arq.exception.arq_exception_message import REQUIRED_FIELD_EXCEPTION_MESSAGE
 from arq.util.object_util import is_none_or_empty
 
 class ArqCRUDValidator:
-
-    REQUIRED_FIELD_EXCEPTION_MESSAGE = "The field '{0}' is required."
 
     def __init__(self, required_fields=[]) -> None:
         self.required_fields = required_fields
@@ -30,5 +29,5 @@ class ArqCRUDValidator:
                 self._raise_required_field_exception(field)
 
     def _raise_required_field_exception(self, required_field: str):
-        raise ArqException(self.REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field))
+        raise ArqException(REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field))
         

@@ -14,7 +14,7 @@ class ArqException(Exception):
     BAD_REQUEST = 400
 
     def __init__(self, message, payload=None, status_code=BAD_REQUEST) -> None:
-        super().__init__()
+        super().__init__(message)
 
         self.message = message
         self.status_code = status_code

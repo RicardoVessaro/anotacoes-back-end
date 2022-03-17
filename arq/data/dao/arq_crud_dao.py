@@ -10,8 +10,13 @@ class ArqCRUDDAO(ArqDao):
     def __init__(self, model:Document) -> None:
         super().__init__(model)
 
-    def insert(self, model_data: dict) -> str:
-        model = self._model(**model_data)
+    def insert(self, model_data) -> str:
+        # TODO testar usando model ao inves de dict
+        model = model_data
+
+        if type(model_data) is dict:
+            model = self._model(**model_data)
+
         model.save()
 
         return model

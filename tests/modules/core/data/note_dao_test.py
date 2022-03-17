@@ -1,7 +1,6 @@
 
 # TODO Ver quando usar aspas simples ('') e aspas duplas ("")
 
-# TODO Ver Decorators
 # TODO Fazer com que o banco seja limpados dee forma automatica antes de iniciar os testes
 # TODO Fazer com que os dados inseridos sejam cadastrados de forma automatica antes dos testes
 # TODO Fazer com que os dados cadastrados sejam excluidos apos os testes
@@ -18,8 +17,12 @@ from pytest import raises
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.util.test.arq_test import ArqDatabaseTest
+from api.modules.core.blueprints.data.model.note import Note
 
 class TestNoteDAO():
+
+    DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
     dao = NoteService()._dao
     
@@ -28,8 +31,8 @@ class TestNoteDAO():
 
     # TODO criar estrutura generica para conexao nos testes
     def connect(self):
-        DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
-        connect(host=DB_URI)
+        
+        connect(host=self.DB_URI)
 
     # TODO criar estrutura generica para conexao nos testes
     def disconnect(self):
@@ -39,6 +42,34 @@ class TestNoteDAO():
     def clean_database(self, used_documents=[]):
         for document in used_documents:
             document.objects().delete()
+            
+    def test_delete_arq_database_test(self):
+
+        title = "test_delete_NoteDAO"
+
+        note = Note(
+            title=title,
+            pinned=True,
+            text="lorem ipsum dolor sit amet",
+            created_in=datetime.datetime.today()
+        )
+        arq_database_test = ArqDatabaseTest()
+        arq_database_test.add_data(self.dao, note)
+        @arq_database_test.persistence_test(host=self.DB_URI)
+        def test():
+            note_id = str(note.id)
+
+            deleted_id = self.dao.delete(note_id)
+
+            assert deleted_id == note_id
+            assert self.dao.find_by_id(deleted_id) is None
+            
+
+            with raises(ArqException, match=OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+                self.dao.delete(deleted_id)
+
+        test()
+        
 
     def test_insert(self):
         self.connect()
@@ -350,7 +381,7 @@ class TestNoteDAO():
 
         self.delete_notes(notes)
         self.disconnect()
-    
+
     def _insert_notes(self):
         notes = []
         notes_id = []

@@ -3,7 +3,6 @@ import functools
 from mongoengine import connect, disconnect
 from collections import namedtuple
 
-# TODO url banco obrigatoria
 # TODO criar teste unitario (dps que cirar teste com ModelTest)
 class ArqDatabaseTest:
 
@@ -15,15 +14,12 @@ class ArqDatabaseTest:
         data = self._data(dao=dao, model=model, data_id=None)
         self.data_to_insert.append(data)
 
-    def persistence_test(self, host=None, clean_database=True):
-        print('persistence_test')
+    def persistence_test(self, host, clean_database=False):
 
         def decorate(func):
-            print('decorate')
 
             @functools.wraps(func)
             def test(*args, **kwargs):
-                print('\ntest')
                 self._connect(host)
 
                 if clean_database:
@@ -31,11 +27,13 @@ class ArqDatabaseTest:
 
                 self._insert_data()
 
-                func(*args, **kwargs)
+                try:
+                    func(*args, **kwargs)
 
-                self._delete_data()
+                finally:
+                    self._delete_data()
 
-                self._disconnect()
+                    self._disconnect()
 
             return test
 

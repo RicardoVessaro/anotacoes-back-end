@@ -19,23 +19,20 @@ from api.modules.core.blueprints.data.model.note import Note
 
 class TestNoteDAO():
 
+    # TODO Mudar forma de eviar a URL
     DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
     dao = NoteService()._dao
     
-    # TODO ver se continua acessando atributo privado
     model = dao._model
 
-    # TODO criar estrutura generica para conexao nos testes
     def connect(self):
         
         connect(host=self.DB_URI)
 
-    # TODO criar estrutura generica para conexao nos testes
     def disconnect(self):
         disconnect()
 
-    # TODO criar estrutura gennerica para deletar documentos utilizados
     def clean_database(self, used_documents=[]):
         for document in used_documents:
             document.objects().delete()

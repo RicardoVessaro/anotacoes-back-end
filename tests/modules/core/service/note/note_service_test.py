@@ -7,6 +7,8 @@ from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 
+# TODO Usar ArqTest
+
 class TestNoteService:
 
     service = NoteService()
@@ -18,11 +20,9 @@ class TestNoteService:
         DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
         connect(host=DB_URI)
 
-    # TODO criar estrutura generica para conexao nos testes
     def disconnect(self):
         disconnect()
 
-    # TODO criar estrutura gennerica para deletar documentos utilizados
     def clean_database(self, used_documents=[]):
         for document in used_documents:
             document.objects().delete()

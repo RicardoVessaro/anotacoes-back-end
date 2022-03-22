@@ -1,11 +1,16 @@
 
+# TODO Testar usando documento alem de dict
 
 class ArqService:
 
-    def __init__(self, dao, validator, non_editable_fields=[]) -> None:
+    def __init__(self, dao) -> None:
         self._dao = dao
-        self._validator = validator
-        self._non_editable_fields = non_editable_fields
+
+    def insert(self, body: dict):
+        return self._dao.insert(body)
+
+    def delete(self, id):
+        return self._dao.delete(id)   
 
     def find_by_id(self, id):
         return self._dao.find_by_id(id)

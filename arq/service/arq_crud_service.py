@@ -1,10 +1,14 @@
 
 from arq.service.arq_service import ArqService
 
+# TODO Testar usando documento alem de dict
+
 class ArqCRUDService(ArqService):
 
     def __init__(self, dao, validator, non_editable_fields=[]) -> None:
-        super().__init__(dao, validator, non_editable_fields)
+        super().__init__(dao)
+        self._validator = validator
+        self._non_editable_fields = non_editable_fields
 
     def insert(self, body: dict):
         self._validator.validate_insert(body)

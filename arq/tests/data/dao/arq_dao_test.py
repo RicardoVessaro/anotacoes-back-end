@@ -5,7 +5,7 @@ from pytest import raises
 from arq.data.dao.arq_dao import ArqDao
 from arq.exception.arq_exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
-from arq.util.test.arq_test import ArqDatabaseTest
+from arq.util.test.arq_database_test import ArqDatabaseTest
 from arq.exception.arq_exception import ArqException
 
 # TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI

@@ -14,7 +14,7 @@ from pytest import raises
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
-from arq.util.test.arq_test import ArqDatabaseTest
+from arq.util.test.arq_database_test import ArqDatabaseTest
 from api.modules.core.blueprints.data.model.note import Note
 
 class TestNoteDAO():

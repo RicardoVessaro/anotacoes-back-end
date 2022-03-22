@@ -4,7 +4,7 @@ from arq.data.dao.arq_crud_dao import ArqCRUDDAO
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
-from arq.util.test.arq_test import ArqDatabaseTest
+from arq.util.test.arq_database_test import ArqDatabaseTest
 
 
 class TestArqCRUDDao:

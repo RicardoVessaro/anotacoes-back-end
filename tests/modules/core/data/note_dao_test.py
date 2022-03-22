@@ -172,8 +172,6 @@ class TestNoteDAO():
 
         self.disconnect()
 
-    # TODO testar com entidade que tem o valor de lista
-    # TODO Com mais possibilidades com entidade especifica para testes
     def test_find(self):
         self.connect()
         self.clean_database(used_documents=[self.model])

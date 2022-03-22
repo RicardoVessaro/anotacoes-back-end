@@ -11,7 +11,6 @@ class ArqCRUDDAO(ArqDao):
         super().__init__(model)
 
     def insert(self, model_data) -> str:
-        # TODO testar usando model ao inves de dict
         model = model_data
 
         if type(model_data) is dict:
@@ -21,11 +20,14 @@ class ArqCRUDDAO(ArqDao):
 
         return model
 
-    def update(self, id, model_date: dict):
-        model = self.find_by_id(id)
+    def update(self, id, model_data):
+        model = model_data
+        
+        if type(model_data) is dict:
+            model = self.find_by_id(id)
 
-        for key, value in model_date.items():
-            model[key] = value
+            for key, value in model_data.items():
+                model[key] = value
 
         return model.save()
 

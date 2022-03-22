@@ -3,10 +3,11 @@ from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 NOT_SUPPORTED_TYPES = [
-    int, float, complex, range, set, frozenset,
+    complex, range, set, frozenset,
     bytes, bytearray, memoryview
 ]
 
+# TODO Usar dispatcher
 def is_none_or_empty(value, verify_iterable_values=True):
     _validate_type(value)
 
@@ -15,6 +16,9 @@ def is_none_or_empty(value, verify_iterable_values=True):
 
     elif value is bool:
         return False
+
+    elif type(value) is int or type(value) is float:
+        return value is None
     
     elif type(value) is str:
         return is_string_none_or_empty(value)

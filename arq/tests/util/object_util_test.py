@@ -9,6 +9,12 @@ def test_boolean_value():
     assert not is_none_or_empty(True)
     assert not is_none_or_empty(False)
 
+def test_int_value():
+    assert not is_none_or_empty(1)
+
+def test_float_value():
+    assert not is_none_or_empty(1.0)
+
 def test_string_value():
     assert is_none_or_empty("")
     assert is_none_or_empty("    ")

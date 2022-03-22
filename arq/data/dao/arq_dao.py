@@ -6,8 +6,6 @@ from arq.exception.arq_exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util import object_util
 from arq.util.data.query_filter_builder import QueryFilterBuilder
 
-
-# TODO add insert e delete padroes do mongo engine
 class ArqDao:
 
     def __init__(self, model:Document) -> None:

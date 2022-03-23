@@ -103,7 +103,7 @@ class TestNoteService:
             "created_in": datetime.datetime.today()
         }
 
-        editable_note = self.service._remove_non_editable_fields(note)
+        editable_note = self.service._remove_non_editable_fields_from_dict(note)
 
         assert "text" in editable_note
 

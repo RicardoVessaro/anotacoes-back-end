@@ -14,8 +14,14 @@ class ArqCRUDService(ArqService):
         self._validator.validate_insert(body)
         return self._dao.insert(body)
 
-    def update(self, id, body: dict):
-        body = self._remove_non_editable_fields(body)
+    def update(self, id, body):
+        is_dict = type(body) == dict
+
+        if is_dict:
+            body = self._remove_non_editable_fields_from_dict(body)
+
+        else :
+            body = self._remove_non_editable_fields_from_model(id, body)
 
         self._validator.validate_update(id, body)
 
@@ -26,7 +32,7 @@ class ArqCRUDService(ArqService):
 
         return self._dao.delete(id)
 
-    def _remove_non_editable_fields(self, body: dict):
+    def _remove_non_editable_fields_from_dict(self, body: dict):
         editable_body = {}
 
         for field, value in body.items():
@@ -34,3 +40,12 @@ class ArqCRUDService(ArqService):
                 editable_body[field] = value
 
         return editable_body
+
+    def _remove_non_editable_fields_from_model(self, id, body):
+        model = self.find_by_id(id)
+
+        for field, value in body.to_mongo().items():
+            if field in self._non_editable_fields:
+                body[field] = model[field]
+
+        return body

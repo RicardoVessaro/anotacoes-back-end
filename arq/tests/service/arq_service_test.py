@@ -1,31 +1,32 @@
 
-from xmlrpc.client import boolean
-
 from pytest import raises
 from arq.data.dao.arq_dao import ArqDao
+from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.service.arq_service import ArqService
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 from arq.util.test.arq_database_test import ArqDatabaseTest
-from arq.exception.arq_exception import ArqException
 
-# TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
+#  TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
-class TestArqDao:
+class TestArqService:
 
     TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
-    arq_dao = ArqDao(model=ArqTestModel)
+    arq_service = ArqService(dao=ArqDao(model=ArqTestModel))
 
-    model = arq_dao._model
+    dao = arq_service._dao
+
+    model = dao._model
 
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
 
-        arq_database_test = ArqDatabaseTest(daos_to_clean=[self.arq_dao])
+        arq_database_test = ArqDatabaseTest(daos_to_clean=[self.dao])
         @arq_database_test.persistence_test(host=self.TEST_DB_URI)
         def _():
             
-            inserted_model = self.arq_dao.insert(arq_test_model)
+            inserted_model = self.arq_service.insert(arq_test_model)
             db_model = self.model.objects().first()
 
             assert inserted_model.id == db_model.id
@@ -39,11 +40,11 @@ class TestArqDao:
         def _():
             arq_test_model_id = str(arq_test_model.id)
 
-            deleted_id = self.arq_dao.delete(arq_test_model_id)
+            deleted_id = self.arq_service.delete(arq_test_model_id)
 
             assert deleted_id == arq_test_model_id
 
-            assert self.arq_dao.find_by_id(arq_test_model_id) is None
+            assert self.arq_service.find_by_id(arq_test_model_id) is None
 
         _()
 
@@ -55,7 +56,7 @@ class TestArqDao:
             def test_find_by_id_using_string():
                 arq_test_model_id_str = str(arq_test_model.id)
 
-                bd_model = self.arq_dao.find_by_id(arq_test_model_id_str)
+                bd_model = self.arq_service.find_by_id(arq_test_model_id_str)
 
                 assert bd_model.id == arq_test_model.id
                 assert bd_model.code == arq_test_model.code
@@ -66,7 +67,7 @@ class TestArqDao:
             def test_find_by_id_using_object_id():
                 arq_test_model_id = arq_test_model.id
 
-                bd_model = self.arq_dao.find_by_id(arq_test_model_id)
+                bd_model = self.arq_service.find_by_id(arq_test_model_id)
 
                 assert bd_model.id == arq_test_model.id
                 assert bd_model.code == arq_test_model.code
@@ -82,61 +83,61 @@ class TestArqDao:
         arq_test_model_3 = ArqTestModel(code=3, title='test_find_TestArqDao_3', boolean=True, tags=['B', 'C', 'D'])
 
         arq_database_test = ArqDatabaseTest()
-        arq_database_test.add_data(self.arq_dao, arq_test_model_1)
-        arq_database_test.add_data(self.arq_dao, arq_test_model_2)
-        arq_database_test.add_data(self.arq_dao, arq_test_model_3)
+        arq_database_test.add_data(self.dao, arq_test_model_1)
+        arq_database_test.add_data(self.dao, arq_test_model_2)
+        arq_database_test.add_data(self.dao, arq_test_model_3)
         @arq_database_test.persistence_test(host=self.TEST_DB_URI)
         def _():
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find()
+            results = self.arq_service.find()
             for result in results:
                 assert result.id in expected_ids
 
-            results = self.arq_dao.find({"code": 2})
+            results = self.arq_service.find({"code": 2})
             for result in results:
                 assert result.id == arq_test_model_2.id
 
-            results = self.arq_dao.find({"title": 'test_find_TestArqDao_3'})
+            results = self.arq_service.find({"title": 'test_find_TestArqDao_3'})
             for result in results:
                 assert result.id == arq_test_model_3.id
 
             expected_ids = [arq_test_model_1.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"boolean": True})
+            results = self.arq_service.find({"boolean": True})
             for result in results:
                 assert result.id in expected_ids
 
-            results = self.arq_dao.find({"boolean": True, "code": 3})
+            results = self.arq_service.find({"boolean": True, "code": 3})
             for resultd in results:
                 assert resultd.id == arq_test_model_3.id
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id]
-            results = self.arq_dao.find({"code": [1, 2]})
+            results = self.arq_service.find({"code": [1, 2]})
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_1.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"title": ['test_find_TestArqDao_1', 'test_find_TestArqDao_3']})
+            results = self.arq_service.find({"title": ['test_find_TestArqDao_1', 'test_find_TestArqDao_3']})
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"tags": 'D'})
+            results = self.arq_service.find({"tags": 'D'})
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"tags": ['D']})
+            results = self.arq_service.find({"tags": ['D']})
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id]
-            results = self.arq_dao.find({"tags": ['A']})
+            results = self.arq_service.find({"tags": ['A']})
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"tags": ['A', 'B']})
+            results = self.arq_service.find({"tags": ['A', 'B']})
             for result in results:
                 assert result.id in expected_ids
 
@@ -146,13 +147,13 @@ class TestArqDao:
         arq_test_model_list = self._build_arq_test_model_list()
 
         arq_database_test = ArqDatabaseTest()
-        arq_database_test.add_data(self.arq_dao, arq_test_model_list)
+        arq_database_test.add_data(self.dao, arq_test_model_list)
         @arq_database_test.persistence_test(host=self.TEST_DB_URI)
         def _():
             model_ids, boolean_model_ids = self._get_model_ids(arq_test_model_list)
 
             def test_default_pagination():
-                pagination = self.arq_dao.paginate()
+                pagination = self.arq_service.paginate()
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 5
@@ -167,7 +168,7 @@ class TestArqDao:
 
 
             def test_paginate_with_filter():
-                pagination = self.arq_dao.paginate(query_filter={'boolean': False})
+                pagination = self.arq_service.paginate(query_filter={'boolean': False})
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 5
@@ -182,7 +183,7 @@ class TestArqDao:
 
 
             def test_paginate_limit_7_in_results():
-                pagination = self.arq_dao.paginate(limit=7)
+                pagination = self.arq_service.paginate(limit=7)
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 7
@@ -197,7 +198,7 @@ class TestArqDao:
 
 
             def test_paginate_limit_7_page_2_in_results():
-                pagination = self.arq_dao.paginate(limit=7, page=2)
+                pagination = self.arq_service.paginate(limit=7, page=2)
 
                 assert pagination['page'] == 2
                 assert pagination['limit'] == 7
@@ -211,7 +212,7 @@ class TestArqDao:
             test_paginate_limit_7_page_2_in_results()
 
             def test_paginate_limit_7_page_3_in_results():
-                pagination = self.arq_dao.paginate(limit=7, page=3)
+                pagination = self.arq_service.paginate(limit=7, page=3)
 
                 assert pagination['page'] == 3
                 assert pagination['limit'] == 7
@@ -228,7 +229,7 @@ class TestArqDao:
             def test_paginate_must_raise_exception_when_page_is_greater_than_pages():
 
                 with raises(ArqException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
-                    pagination = self.arq_dao.paginate(page=4, limit=5)
+                    pagination = self.arq_service.paginate(page=4, limit=5)
 
             test_paginate_must_raise_exception_when_page_is_greater_than_pages()
 
@@ -264,14 +265,10 @@ class TestArqDao:
 
         return ids, boolean_ids
 
-
     def _build_default_model_and_arq_test(self, code, title):
         arq_test_model = ArqTestModel(code=code, title=title)
 
         arq_database_test = ArqDatabaseTest()
-        arq_database_test.add_data(self.arq_dao, arq_test_model)
+        arq_database_test.add_data(self.dao, arq_test_model)
         
         return arq_test_model, arq_database_test
-
-    
-

@@ -22,8 +22,13 @@ class ArqCRUDValidator:
             if required_field not in body.keys() or is_none_or_empty(body[required_field]):
                 self._raise_required_field_exception(required_field)
 
-    def _validate_required_fields_on_update(self, body: dict):
-        for field, value in body.items():
+    def _validate_required_fields_on_update(self, body):
+        body_dict = body
+
+        if not type(body) is dict:
+            body_dict = body.to_mongo()
+
+        for field, value in body_dict.items():
 
             if field in self.required_fields and is_none_or_empty(value):
                 self._raise_required_field_exception(field)

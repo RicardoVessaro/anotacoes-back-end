@@ -1,6 +1,4 @@
 
-# TODO Testar usando documento alem de dict
-
 class ArqService:
 
     def __init__(self, dao) -> None:

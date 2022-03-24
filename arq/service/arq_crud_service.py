@@ -1,8 +1,6 @@
 
 from arq.service.arq_service import ArqService
 
-# TODO Testar usando documento alem de dict
-
 class ArqCRUDService(ArqService):
 
     def __init__(self, dao, validator, non_editable_fields=[]) -> None:

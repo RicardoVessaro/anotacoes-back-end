@@ -1,6 +1,4 @@
 
-#  TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
-
 from pytest import raises
 from arq.data.dao.arq_crud_dao import ArqCRUDDAO
 from arq.exception.arq_exception import ArqException
@@ -10,6 +8,7 @@ from arq.service.arq_crud_validator import ArqCRUDValidator
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 from arq.util.test.arq_database_test import ArqDatabaseTest
 
+#  TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
 class TestArqCRUDService:
 

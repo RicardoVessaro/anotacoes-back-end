@@ -6,9 +6,6 @@ from arq.service.arq_crud_validator import ArqCRUDValidator
 from arq.exception.arq_exception import ArqException
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 
-# TODO Testar ArqCRUDValidator
-# TODO Testar Usando Document e dict
-
 class TestArqCRUDValidator:
 
     arq_crud_validator = ArqCRUDValidator(required_fields=['code', 'title'])

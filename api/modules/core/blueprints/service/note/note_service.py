@@ -13,7 +13,7 @@ class NoteService(ArqCRUDService):
             non_editable_fields=['created_in']
         )
     
-    def insert(self, body: dict):
+    def insert(self, body):
         body['created_in'] = datetime.datetime.today()
 
         return super().insert(body)

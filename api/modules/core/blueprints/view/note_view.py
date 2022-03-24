@@ -7,7 +7,7 @@ from arq.view.arq_crud_view import ArqCRUDView
 # TODO Ver testes de integração
 
 # TODO Buscar de forma generica
-note_view_name = 'materia'
+note_view_name = 'note'
 note_blueprint = Blueprint(note_view_name, __name__)
 
 class NoteView(ArqCRUDView):

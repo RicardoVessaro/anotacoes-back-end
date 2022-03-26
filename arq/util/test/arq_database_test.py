@@ -3,7 +3,6 @@ import functools
 from mongoengine import connect, disconnect
 from collections import namedtuple
 
-# TODO criar teste unitario (dps que cirar teste com ModelTest)
 class ArqDatabaseTest:
 
     def __init__(self, daos_to_clean=[]) -> None:
@@ -65,9 +64,6 @@ class ArqDatabaseTest:
 
             if dao.find_by_id(data.data_id) is not None:
                 dao.delete(data.data_id)
-
-        for dao in self.daos_to_clean:
-            self._delete_dao_data(dao)
 
     def _clean_existing_data(self):
         already_deleted = []

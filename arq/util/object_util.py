@@ -1,4 +1,5 @@
 
+from functools import singledispatch
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception_message import NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
@@ -14,23 +15,36 @@ def is_none_or_empty(value, verify_iterable_values=True):
     if value is None:
         return True
 
-    elif value is bool:
-        return False
+    return _is_none_or_empty(value, verify_iterable_values=verify_iterable_values)
 
-    elif type(value) is int or type(value) is float:
-        return value is None
-    
-    elif type(value) is str:
-        return is_string_none_or_empty(value)
+@singledispatch
+def _is_none_or_empty(value, verify_iterable_values=True):
+    pass
 
-    elif type(value) is list:
-        return is_list_none_or_empty(value, verify_iterable_values)
+@_is_none_or_empty.register(bool)
+def _(value, verify_iterable_values=True):
+    return False
 
-    elif type(value) is tuple:
-        return is_tuple_none_or_empty(value, verify_iterable_values)
+@_is_none_or_empty.register(int)
+@_is_none_or_empty.register(float)
+def _(value, verify_iterable_values=True):
+    return value is None
 
-    elif type(value) is dict:
-        return is_dict_none_or_empty(value, verify_iterable_values)
+@_is_none_or_empty.register(str)
+def _(value, verify_iterable_values=True):
+    return is_string_none_or_empty(value)
+
+@_is_none_or_empty.register(list)
+def _(value, verify_iterable_values=True):
+    return is_list_none_or_empty(value, verify_iterable_values)
+
+@_is_none_or_empty.register(tuple)
+def _(value, verify_iterable_values=True):
+    return is_tuple_none_or_empty(value, verify_iterable_values)
+
+@_is_none_or_empty.register(dict)
+def _(value, verify_iterable_values=True):
+    return is_dict_none_or_empty(value, verify_iterable_values)
 
 def is_string_none_or_empty(string: str):
     return len(string) == 0 or len(string.split()) == 0

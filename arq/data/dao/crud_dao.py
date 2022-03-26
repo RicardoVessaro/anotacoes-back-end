@@ -21,6 +21,10 @@ class CRUDDAO(Dao):
         return model
 
     def update(self, id, model_data):
+        if self.find_by_id(id) is None:
+            exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
+            raise ArqException(exception_message, status_code=404)
+            
         model = model_data
         
         if type(model_data) is dict:

@@ -86,6 +86,8 @@ class TestCRUDDao:
 
         test_update_using_dict()
 
+        arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_update_TestArqCRUDDao', True)
+
         @arq_database_test.persistence_test(host=self.TEST_DB_URI)
         def test_update_using_model():
             model_id = arq_test_model.id 
@@ -104,6 +106,21 @@ class TestCRUDDao:
             assert updated_model.code == database_model.code == changes.code
 
         test_update_using_model()
+
+        def must_raise_exception_when_model_not_exists():
+            arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_delete_TestArqCRUDDao')
+        
+            @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+            def _():
+                arq_test_model_id = str(arq_test_model.id)
+
+                self.arq_crud_dao.delete(arq_test_model_id)
+
+                with raises(ArqException, match=OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(arq_test_model_id)):
+                    self.arq_crud_dao.update(arq_test_model_id, arq_test_model)
+
+            _()
+        must_raise_exception_when_model_not_exists()
 
     def _build_default_model_and_arq_test(self, code, title, boolean=False):
         arq_test_model = ArqTestModel(code=code, title=title, boolean=boolean)

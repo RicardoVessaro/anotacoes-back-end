@@ -1,5 +1,5 @@
 
-class ArqService:
+class Service:
 
     def __init__(self, dao) -> None:
         self._dao = dao

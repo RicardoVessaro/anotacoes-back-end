@@ -1,7 +1,7 @@
 
-from arq.service.arq_crud_validator import ArqCRUDValidator
+from arq.service.crud_validator import CRUDValidator
 
-class NoteValidator(ArqCRUDValidator):
+class NoteValidator(CRUDValidator):
 
     def __init__(self) -> None:
         super().__init__(

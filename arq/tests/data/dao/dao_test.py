@@ -1,27 +1,26 @@
 
-from xmlrpc.client import boolean
 
 from pytest import raises
-from arq.data.dao.arq_dao import ArqDao
-from arq.exception.arq_exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.data.dao.dao import Dao
+from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
-from arq.util.test.arq_database_test import ArqDatabaseTest
+from arq.util.test.database_test import DatabaseTest
 from arq.exception.arq_exception import ArqException
 
 # TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
-class TestArqDao:
+class TestDao:
 
     TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
-    arq_dao = ArqDao(model=ArqTestModel)
+    arq_dao = Dao(model=ArqTestModel)
 
     model = arq_dao._model
 
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
 
-        arq_database_test = ArqDatabaseTest(daos_to_clean=[self.arq_dao])
+        arq_database_test = DatabaseTest(daos_to_clean=[self.arq_dao])
         @arq_database_test.persistence_test(host=self.TEST_DB_URI)
         def _():
             
@@ -81,7 +80,7 @@ class TestArqDao:
         arq_test_model_2 = ArqTestModel(code=2, title='test_find_TestArqDao_2', boolean=False, tags=['A', 'B', 'D'])
         arq_test_model_3 = ArqTestModel(code=3, title='test_find_TestArqDao_3', boolean=True, tags=['B', 'C', 'D'])
 
-        arq_database_test = ArqDatabaseTest()
+        arq_database_test = DatabaseTest()
         arq_database_test.add_data(self.arq_dao, arq_test_model_1)
         arq_database_test.add_data(self.arq_dao, arq_test_model_2)
         arq_database_test.add_data(self.arq_dao, arq_test_model_3)
@@ -145,7 +144,7 @@ class TestArqDao:
     def test_paginate(self):
         arq_test_model_list = self._build_arq_test_model_list()
 
-        arq_database_test = ArqDatabaseTest()
+        arq_database_test = DatabaseTest()
         arq_database_test.add_data(self.arq_dao, arq_test_model_list)
         @arq_database_test.persistence_test(host=self.TEST_DB_URI)
         def _():
@@ -268,7 +267,7 @@ class TestArqDao:
     def _build_default_model_and_arq_test(self, code, title):
         arq_test_model = ArqTestModel(code=code, title=title)
 
-        arq_database_test = ArqDatabaseTest()
+        arq_database_test = DatabaseTest()
         arq_database_test.add_data(self.arq_dao, arq_test_model)
         
         return arq_test_model, arq_database_test

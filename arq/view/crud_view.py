@@ -1,13 +1,13 @@
 
 from flask import request
 from flask_classful import route
-from arq.service.arq_crud_service import ArqCRUDService
+from arq.service.crud_service import CRUDService
 from arq.view.arq_view import ArqView
 
 
-class ArqCRUDView(ArqView):
+class CRUDView(ArqView):
 
-    def __init__(self, service: ArqCRUDService) -> None:
+    def __init__(self, service: CRUDService) -> None:
         super().__init__(
             service=service
         )

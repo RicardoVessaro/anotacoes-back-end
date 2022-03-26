@@ -2,11 +2,11 @@
 from mongoengine import Document
 from bson import ObjectId
 from arq.exception.arq_exception import ArqException
-from arq.exception.arq_exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util import object_util
 from arq.util.data.query_filter_builder import QueryFilterBuilder
 
-class ArqDao:
+class Dao:
 
     def __init__(self, model:Document) -> None:
         self._model = model

@@ -2,9 +2,9 @@
 import datetime
 from api.modules.core.blueprints.data.dao.note_dao import NoteDAO
 from api.modules.core.blueprints.service.note.note_validator import NoteValidator
-from arq.service.arq_crud_service import ArqCRUDService
+from arq.service.crud_service import CRUDService
 
-class NoteService(ArqCRUDService):
+class NoteService(CRUDService):
 
     def __init__(self) -> None:
         super().__init__(

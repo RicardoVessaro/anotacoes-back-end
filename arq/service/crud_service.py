@@ -1,7 +1,7 @@
 
-from arq.service.arq_service import ArqService
+from arq.service.service import Service
 
-class ArqCRUDService(ArqService):
+class CRUDService(Service):
 
     def __init__(self, dao, validator, non_editable_fields=[]) -> None:
         super().__init__(dao)

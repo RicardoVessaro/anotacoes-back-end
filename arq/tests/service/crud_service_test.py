@@ -1,20 +1,20 @@
 
 from pytest import raises
-from arq.data.dao.arq_crud_dao import ArqCRUDDAO
+from arq.data.dao.crud_dao import CRUDDAO
 from arq.exception.arq_exception import ArqException
-from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
-from arq.service.arq_crud_service import ArqCRUDService
-from arq.service.arq_crud_validator import ArqCRUDValidator
+from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.service.crud_service import CRUDService
+from arq.service.crud_validator import CRUDValidator
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
-from arq.util.test.arq_database_test import ArqDatabaseTest
+from arq.util.test.database_test import DatabaseTest
 
 #  TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
-class TestArqCRUDService:
+class TestCRUDServices:
 
     TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
-    arq_crud_service = ArqCRUDService(dao=ArqCRUDDAO(model=ArqTestModel), validator=ArqCRUDValidator(), non_editable_fields=["code"])
+    arq_crud_service = CRUDService(dao=CRUDDAO(model=ArqTestModel), validator=CRUDValidator(), non_editable_fields=["code"])
 
     dao = arq_crud_service._dao
 
@@ -23,7 +23,7 @@ class TestArqCRUDService:
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
 
-        arq_database_test = ArqDatabaseTest(daos_to_clean=[self.dao])
+        arq_database_test = DatabaseTest(daos_to_clean=[self.dao])
         def _():
             
             @arq_database_test.persistence_test(host=self.TEST_DB_URI)
@@ -163,7 +163,7 @@ class TestArqCRUDService:
     def _build_default_model_and_arq_test(self, code, title, boolean=False):
         arq_test_model = ArqTestModel(code=code, title=title, boolean=boolean)
 
-        arq_database_test = ArqDatabaseTest()
+        arq_database_test = DatabaseTest()
         arq_database_test.add_data(self.dao, arq_test_model)
         
         return arq_test_model, arq_database_test

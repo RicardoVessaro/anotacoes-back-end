@@ -2,7 +2,7 @@
 
 from flask import Blueprint
 from api.modules.core.blueprints.service.note.note_service import NoteService
-from arq.view.arq_crud_view import ArqCRUDView
+from arq.view.crud_view import CRUDView
 
 # TODO Ver testes de integração
 
@@ -10,7 +10,7 @@ from arq.view.arq_crud_view import ArqCRUDView
 note_view_name = 'note'
 note_blueprint = Blueprint(note_view_name, __name__)
 
-class NoteView(ArqCRUDView):
+class NoteView(CRUDView):
 
     def __init__(self) -> None:
         super().__init__(

@@ -2,12 +2,12 @@ from flask_classful import FlaskView, route
 from flask import make_response, request
 from arq.util.view.query_string_parser import QueryStringParser
 
-from arq.service.arq_service import ArqService
+from arq.service.service import Service
 from arq.util.view.view_encoder import ViewEncoder
 
 class ArqView(FlaskView):
 
-    def __init__(self, service: ArqService) -> None:
+    def __init__(self, service: Service) -> None:
         super().__init__()
 
         self._service = service

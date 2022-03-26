@@ -1,11 +1,11 @@
 
-from arq.data.dao.arq_dao import ArqDao
+from arq.data.dao.dao import Dao
 from mongoengine import Document
 
 from arq.exception.arq_exception import ArqException
-from arq.exception.arq_exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 
-class ArqCRUDDAO(ArqDao):
+class CRUDDAO(Dao):
 
     def __init__(self, model:Document) -> None:
         super().__init__(model)

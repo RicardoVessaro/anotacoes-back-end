@@ -1,14 +1,14 @@
 
 from xmlrpc.client import boolean
 from pytest import raises
-from arq.exception.arq_exception_message import REQUIRED_FIELD_EXCEPTION_MESSAGE
-from arq.service.arq_crud_validator import ArqCRUDValidator
+from arq.exception.exception_message import REQUIRED_FIELD_EXCEPTION_MESSAGE
+from arq.service.crud_validator import CRUDValidator
 from arq.exception.arq_exception import ArqException
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 
 class TestArqCRUDValidator:
 
-    arq_crud_validator = ArqCRUDValidator(required_fields=['code', 'title'])
+    arq_crud_validator = CRUDValidator(required_fields=['code', 'title'])
 
     def test_validate_insert(self):
 

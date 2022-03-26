@@ -3,7 +3,7 @@ import functools
 from mongoengine import connect, disconnect
 from collections import namedtuple
 
-class ArqDatabaseTest:
+class DatabaseTest:
 
     def __init__(self, daos_to_clean=[]) -> None:
         self.data_to_insert = []

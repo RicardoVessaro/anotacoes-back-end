@@ -1,19 +1,19 @@
 
 from operator import le
-from arq.util.test.arq_database_test import ArqDatabaseTest
-from arq.data.dao.arq_dao import ArqDao
+from arq.util.test.database_test import DatabaseTest
+from arq.data.dao.dao import Dao
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 
 class TestArqDatabaseTest:
 
     TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
-    arq_dao = ArqDao(model=ArqTestModel)
+    arq_dao = Dao(model=ArqTestModel)
 
     def test_add_data(self):
 
         def test_using_one_item():
-            arq_database_test = ArqDatabaseTest()
+            arq_database_test = DatabaseTest()
 
             model = ArqTestModel(code=1, title="test_using_one_item")
             arq_database_test.add_data(self.arq_dao, model)
@@ -43,7 +43,7 @@ class TestArqDatabaseTest:
             model_0 = ArqTestModel(code=0, title="test_using_one_item")
             model_1 = ArqTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = ArqDatabaseTest()
+            arq_database_test = DatabaseTest()
             arq_database_test.add_data(self.arq_dao, [model_0, model_1])
             assert len(arq_database_test.data_to_insert) == 2
 
@@ -77,7 +77,7 @@ class TestArqDatabaseTest:
         def test_method():
             model = ArqTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = ArqDatabaseTest()
+            arq_database_test = DatabaseTest()
             arq_database_test.add_data(self.arq_dao, model)
 
             arq_database_test._connect(host=self.TEST_DB_URI)
@@ -100,7 +100,7 @@ class TestArqDatabaseTest:
 
             model = ArqTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = ArqDatabaseTest()
+            arq_database_test = DatabaseTest()
             arq_database_test.add_data(self.arq_dao, model)
             
             @arq_database_test.persistence_test(host=self.TEST_DB_URI)
@@ -121,7 +121,7 @@ class TestArqDatabaseTest:
             def _test_cleaning_data_to_insert():
                 model = ArqTestModel(code=1, title="test_using_one_item")
 
-                arq_database_test = ArqDatabaseTest()
+                arq_database_test = DatabaseTest()
                 arq_database_test.add_data(self.arq_dao, model)
 
                 arq_database_test._connect(host=self.TEST_DB_URI)
@@ -144,7 +144,7 @@ class TestArqDatabaseTest:
 
                 model = ArqTestModel(code=1, title="test_using_one_item")
 
-                arq_database_test = ArqDatabaseTest(daos_to_clean=[self.arq_dao])
+                arq_database_test = DatabaseTest(daos_to_clean=[self.arq_dao])
                 arq_database_test._connect(host=self.TEST_DB_URI)
                 arq_database_test._clean_existing_data()
 
@@ -170,7 +170,7 @@ class TestArqDatabaseTest:
 
                 model = ArqTestModel(code=1, title="test_using_one_item")
 
-                arq_database_test = ArqDatabaseTest()
+                arq_database_test = DatabaseTest()
                 arq_database_test.add_data(self.arq_dao, model)
                 
                 @arq_database_test.persistence_test(host=self.TEST_DB_URI)
@@ -188,7 +188,7 @@ class TestArqDatabaseTest:
             def _test_cleaning_daos_to_clean():
                 model = ArqTestModel(code=1, title="test_using_one_item")
 
-                arq_database_test = ArqDatabaseTest(daos_to_clean=[self.arq_dao])
+                arq_database_test = DatabaseTest(daos_to_clean=[self.arq_dao])
                 @arq_database_test.persistence_test(host=self.TEST_DB_URI)
                 def _():
                     self.arq_dao.insert(model)
@@ -210,7 +210,7 @@ class TestArqDatabaseTest:
 
             model = ArqTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = ArqDatabaseTest()
+            arq_database_test = DatabaseTest()
             arq_database_test.add_data(self.arq_dao, model)
 
             arq_database_test._connect(host=self.TEST_DB_URI)
@@ -233,7 +233,7 @@ class TestArqDatabaseTest:
 
             model = ArqTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = ArqDatabaseTest()
+            arq_database_test = DatabaseTest()
             arq_database_test.add_data(self.arq_dao, model)
             
             @arq_database_test.persistence_test(host=self.TEST_DB_URI)

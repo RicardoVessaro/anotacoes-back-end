@@ -3,6 +3,8 @@ from functools import singledispatch
 from arq.exception.arq_exception import ArqException
 from arq.exception.exception_message import NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
+LEN = '__len__'
+
 NOT_SUPPORTED_TYPES = [
     complex, range, set, frozenset,
     bytes, bytearray, memoryview
@@ -18,7 +20,11 @@ def is_none_or_empty(value, verify_iterable_values=True):
 
 @singledispatch
 def _is_none_or_empty(value, verify_iterable_values=True):
-    pass
+    
+    if hasattr(value, LEN):
+        return len(value) == 0
+
+    return False
 
 @_is_none_or_empty.register(bool)
 def _(value, verify_iterable_values=True):

@@ -1,9 +1,35 @@
 from pytest import raises
+from collections import namedtuple
+from array import array
 from arq.exception.arq_exception import ArqException
 from arq.util.object_util import is_none_or_empty, NOT_SUPPORTED_TYPES, NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 def test_none_value():
     assert is_none_or_empty(None)
+
+def test_default_value():
+
+    def test_namedtuple():
+        test = namedtuple('Test', 'name')
+        t1 = test(name='t1')
+
+        assert not is_none_or_empty(t1)
+
+    test_namedtuple()
+
+    def test_array():
+
+        ints = array('i')
+
+        assert is_none_or_empty(ints)
+
+        ints.append(1)
+        ints.append(6)
+
+        assert not is_none_or_empty(ints)
+
+    test_array()
+    
 
 def test_boolean_value():
     assert not is_none_or_empty(True)

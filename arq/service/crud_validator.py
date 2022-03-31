@@ -4,7 +4,8 @@ from arq.util.object_util import is_none_or_empty
 
 class CRUDValidator:
 
-    def __init__(self, required_fields=[]) -> None:
+    def __init__(self, dao, required_fields=[]) -> None:
+        self._dao = dao
         self.required_fields = required_fields
 
     def validate_insert(self, body):

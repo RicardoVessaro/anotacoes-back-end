@@ -13,11 +13,11 @@ class Service:
     def find_by_id(self, id):
         return self._dao.find_by_id(id)
 
-    def find(self, query_filter={}):
-        return self._dao.find(query_filter)
+    def find(self, **query_filter):
+        return self._dao.find(**query_filter)
         
-    def paginate(self, query_filter={}, page=1, limit=5):
-        return self._dao.paginate(query_filter=query_filter, page=page, limit=limit)
+    def paginate(self, page=1, limit=5, **query_filter):
+        return self._dao.paginate(page=page, limit=limit, **query_filter)
 
 
 

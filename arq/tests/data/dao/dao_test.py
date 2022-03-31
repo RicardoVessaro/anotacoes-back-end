@@ -92,50 +92,50 @@ class TestDao:
             for result in results:
                 assert result.id in expected_ids
 
-            results = self.arq_dao.find({"code": 2})
+            results = self.arq_dao.find(code=2)
             for result in results:
                 assert result.id == arq_test_model_2.id
 
-            results = self.arq_dao.find({"title": 'test_find_TestArqDao_3'})
+            results = self.arq_dao.find(title='test_find_TestArqDao_3')
             for result in results:
                 assert result.id == arq_test_model_3.id
 
             expected_ids = [arq_test_model_1.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"boolean": True})
+            results = self.arq_dao.find(boolean=True)
             for result in results:
                 assert result.id in expected_ids
 
-            results = self.arq_dao.find({"boolean": True, "code": 3})
+            results = self.arq_dao.find(boolean=True, code=3)
             for resultd in results:
                 assert resultd.id == arq_test_model_3.id
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id]
-            results = self.arq_dao.find({"code": [1, 2]})
+            results = self.arq_dao.find(code=[1, 2])
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_1.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"title": ['test_find_TestArqDao_1', 'test_find_TestArqDao_3']})
+            results = self.arq_dao.find(title=['test_find_TestArqDao_1', 'test_find_TestArqDao_3'])
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"tags": 'D'})
+            results = self.arq_dao.find(tags='D')
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"tags": ['D']})
+            results = self.arq_dao.find(tags=['D'])
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id]
-            results = self.arq_dao.find({"tags": ['A']})
+            results = self.arq_dao.find(tags=['A'])
             for result in results:
                 assert result.id in expected_ids
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_dao.find({"tags": ['A', 'B']})
+            results = self.arq_dao.find(tags=['A', 'B'])
             for result in results:
                 assert result.id in expected_ids
 
@@ -166,7 +166,7 @@ class TestDao:
 
 
             def test_paginate_with_filter():
-                pagination = self.arq_dao.paginate(query_filter={'boolean': False})
+                pagination = self.arq_dao.paginate(boolean=False)
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 5
@@ -193,6 +193,21 @@ class TestDao:
                     assert item.id in model_ids[0:7]
 
             test_paginate_limit_7_in_results()
+
+            def test_paginate_with_filter_and_limit_3_in_results():
+                pagination = self.arq_dao.paginate(boolean=True, limit=3, page=2)
+
+                assert pagination['page'] == 2
+                assert pagination['limit'] == 3
+                assert pagination['total'] == len(boolean_model_ids)
+                assert pagination['has_prev'] == True
+                assert pagination['has_next'] == True
+
+                for item in pagination['items']:
+                    assert item.id in boolean_model_ids
+                    assert item.id in boolean_model_ids[3:6]
+            
+            test_paginate_with_filter_and_limit_3_in_results()
 
 
             def test_paginate_limit_7_page_2_in_results():

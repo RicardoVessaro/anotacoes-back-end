@@ -14,7 +14,9 @@ class TestCRUDServices:
 
     TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
 
-    arq_crud_service = CRUDService(dao=CRUDDAO(model=ArqTestModel), validator=CRUDValidator(), non_editable_fields=["code"])
+    dao = CRUDDAO(model=ArqTestModel)
+
+    arq_crud_service = CRUDService(dao=dao, validator=CRUDValidator(dao), non_editable_fields=["code"])
 
     dao = arq_crud_service._dao
 

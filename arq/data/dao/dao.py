@@ -37,9 +37,9 @@ class Dao:
 
         return self._model.objects(id=_id).first()
 
-    def find(self, query_filter={}):
+    def find(self, **query_filter):
 
-        if object_util.is_none_or_empty(query_filter):
+        if object_util.is_none_or_empty(query_filter, verify_iterable_values=False):
             return self._model.objects()
 
         else:    
@@ -47,8 +47,8 @@ class Dao:
         
             return self._model.objects(**built_query_filter)
 
-    def paginate(self, query_filter={}, page=1, limit=5) -> dict:
-        results = self.find(query_filter)
+    def paginate(self, page=1, limit=5, **query_filter) -> dict:
+        results = self.find(**query_filter)
 
         total = len(results)
         mod = total % limit

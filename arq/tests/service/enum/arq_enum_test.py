@@ -69,14 +69,12 @@ class TestArqEnum:
 
         for e in enums_to_insert:
             if e.clazz == ArqEnumService:
-                print('ArqEnumService')
 
                 assert e.clazz == ArqEnumServiceToInsert.clazz
                 assert e.args == ArqEnumServiceToInsert.args
                 assert e.kwargs == ArqEnumServiceToInsert.kwargs
 
             elif e.clazz == ArqEnumServiceWithArgs:
-                print('ArqEnumServiceWithArgsToInsert')
 
                 assert e.clazz == ArqEnumServiceWithArgsToInsert.clazz
                 assert e.args == ArqEnumServiceWithArgsToInsert.args

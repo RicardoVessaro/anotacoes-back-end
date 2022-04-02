@@ -4,13 +4,13 @@ from flask.json import JSONEncoder
 from mongoengine import Document
 from json import dumps
 from mongoengine.fields import BaseQuerySet
-from flask_mongoengine import BaseQuerySet as FlaskBaseQuerySet
+from flask_mongoengine import BaseQuerySet as FlaskBaseQuerySet, QuerySet
 
 class ViewEncoder(JSONEncoder):
 
     KEY_ID = "_id"
     ID = "id"
-    SUPPORTED_ITERATORS = [list, BaseQuerySet, FlaskBaseQuerySet]
+    SUPPORTED_ITERATORS = [list, BaseQuerySet, FlaskBaseQuerySet, QuerySet]
 
     def default(self, o):
 

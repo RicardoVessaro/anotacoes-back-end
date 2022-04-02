@@ -3,7 +3,6 @@ from arq.data.model.enum_document import CODE, NAME
 from arq.exception.arq_exception import ArqException
 from arq.exception.exception_message import DUPLICATED_ENUM_CODE
 from arq.service.crud_validator import CRUDValidator
-from arq.util.object_util import is_none_or_empty
 
 class EnumValidator(CRUDValidator):
 

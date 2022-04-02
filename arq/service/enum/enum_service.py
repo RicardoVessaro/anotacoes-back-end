@@ -25,4 +25,6 @@ class EnumService(CRUDService):
                 
             else:
                 db_enum = db_enum_result.first()
-                self.update(db_enum.id, enum)
+                enum.id = db_enum.id
+
+                self.update(enum.id, enum)

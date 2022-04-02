@@ -24,13 +24,13 @@ class ArqView(FlaskView):
 
             parsed_query_body = QueryStringParser().parse_dict(query_body)
 
-            return self._to_response(self._service.find(query_filter=parsed_query_body))
+            return self._to_response(self._service.find(**parsed_query_body))
 
         request_query_string = request.query_string
 
         parsed_query_string = QueryStringParser().parse_string(request_query_string)
 
-        return self._to_response(self._service.find(query_filter=parsed_query_string))
+        return self._to_response(self._service.find(**parsed_query_string))
 
     @route('paginate', methods=['POST'])
     def paginate(self):
@@ -49,7 +49,7 @@ class ArqView(FlaskView):
             page = parsed_query_body.pop(QUERY_PAGE)
 
         
-        return self._to_response(self._service.paginate(query_filter=parsed_query_body, limit=limit, page=page))
+        return self._to_response(self._service.paginate(limit=limit, page=page, **parsed_query_body))
 
     def _to_response(self, object=None):
         answer = ViewEncoder().default(object)

@@ -4,7 +4,7 @@ from flask import Blueprint
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.view.crud_view import CRUDView
 
-# TODO Ver testes de integração
+# TODO Criar testes de integração
 
 # TODO Buscar de forma generica
 note_view_name = 'note'
@@ -16,7 +16,5 @@ class NoteView(CRUDView):
         super().__init__(
             service=NoteService()
         )
-
-        self._service = NoteService()
 
 NoteView.register(note_blueprint)

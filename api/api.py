@@ -3,9 +3,12 @@ import os
 
 from flask import Flask
 from api.db import db
-from api.modules.core.blueprints.view import note_view
+from api.modules.core.blueprints.view import note_view, tag_view
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception import error_handler
+from arq.service.enum.arq_enum import save_enums
+
+
 def create_flask_app():
     
     api = Flask(__name__)
@@ -17,6 +20,8 @@ def create_flask_app():
 
     db.init_app(api)
 
+    save_enums()
+
     return api
 
 def _register_blueprint(flask_app: Flask):
@@ -25,7 +30,7 @@ def _register_blueprint(flask_app: Flask):
 
 def _register_core_blueprint(flask_app: Flask):
     flask_app.register_blueprint(note_view.note_blueprint)
-
+    flask_app.register_blueprint(tag_view.tag_blueprint)
 
 def _set_database_config(flask_app: Flask):
     MONGODB_USER = os.environ['MONGODB_USER']

@@ -3,7 +3,7 @@ from arq.service.crud_validator import CRUDValidator
 
 class NoteValidator(CRUDValidator):
 
-    def __init__(self) -> None:
+    def __init__(self, dao) -> None:
         super().__init__(
-            required_fields=['pinned', 'text', 'created_in']
+            dao, required_fields=['pinned', 'text', 'created_in']
         )

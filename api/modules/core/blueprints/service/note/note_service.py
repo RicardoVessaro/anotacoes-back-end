@@ -7,9 +7,11 @@ from arq.service.crud_service import CRUDService
 class NoteService(CRUDService):
 
     def __init__(self) -> None:
+        dao = NoteDAO()
+
         super().__init__(
-            dao=NoteDAO(), 
-            validator=NoteValidator(), 
+            dao=dao, 
+            validator=NoteValidator(dao), 
             non_editable_fields=['created_in']
         )
     

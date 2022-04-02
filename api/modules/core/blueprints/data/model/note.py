@@ -1,6 +1,6 @@
 from api.db import db
 
-# TODO Adicionar campo ENUM humor (mood), lista com emojis (para testar enum)
+# TODO Adicionar campo ENUM Tags 1(Important, Ok, Later) Mood n+(Cool, Ok, Boring, Sad, Love, Great)
 class Note(db.Document):
 
     title = db.StringField()

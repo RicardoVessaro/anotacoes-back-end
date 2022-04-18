@@ -22,8 +22,8 @@ def get_database_config():
     
     return MONGODB_HOST
 
-# TODO Criar arquivo para constantes das variavies de ambiente ARQ
 # TODO Criar facilitador para lidar com variavies de ambiente ou arquivos de config
+# TODO Criar arquivo para constantes das variavies de ambiente ARQ
 
 def _is_test_enviroment():
     TEST_ENVIROMENT = 'TEST_ENVIROMENT'

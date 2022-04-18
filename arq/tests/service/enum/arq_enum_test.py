@@ -65,9 +65,11 @@ class TestArqEnum:
             kwargs={'description':"A Decorator Test", 'number':10}
         )
 
-        assert len(enums_to_insert) == 2
+        expected_enums = [ArqEnumService, ArqEnumServiceWithArgs]
 
         for e in enums_to_insert:
+            e.clazz in expected_enums
+
             if e.clazz == ArqEnumService:
 
                 assert e.clazz == ArqEnumServiceToInsert.clazz

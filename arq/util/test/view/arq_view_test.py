@@ -8,9 +8,6 @@ from arq.util.test.integration_test import get_base_url
 from arq.util.test.database_test import DatabaseTest
 from arq.util.view.view_encoder import ViewEncoder
 
-# TODO Fazer classe gegnerica para testar tag e note
-#   pois nao havera teste de inntegracao para estrutura da ARQ
-
 ID_FIELD = 'id'
 
 FindFilterResult = namedtuple('FindFilterResult', 'filter expected_indexes')
@@ -61,26 +58,7 @@ class ArqViewTest(ABC):
     def get_updated_model(self):
         pass
 
-    def test_insert(self):
-
-        database_test = DatabaseTest(daos_to_clean=[self.dao])
-        
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
-        def _():
-            url = self.get_view_url() + '/'
-
-            db_model = self.get_model()
-
-            data = self.encode(db_model)
-
-            response = requests.post(url, json=data)
-
-            item = response.json()
-
-            for k in data:
-                assert data[k] == item[k]
-
-        _()
+    
 
 
     def test_find_by_id(self):

@@ -4,11 +4,12 @@ import requests
 from datetime import datetime
 from api.modules.core.blueprints.data.dao.note_dao import NoteDAO
 from arq.util.test.database_test import DatabaseTest
-from arq.util.test.view.arq_view_test import ArqViewTest, FindFilterResult, PaginateFilterResult
+from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from api.modules.core.blueprints.data.model.note import Note
 from api.modules.core.blueprints.view.note_view import note_view_name
+from arq.util.test.view.crud_view_test import CRUDViewTest
 
-class TestNoteView(ArqViewTest):
+class TestNoteView(CRUDViewTest):
 
     INTEGRATION_TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-integration-test?retryWrites=true&w=majority"
 

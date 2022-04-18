@@ -11,7 +11,7 @@ def test_assert_is_test_enviroment():
                 return str(os.environ[TEST_ENVIROMENT]) == '1'
 
         # TODO Usar URI por variavel de ambiente
-        #assert is_test_enviroment == True
+        #assert is_test_enviroment() == True
 
 def test_connection():
 

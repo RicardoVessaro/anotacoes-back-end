@@ -3,5 +3,3 @@
 __pycache__/
 .pytest_cache/
 .vscode/
-.vscode/tasks.json
-.vscode/launch.json

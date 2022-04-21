@@ -8,11 +8,28 @@ Link para utilizar clusters kubernetes no VSCode: [Working with Kubernetes in VS
 
 Exemplo de Arquivo ```launch.json``` para criar debug em cluster kubernetes.
 
-```$yaml
-
+```$json
 {
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Docker: Python - Flask with Kubernetes",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "bridge-to-kubernetes.compound",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "flask"
+            },
+            "env": {
+                "GRPC_DNS_RESOLVER": "native"
+            }
+        },
         {
             "name": "Docker: Python - Flask",
             "type": "docker",
@@ -30,13 +47,30 @@ Exemplo de Arquivo ```launch.json``` para criar debug em cluster kubernetes.
         }
     ]
 }
-
 ```
 
 Exemplo de Arquivo ```tasks.json``` para criar debug em cluster kubernetes.
 
-```$yaml
+Lembre-se de alterar os seguintes parametrôs
 
+**<:host>**              : URL do servidor. Ex: http://127.0.0.1
+
+**<:port>**              : Porta do servidor. Ex: 5000
+
+**<:db_user>**           : Usuário do banco de dados.
+
+**<:db_password>**       : Senha para o banco de dados.
+
+**<:atlas_prefix>**      : Prefixo da URL do Atlas Cluster. Ex: my-cluster.abcde.mongodb.net
+
+**<:database_name>**     : Nome da base de dados.
+
+**<:atlas_url_options>** : Opções do Atlas Cluster. Ex: retryWrites=true&w=majority
+
+**<:isolated_container_name>** : Nome do container isolado. Ex: myname-f7bf
+
+
+```$json
 {
 	"version": "2.0.0",
 	"tasks": [
@@ -62,7 +96,14 @@ Exemplo de Arquivo ```tasks.json``` para criar debug em cluster kubernetes.
 				"image": "ricardovessaro/anotacoes-back-end:debug",
 				"remove": true,
 				"env": {
-					"FLASK_ENV": "development"
+					"FLASK_ENV": "development",
+					"INTEGRATION_TEST_HOST": "<:host>",
+                    "INTEGRATION_TEST_PORT": "<:port>",
+                    "TEST_MONGODB_USER": "<:db_user>",
+                    "TEST_MONGODB_PASSWORD": "<:db_password>",
+                    "TEST_MONGODB_ATLAS_PREFIX": "<:atlas_prefix>"
+                    "TEST_MONGODB_DATABASE": "<:database_name>",
+                    "TEST_MONGODB_URL_OPTIONS": "<:atlas_url_options>" 
 				},
 				"volumes": [
 					{
@@ -88,9 +129,29 @@ Exemplo de Arquivo ```tasks.json``` para criar debug em cluster kubernetes.
 				"module": "flask"
 			}
 		},
+		{
+			"label": "bridge-to-kubernetes.resource",
+			"type": "bridge-to-kubernetes.resource",
+			"resource": "anotacoes-back-end",
+			"resourceType": "service",
+			"ports": [
+				5001
+			],
+			"targetCluster": "k3d-anotacoes-cluster",
+			"targetNamespace": "default",
+			"useKubernetesServiceEnvironmentVariables": false,
+			"isolateAs": "<:isolated_container_name>"
+		},
+		{
+			"label": "bridge-to-kubernetes.compound",
+			"dependsOn": [
+				"bridge-to-kubernetes.resource",
+				"docker-run: debug"
+			],
+			"dependsOrder": "sequence"
+		}
 	]
 }
-
 ```
 
 Ambos os arquivos ficaram na pasta ```.vscode```.

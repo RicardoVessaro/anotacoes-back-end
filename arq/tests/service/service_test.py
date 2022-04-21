@@ -5,13 +5,12 @@ from arq.exception.arq_exception import ArqException
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.service.service import Service
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
-
-#  TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
 class TestArqService:
 
-    TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    TEST_DB_URI = get_test_database_url()
 
     arq_service = Service(dao=Dao(model=ArqTestModel))
 

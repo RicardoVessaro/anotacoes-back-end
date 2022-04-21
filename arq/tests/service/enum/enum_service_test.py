@@ -7,11 +7,12 @@ from arq.service.enum.enum_service import EnumService
 from arq.data.dao.crud_dao import CRUDDAO
 from arq.tests.resources.data.model.enum_test_model import EnumTestModel
 from arq.service.enum.enum_validator import EnumValidator
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 
 class TestEnumService:
 
-    TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    TEST_DB_URI = get_test_database_url()
 
     def test_must_raise_exception_when_required_field_is_none_on_insert(self):
 

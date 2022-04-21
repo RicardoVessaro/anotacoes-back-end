@@ -1,13 +1,12 @@
 
 from api.modules.core.blueprints.data.model.note import Note
 from api.modules.core.blueprints.service.note.note_service import NoteService
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
-
-# TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
 class TestNoteService:
 
-    DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    DB_URI = get_test_database_url()
 
     service = NoteService()
 

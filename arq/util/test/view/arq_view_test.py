@@ -4,7 +4,7 @@ import requests
 from collections import namedtuple
 from abc import ABC, abstractproperty, abstractmethod
 from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
-from arq.util.test.integration_test import get_base_url
+from arq.util.enviroment_variable import get_api_url
 from arq.util.test.database_test import DatabaseTest
 from arq.util.view.view_encoder import ViewEncoder
 
@@ -276,7 +276,7 @@ class ArqViewTest(ABC):
         return ViewEncoder().default(db_model)
 
     def get_view_url(self):
-        base_url = get_base_url()
+        base_url = get_api_url()
 
         return f'{base_url}/{self.view_name}'    
 

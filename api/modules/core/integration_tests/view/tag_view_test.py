@@ -1,4 +1,5 @@
 
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from api.modules.core.blueprints.view.tag_view import tag_view_name
@@ -7,7 +8,7 @@ from api.modules.core.blueprints.data.dao.tag_dao import TagDAO
 
 class TestTagView(CRUDViewTest):
 
-    INTEGRATION_TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-integration-test?retryWrites=true&w=majority"
+    INTEGRATION_TEST_DB_URI = get_test_database_url()
 
     view_name = tag_view_name
 

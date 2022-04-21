@@ -6,13 +6,12 @@ from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.service.crud_service import CRUDService
 from arq.service.crud_validator import CRUDValidator
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
-
-#  TODO Usar URI por variavel de ambiente ao inves de TEST_DB_URI
 
 class TestCRUDServices:
 
-    TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    TEST_DB_URI = get_test_database_url()
 
     dao = CRUDDAO(model=ArqTestModel)
 

@@ -1,12 +1,13 @@
 
 from operator import le
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 from arq.data.dao.dao import Dao
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 
 class TestArqDatabaseTest:
 
-    TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    TEST_DB_URI = get_test_database_url()
 
     arq_dao = Dao(model=ArqTestModel)
 

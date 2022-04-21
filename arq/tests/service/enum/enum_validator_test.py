@@ -6,11 +6,12 @@ from arq.exception.exception_message import DUPLICATED_ENUM_CODE, REQUIRED_FIELD
 from arq.service.enum.enum_validator import EnumValidator
 from arq.tests.resources.data.model.enum_test_model import EnumTestModel
 from arq.exception.arq_exception import ArqException
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 
 class TestEnumValidator:
 
-    TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    TEST_DB_URI = get_test_database_url()
 
     enum_validator = EnumValidator(dao=CRUDDAO(model=EnumTestModel))
 

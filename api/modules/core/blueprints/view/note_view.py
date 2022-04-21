@@ -4,9 +4,6 @@ from flask import Blueprint
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.view.crud_view import CRUDView
 
-# TODO Usar URI por variavel de ambiente
-
-# TODO Buscar de forma generica
 note_view_name = 'note'
 note_blueprint = Blueprint(note_view_name, __name__)
 

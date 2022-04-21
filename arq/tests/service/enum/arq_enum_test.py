@@ -8,6 +8,7 @@ from arq.service.enum.arq_enum import arq_enum, enums_to_insert, EnumToInsert, s
 from arq.service.enum.enum_validator import EnumValidator
 from arq.tests.resources.data.model.enum_test_model import EnumTestModel
 from arq.data.dao.crud_dao import CRUDDAO
+from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 
 
@@ -55,7 +56,7 @@ class ArqEnumServiceWithArgs(EnumService):
 
 class TestArqEnum:
 
-    TEST_DB_URI = "mongodb+srv://user:senha@anotacoes-cluster.jwtdf.mongodb.net/anotacoes-test?retryWrites=true&w=majority"
+    TEST_DB_URI = get_test_database_url()
 
     def test_must_add_decorated_enums(self):
 

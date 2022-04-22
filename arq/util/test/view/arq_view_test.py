@@ -3,7 +3,7 @@ import requests
 
 from collections import namedtuple
 from abc import ABC, abstractproperty, abstractmethod
-from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util.enviroment_variable import get_api_url
 from arq.util.test.database_test import DatabaseTest
 from arq.util.view.view_encoder import ViewEncoder
@@ -58,9 +58,6 @@ class ArqViewTest(ABC):
     def get_updated_model(self):
         pass
 
-    
-
-
     def test_find_by_id(self):
         db_model = self.get_model()
 
@@ -91,87 +88,6 @@ class ArqViewTest(ABC):
             assert response.status_code == 204
 
         _must_return_204_no_content_when_id_not_exists()
-
-    def test_update(self):
-        db_model = self.get_model()
-
-        database_test = DatabaseTest()
-        database_test.add_data(self.dao, db_model)
-    
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
-        def _():
-            id = str(db_model.id)
-            url = self.get_view_url() + f'/{id}'
-
-            updated_model = self.get_updated_model()
-            updated_model.id = db_model.id
-
-            data = self.encode(updated_model)
-
-            response = requests.put(url, json=data)
-
-            item = response.json()
-
-            for k in data:
-                assert data[k] == item[k]
-
-        _()
-
-        def _must_return_404_not_found_when_id_not_exists():
-            url = self.get_view_url() + f'/{self.fake_id}'
-
-            updated_model = self.get_updated_model()
-            updated_model.id = db_model.id
-
-            data = self.encode(updated_model)
-
-            response = requests.put(url, json=data)
-
-            assert response.status_code == 404
-
-            item = response.json()
-
-            assert item['status_code'] == 404
-            assert item['message'] == OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self.fake_id)
-
-        _must_return_404_not_found_when_id_not_exists()
-
-    def test_delete(self):
-        db_model = self.get_model()
-
-        database_test = DatabaseTest()
-        database_test.add_data(self.dao, db_model)
-    
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
-        def _():
-            id = str(db_model.id)
-
-            url = self.get_view_url() + f'/{id}'
-
-            response = requests.delete(url)
-
-            assert response.status_code == 204
-
-            assert_response = requests.get(url)
-
-            assert assert_response.status_code == 204
-
-        _()
-        
-        def _must_return_404_not_found_when_id_not_exists():
-            
-            url = self.get_view_url() + f'/{self.fake_id}'
-
-            response = requests.delete(url)
-
-            assert response.status_code == 404
-
-            item = response.json()
-
-            assert item['status_code'] == 404
-            assert item['message'] == OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self.fake_id)
-
-        _must_return_404_not_found_when_id_not_exists()
 
     def test_find(self):
 

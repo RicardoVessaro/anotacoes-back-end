@@ -5,14 +5,19 @@ from api.modules.core.blueprints.service.tag.tag_validator import TagValidator
 from arq.service.enum.arq_enum import arq_enum
 from arq.service.enum.enum_service import EnumService
 
+IMPORTANT = Tag(code=1, name="IMPORTANT", priority=1)
+OK = Tag(code=2, name="OK", priority=2)
+LATER = Tag(code=3, name="LATER", priority=3)
+
 @arq_enum()
-class TagService(EnumService):
+class TagService(EnumService):   
 
     def __init__(self) -> None:
+
         enums = [
-            Tag(code=1, name="IMPORTANT", priority=1),
-            Tag(code=2, name="OK", priority=2),
-            Tag(code=3, name="LATER", priority=3)
+            IMPORTANT,
+            OK,
+            LATER
         ]
         
         dao = TagDAO()

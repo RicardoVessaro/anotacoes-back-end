@@ -3,12 +3,15 @@ import requests
 
 from datetime import datetime
 from api.modules.core.blueprints.data.dao.note_dao import NoteDAO
-from arq.util.enviroment_variable import get_test_database_url
+from api.modules.core.blueprints.service.note.note_service import CREATED_IN, TAG
+from api.modules.core.blueprints.service.tag.tag_service import IMPORTANT, OK
+from arq.util.enviroment_variable import get_api_url, get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from api.modules.core.blueprints.data.model.note import Note
 from api.modules.core.blueprints.view.note_view import note_view_name
 from arq.util.test.view.crud_view_test import CRUDViewTest
+from api.modules.core.blueprints.view.tag_view import tag_view_name
 
 class TestNoteView(CRUDViewTest):
 
@@ -52,10 +55,14 @@ class TestNoteView(CRUDViewTest):
         return db_model
 
     def get_updated_model(self):
+
+        important_tag = self._find_tag_by_code(IMPORTANT.code)
+
         db_model = self.model(
             title="test UPDATED",
             pinned=True,
             text="lorem ipsum dolor sit amet UPDATED",
+            tag=important_tag['id']
         )
         
         return db_model 
@@ -97,8 +104,6 @@ class TestNoteView(CRUDViewTest):
         return model_list
 
     def test_insert(self):
-        CREATED_IN = 'created_in'
-
         database_test = DatabaseTest(daos_to_clean=[self.dao])
         
         @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
@@ -114,11 +119,47 @@ class TestNoteView(CRUDViewTest):
 
             item = response.json()
 
+            ok_tag = self._find_tag_by_code(OK.code)
+
             for k in data:
                 if k != CREATED_IN:
                     assert data[k] == item[k]
 
             assert not item[CREATED_IN] is None
 
+            assert ok_tag['id'] == item['tag']
         _()
         
+    def test_insert_with_default_values(self):
+        database_test = DatabaseTest(daos_to_clean=[self.dao])
+        
+        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        def _():
+            url = self.get_view_url() + '/'
+
+            db_model = self.get_model()
+
+            important_tag = self._find_tag_by_code(IMPORTANT.code)
+            db_model[TAG] = important_tag['id']
+
+            data = self.encode(db_model)
+
+            response = requests.post(url, json=data)
+
+            item = response.json()
+
+            for k in data:
+                if k != CREATED_IN:
+                    assert data[k] == item[k]
+
+            assert not item[CREATED_IN] is None
+        _()
+
+    def _find_tag_by_code(self, code):
+        tag_find_by_code_url = self._get_tag_find_by_code_url(code)
+
+        return requests.get(tag_find_by_code_url).json()[0]
+
+    def _get_tag_find_by_code_url(self, code):
+        return f'{get_api_url()}/{tag_view_name}?code={code}'   
+

@@ -22,8 +22,8 @@ class TestEnumService:
 
             enum_service = self._get_enum_service(enums)
 
-            database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
-            @database_test.persistence_test(host=self.TEST_DB_URI)
+            database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+            @database_test.persistence_test()
             def _():
                 with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
                     enum_service.save_enums()
@@ -36,8 +36,8 @@ class TestEnumService:
 
                 enum_service = self._get_enum_service(enums)
 
-                database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+                @database_test.persistence_test()
                 def _():
 
                     with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(NAME)):
@@ -55,8 +55,8 @@ class TestEnumService:
 
                 enum_service = self._get_enum_service(enums, required_fields=[INTEGER])
 
-                database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+                @database_test.persistence_test()
                 def _():
 
                     with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(INTEGER)):
@@ -72,8 +72,8 @@ class TestEnumService:
 
                 enum_service = self._get_enum_service(enums)
 
-                database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+                @database_test.persistence_test()
                 def _():
 
                     enum_service.save_enums()
@@ -91,10 +91,10 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums)
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest()
+                database_test = DatabaseTest(host=self.TEST_DB_URI)
                 database_test.add_data(enum_service._dao, db_enum)
                 
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                @database_test.persistence_test()
                 def _():
                     with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
                         enum_service.save_enums()
@@ -108,10 +108,10 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums)
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest()
+                database_test = DatabaseTest(host=self.TEST_DB_URI)
                 database_test.add_data(enum_service._dao, db_enum)
                 
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                @database_test.persistence_test()
                 def _():
 
                     with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(NAME)):
@@ -130,10 +130,10 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums, required_fields=[INTEGER])
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest()
+                database_test = DatabaseTest(host=self.TEST_DB_URI)
                 database_test.add_data(enum_service._dao, db_enum)
                 
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                @database_test.persistence_test()
                 def _():
                     with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(INTEGER)):
                         enum_service.save_enums()
@@ -148,10 +148,10 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums)
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest()
+                database_test = DatabaseTest(host=self.TEST_DB_URI)
                 database_test.add_data(enum_service._dao, db_enum)
                 
-                @database_test.persistence_test(host=self.TEST_DB_URI)
+                @database_test.persistence_test()
                 def _():
                     enum_service.save_enums()
                 _()
@@ -167,9 +167,9 @@ class TestEnumService:
         ]
 
         enum_service = self._get_enum_service(enums)
-        database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
+        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
 
-        @database_test.persistence_test(host=self.TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             enum_service.save_enums()
 
@@ -192,10 +192,10 @@ class TestEnumService:
 
         enum_service = self._get_enum_service(enums)
 
-        database_test = DatabaseTest()
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(enum_service._dao, enums)
 
-        @database_test.persistence_test(host=self.TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             enum_service.enums[1].name = 'Test 2 Updated'
             enum_service.enums[1].integer = 200

@@ -3,12 +3,18 @@ import functools
 from mongoengine import connect, disconnect
 from collections import namedtuple
 
+from arq.util.object_util import is_none_or_empty
+
 class DatabaseTest:
 
-    def __init__(self, daos_to_clean=[]) -> None:
+    def __init__(self, host, daos_to_clean=[], enum_services_to_insert=[]) -> None:
+        self.host = host
         self.data_to_insert = []
         self._data = namedtuple('Data', ['dao', 'model', 'data_id'])
         self.daos_to_clean = daos_to_clean
+        self.enum_services_to_insert = enum_services_to_insert
+
+        self._already_inserted = False
 
     def add_data(self, dao, model):
         if type(model) is list:
@@ -20,16 +26,27 @@ class DatabaseTest:
             data = self._data(dao=dao, model=model, data_id=None)
             self.data_to_insert.append(data)
 
-    def persistence_test(self, host, clean_database=True):
+    def persistence_test(self, clean_database=True):
 
         def decorate(func):
 
             @functools.wraps(func)
             def test(*args, **kwargs):
-                self._connect(host)
+                self._connect()
+
+                # TODO :: BUG ::
+                # ao excluir os dados no _clean_existing_data está removendo 
+                # enuns que outros testes dependem, entao devemos reinserir 
+                # as enum que o teste depende (isso pode ser opcional para 
+                # que a enum de teste nao seja reinserida em determinado 
+                # teste (ex: paginacao) )
 
                 if clean_database:
                     self._clean_existing_data()
+
+                print('FFFFFFFFFFFFF', self.enum_services_to_insert)
+                
+                self._insert_enums()
 
                 self._insert_data()
 
@@ -44,6 +61,20 @@ class DatabaseTest:
             return test
 
         return decorate
+
+    def insert_enums(self):
+        self._connect()
+
+        self._insert_enums()
+
+        self._disconnect()
+
+    def _insert_enums(self):
+        if not is_none_or_empty(self.enum_services_to_insert) and not self._already_inserted:
+            for enum_service in self.enum_services_to_insert:
+                enum_service.save_enums()
+
+            self._already_inserted = True
 
     def _insert_data(self):
         inserted_data = []
@@ -64,7 +95,7 @@ class DatabaseTest:
 
             if dao.find_by_id(data.data_id) is not None:
                 dao.delete(data.data_id)
-
+    
     def _clean_existing_data(self):
         already_deleted = []
 
@@ -87,8 +118,8 @@ class DatabaseTest:
         for data_to_delete in data_to_delete_list:
             dao.delete(data_to_delete.id)
 
-    def _connect(self, host):
-        connect(host=host)
+    def _connect(self):
+        connect(host=self.host)
 
     def _disconnect(self):
         disconnect()

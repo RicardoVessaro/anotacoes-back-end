@@ -10,6 +10,8 @@ class TestMoodView(CRUDViewTest):
 
     INTEGRATION_TEST_DB_URI = get_test_database_url()
 
+    enum_services_to_insert = None
+
     view_name = mood_view_name 
 
     model = Mood

@@ -19,8 +19,8 @@ class TestDao:
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
 
-        arq_database_test = DatabaseTest(daos_to_clean=[self.arq_dao])
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao])
+        @arq_database_test.persistence_test()
         def _():
             
             inserted_model = self.arq_dao.insert(arq_test_model)
@@ -33,7 +33,7 @@ class TestDao:
     def test_delete(self):
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_delete_TestArqDao')
         
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
             arq_test_model_id = str(arq_test_model.id)
 
@@ -47,7 +47,7 @@ class TestDao:
 
     def test_find_by_id(self):
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_find_by_idTestArqDao')
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
 
             def test_find_by_id_using_string():
@@ -79,11 +79,11 @@ class TestDao:
         arq_test_model_2 = ArqTestModel(code=2, title='test_find_TestArqDao_2', boolean=False, tags=['A', 'B', 'D'])
         arq_test_model_3 = ArqTestModel(code=3, title='test_find_TestArqDao_3', boolean=True, tags=['B', 'C', 'D'])
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.arq_dao, arq_test_model_1)
         arq_database_test.add_data(self.arq_dao, arq_test_model_2)
         arq_database_test.add_data(self.arq_dao, arq_test_model_3)
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
 
             expected_ids = [arq_test_model_1.id, arq_test_model_2.id, arq_test_model_3.id]
@@ -143,9 +143,9 @@ class TestDao:
     def test_paginate(self):
         arq_test_model_list = self._build_arq_test_model_list()
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.arq_dao, arq_test_model_list)
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
             model_ids, boolean_model_ids = self._get_model_ids(arq_test_model_list)
 
@@ -281,7 +281,7 @@ class TestDao:
     def _build_default_model_and_arq_test(self, code, title):
         arq_test_model = ArqTestModel(code=code, title=title)
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.arq_dao, arq_test_model)
         
         return arq_test_model, arq_database_test

@@ -19,6 +19,10 @@ class ArqViewTest(ABC):
     fake_id = '6248620366564103f229595f'
 
     @abstractproperty
+    def enum_services_to_insert(self):
+        pass
+
+    @abstractproperty
     def INTEGRATION_TEST_DB_URI(self):
         pass
 
@@ -59,12 +63,14 @@ class ArqViewTest(ABC):
         pass
 
     def test_find_by_id(self):
-        db_model = self.get_model()
 
-        database_test = DatabaseTest()
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
+        database_test.insert_enums()
+
+        db_model = self.get_model()
         database_test.add_data(self.dao, db_model)
     
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             id = str(db_model.id)
             url = self.get_view_url() + f'/{id}'
@@ -95,10 +101,10 @@ class ArqViewTest(ABC):
 
         url = self.get_view_url()
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
         arq_database_test.add_data(self.dao, model_list)
 
-        @arq_database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
 
             def test_POST():
@@ -143,10 +149,10 @@ class ArqViewTest(ABC):
 
         url = self.get_view_url() + '/paginate'
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
         arq_database_test.add_data(self.dao, model_list)
 
-        @arq_database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
             
             for paginate_filter_result in self.paginate_filter_results:

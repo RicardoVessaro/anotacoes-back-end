@@ -4,7 +4,7 @@ from dateutil.parser import isoparse
 from arq.util.view.view_encoder import ViewEncoder
 from bson import ObjectId
 
-from api.modules.core.blueprints.data.model.note import Note
+from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 
 
 class TestViewEncoder:
@@ -31,26 +31,24 @@ class TestViewEncoder:
 
     def test_document_encode(self):
 
-        iso_format_day = "2022-03-05T15:49:22.507352"
-        day = isoparse(iso_format_day)
-
         id = "507f191e810c19729de860ea"
         document_id = ObjectId(id)
 
         text = " lorem ipsum"
         title = "Doc"
+        code = 1
 
-        note = Note(id=document_id, title=title, pinned=True, text=text, created_in=day)
+        test_model = ArqTestModel(id=document_id, code=code, title=title, boolean=True, tags=['A', 'B', 'C'])
 
         expected_encoded_doc = {
             "id": id,
-            "created_in": iso_format_day,
-            "pinned": True,
+            "code": code,
             "title": title,
-            "text": text
+            "boolean": True,
+            "tags": ['A', 'B', 'C']
         }
 
-        assert expected_encoded_doc == ViewEncoder().default(note)
+        assert expected_encoded_doc == ViewEncoder().default(test_model)
 
     def test_list_encode(self):
 

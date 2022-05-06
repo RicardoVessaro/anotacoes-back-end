@@ -10,9 +10,9 @@ class CRUDViewTest(ArqViewTest):
 
     def test_insert(self):
 
-        database_test = DatabaseTest(daos_to_clean=[self.dao])
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, daos_to_clean=[self.dao], enum_services_to_insert=self.enum_services_to_insert)
         
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             url = self.get_view_url() + '/'
 
@@ -32,10 +32,10 @@ class CRUDViewTest(ArqViewTest):
     def test_update(self):
         db_model = self.get_model()
 
-        database_test = DatabaseTest()
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
         database_test.add_data(self.dao, db_model)
     
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             id = str(db_model.id)
             url = self.get_view_url() + f'/{id}'
@@ -76,10 +76,10 @@ class CRUDViewTest(ArqViewTest):
     def test_delete(self):
         db_model = self.get_model()
 
-        database_test = DatabaseTest()
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
         database_test.add_data(self.dao, db_model)
     
-        @database_test.persistence_test(host=self.INTEGRATION_TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             id = str(db_model.id)
 

@@ -12,3 +12,5 @@ class Note(db.Document):
     created_in = db.DateTimeField()
 
     tag = db.ObjectIdField()
+
+    moods = db.ListField(field=db.ObjectIdField())

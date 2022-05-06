@@ -19,10 +19,10 @@ class TestCRUDDao:
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqCRUDDao')
 
-        arq_database_test = DatabaseTest(daos_to_clean=[self.arq_crud_dao])
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_crud_dao])
         def _():
             
-            @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+            @arq_database_test.persistence_test()
             def test_insert_using_model():
                 inserted_model = self.arq_crud_dao.insert(arq_test_model)
                 db_model = self.model.objects().first()
@@ -30,7 +30,7 @@ class TestCRUDDao:
                 assert inserted_model.id == db_model.id
             test_insert_using_model()
 
-            @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+            @arq_database_test.persistence_test()
             def test_insert_using_dict():
                 model_dict = {
                     "code":2, "title":'test_insert_TestArqCRUDDao'
@@ -48,7 +48,7 @@ class TestCRUDDao:
 
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_delete_TestArqCRUDDao')
         
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
             arq_test_model_id = str(arq_test_model.id)
 
@@ -67,7 +67,7 @@ class TestCRUDDao:
 
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_update_TestArqCRUDDao', True)
 
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def test_update_using_dict():
             model_id = arq_test_model.id 
 
@@ -89,7 +89,7 @@ class TestCRUDDao:
 
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_update_TestArqCRUDDao', True)
 
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def test_update_using_model():
             model_id = arq_test_model.id 
 
@@ -111,7 +111,7 @@ class TestCRUDDao:
         def must_raise_exception_when_model_not_exists():
             arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_delete_TestArqCRUDDao')
         
-            @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+            @arq_database_test.persistence_test()
             def _():
                 arq_test_model_id = str(arq_test_model.id)
 
@@ -126,7 +126,7 @@ class TestCRUDDao:
     def _build_default_model_and_arq_test(self, code, title, boolean=False):
         arq_test_model = ArqTestModel(code=code, title=title, boolean=boolean)
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.arq_crud_dao, arq_test_model)
         
         return arq_test_model, arq_database_test

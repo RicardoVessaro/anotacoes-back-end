@@ -85,9 +85,9 @@ class TestArqEnum:
 
     def test_must_save_decorated_enums(self):
         
-        database_test = DatabaseTest(daos_to_clean=[crud_dao])
+        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[crud_dao])
 
-        @database_test.persistence_test(host=self.TEST_DB_URI)
+        @database_test.persistence_test()
         def _():
             
             save_enums()

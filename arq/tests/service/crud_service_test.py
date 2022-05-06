@@ -24,10 +24,10 @@ class TestCRUDServices:
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
 
-        arq_database_test = DatabaseTest(daos_to_clean=[self.dao])
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
         def _():
             
-            @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+            @arq_database_test.persistence_test()
             def test_insert_using_model():
                 inserted_model = self.arq_crud_service.insert(arq_test_model)
                 db_model = self.model.objects().first()
@@ -35,7 +35,7 @@ class TestCRUDServices:
                 assert inserted_model.id == db_model.id
             test_insert_using_model()
 
-            @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+            @arq_database_test.persistence_test()
             def test_insert_using_dict():
                 model_dict = {
                     "code":2, "title":'test_insert_TestArqCRUDService'
@@ -53,7 +53,7 @@ class TestCRUDServices:
 
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_delete_TestArqCRUDService')
         
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def _():
             arq_test_model_id = str(arq_test_model.id)
 
@@ -73,7 +73,7 @@ class TestCRUDServices:
 
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(code, 'test_update_TestArqCRUDService', True)
 
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def test_update_using_dict():
             model_id = arq_test_model.id 
 
@@ -96,7 +96,7 @@ class TestCRUDServices:
         test_update_using_dict()
 
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(code, 'test_update_TestArqCRUDService', True)
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def test_update_using_model():
             model_id = arq_test_model.id 
 
@@ -141,7 +141,7 @@ class TestCRUDServices:
 
         code = 1
         arq_test_model, arq_database_test = self._build_default_model_and_arq_test(code, 'test_update_TestArqCRUDService', True)
-        @arq_database_test.persistence_test(host=self.TEST_DB_URI)
+        @arq_database_test.persistence_test()
         def test_remove_non_editable_fields_from_model():
             model_id = arq_test_model.id 
 
@@ -164,7 +164,7 @@ class TestCRUDServices:
     def _build_default_model_and_arq_test(self, code, title, boolean=False):
         arq_test_model = ArqTestModel(code=code, title=title, boolean=boolean)
 
-        arq_database_test = DatabaseTest()
+        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.dao, arq_test_model)
         
         return arq_test_model, arq_database_test

@@ -1,3 +1,4 @@
+
 from flask import Blueprint
 from api.modules.core.blueprints.service.tag.tag_service import TagService
 from arq.view.crud_view import CRUDView

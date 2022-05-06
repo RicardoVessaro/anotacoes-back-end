@@ -15,9 +15,9 @@ class TestNoteService:
     model = dao._model
 
     def test_must_insert_date_on_insert(self):
-        arq_database_test = DatabaseTest(daos_to_clean=[self.dao])
+        arq_database_test = DatabaseTest(host=self.DB_URI, daos_to_clean=[self.dao])
 
-        @arq_database_test.persistence_test(host=self.DB_URI)
+        @arq_database_test.persistence_test()
         def _test_dict():
 
             note = {
@@ -31,7 +31,7 @@ class TestNoteService:
 
         _test_dict()
 
-        @arq_database_test.persistence_test(host=self.DB_URI)
+        @arq_database_test.persistence_test()
         def _test_model():
 
             note = Note(

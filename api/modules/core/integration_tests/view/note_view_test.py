@@ -170,11 +170,7 @@ class TestNoteView(CRUDViewTest):
     def _find_enum_by_code(self, enum_view_name, code):
         enum_find_by_code_url = self._get_enum_find_by_code_url(enum_view_name, code)
 
-        print(f'\nAAA{enum_find_by_code_url}')
-
         response_j = requests.get(enum_find_by_code_url).json()
-
-        print('\naaa', response_j)
 
         return response_j[0]
 

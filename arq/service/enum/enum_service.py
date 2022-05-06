@@ -16,13 +16,9 @@ class EnumService(CRUDService):
     def save_enums(self):
         self._validator.validate_enums(self.enums)
 
-        print('BBBBBBBB')
-
         for enum in self.enums:
             
             db_enum_result = self.find(code=enum.code)
-
-            print('CCCCCCCC')
 
             if is_none_or_empty(db_enum_result):
                 self.insert(enum)

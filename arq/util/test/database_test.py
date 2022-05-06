@@ -34,17 +34,8 @@ class DatabaseTest:
             def test(*args, **kwargs):
                 self._connect()
 
-                # TODO :: BUG ::
-                # ao excluir os dados no _clean_existing_data está removendo 
-                # enuns que outros testes dependem, entao devemos reinserir 
-                # as enum que o teste depende (isso pode ser opcional para 
-                # que a enum de teste nao seja reinserida em determinado 
-                # teste (ex: paginacao) )
-
                 if clean_database:
                     self._clean_existing_data()
-
-                print('FFFFFFFFFFFFF', self.enum_services_to_insert)
                 
                 self._insert_enums()
 

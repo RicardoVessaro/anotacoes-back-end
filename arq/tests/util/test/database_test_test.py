@@ -1,5 +1,6 @@
 
 from operator import le
+from arq.tests.resources.service.enum.enum_test_service_fake import EnumTestServiceFake
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 from arq.data.dao.dao import Dao
@@ -248,4 +249,46 @@ class TestArqDatabaseTest:
             _()
 
         test_decorator()
-    
+
+    def test_insert_enums(self):
+        
+        def _():
+            enum_test_service_fake_1 = EnumTestServiceFake()
+            enum_test_service_fake_2 = EnumTestServiceFake()
+
+            arq_database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1, enum_test_service_fake_2])
+
+            arq_database_test.insert_enums()
+
+            assert enum_test_service_fake_1.save_enums_called == True
+            assert enum_test_service_fake_2.save_enums_called == True
+        
+        _()
+
+        def not_insert_if_enum_already_inserted():
+
+            enum_test_service_fake_1 = EnumTestServiceFake()
+            enum_test_service_fake_2 = EnumTestServiceFake()
+
+            arq_database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1, enum_test_service_fake_2])
+            arq_database_test._already_inserted = True
+
+            arq_database_test.insert_enums()
+
+            assert enum_test_service_fake_1.save_enums_called == False
+            assert enum_test_service_fake_2.save_enums_called == False
+        
+        not_insert_if_enum_already_inserted()
+
+        def not_insert_if_not_given():
+
+            enum_test_service_fake_1 = EnumTestServiceFake()
+            enum_test_service_fake_2 = EnumTestServiceFake()
+
+            arq_database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1])
+            arq_database_test.insert_enums()
+
+            assert enum_test_service_fake_1.save_enums_called == True
+            assert enum_test_service_fake_2.save_enums_called == False
+        
+        not_insert_if_not_given()

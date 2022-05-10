@@ -8,8 +8,6 @@ from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception import error_handler
 from arq.service.enum.arq_enum import save_enums
 
-# TODO Criar ARQ Logger
-
 def create_flask_app():
     
     api = Flask(__name__)
@@ -25,7 +23,6 @@ def create_flask_app():
 
     return api
 
-# TODO Criar decorator para blueprints
 def _register_blueprint(flask_app: Flask):
     _register_core_blueprint(flask_app)
 

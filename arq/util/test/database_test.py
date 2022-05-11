@@ -44,8 +44,14 @@ class DatabaseTest:
                 try:
                     func(*args, **kwargs)
 
-                finally:
+                except Exception as e:
                     self._delete_data()
+
+                    raise e
+                    
+                finally:
+                    if clean_database:
+                        self._delete_data()
 
                     self._disconnect()
 

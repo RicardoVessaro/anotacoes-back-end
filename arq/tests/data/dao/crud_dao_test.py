@@ -14,7 +14,7 @@ class TestCRUDDao:
 
     arq_crud_dao = CRUDDAO(model=ArqTestModel)
 
-    model = arq_crud_dao._model
+    model = arq_crud_dao.model
 
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqCRUDDao')

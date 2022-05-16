@@ -16,7 +16,7 @@ class TestArqService:
 
     dao = arq_service._dao
 
-    model = dao._model
+    model = dao.model
 
     def test_insert(self):
         arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')

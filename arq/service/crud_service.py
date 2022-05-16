@@ -8,7 +8,7 @@ class CRUDService(Service):
         self._validator = validator
         self._non_editable_fields = non_editable_fields
 
-    def insert(self, body: dict):
+    def insert(self, body):
         self._validator.validate_insert(body)
         return self._dao.insert(body)
 

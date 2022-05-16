@@ -12,7 +12,7 @@ class TestNoteService:
 
     dao = service._dao
 
-    model = dao._model
+    model = dao.model
 
     def test_must_insert_date_on_insert(self):
         arq_database_test = DatabaseTest(host=self.DB_URI, daos_to_clean=[self.dao])

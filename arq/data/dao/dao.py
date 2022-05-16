@@ -11,6 +11,10 @@ class Dao:
     def __init__(self, model:Document) -> None:
         self._model = model
 
+    @property
+    def model(self):
+        return self._model
+
     def insert(self, model_data) -> str:
         model_data.save()
 

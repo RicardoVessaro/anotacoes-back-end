@@ -8,11 +8,11 @@ class CRUDService(Service):
         self._validator = validator
         self._non_editable_fields = non_editable_fields
 
-    def insert(self, body):
+    def insert(self, body, **kwargs):
         self._validator.validate_insert(body)
-        return self._dao.insert(body)
+        return self._dao.insert(body, **kwargs)
 
-    def update(self, id, body):
+    def update(self, id, body, **kwargs):
         is_dict = type(body) == dict
 
         if is_dict:
@@ -23,7 +23,7 @@ class CRUDService(Service):
 
         self._validator.validate_update(id, body)
 
-        return self._dao.update(id, body)
+        return self._dao.update(id, body, **kwargs)
 
     def delete(self, id):
         self._validator.validate_delete(id)

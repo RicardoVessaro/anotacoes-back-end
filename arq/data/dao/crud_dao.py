@@ -10,17 +10,17 @@ class CRUDDAO(Dao):
     def __init__(self, model:Document) -> None:
         super().__init__(model)
 
-    def insert(self, model_data) -> str:
+    def insert(self, model_data, **kwargs) -> str:
         model = model_data
 
         if type(model_data) is dict:
             model = self._model(**model_data)
 
-        model.save()
+        model.save(**kwargs)
 
         return model
 
-    def update(self, id, model_data):
+    def update(self, id, model_data, **kwargs):
         if self.find_by_id(id) is None:
             exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
             raise ArqException(exception_message, status_code=404)
@@ -33,7 +33,7 @@ class CRUDDAO(Dao):
             for key, value in model_data.items():
                 model[key] = value
 
-        return model.save()
+        return model.save(**kwargs)
 
     def delete(self, id):
         model = self.find_by_id(id)

@@ -15,8 +15,8 @@ class Dao:
     def model(self):
         return self._model
 
-    def insert(self, model_data) -> str:
-        model_data.save()
+    def insert(self, model_data, **kwargs) -> str:
+        model_data.save(**kwargs)
 
         return model_data
 
@@ -55,6 +55,19 @@ class Dao:
         results = self.find(**query_filter)
 
         total = len(results)
+
+        if total == 0:
+            return {
+                'items': [],
+                'page': 0,
+                'limit': 0,
+                'total': total,
+                'pages': 0,
+                'has_prev': False,
+                'has_next': False,
+                'has_result': False
+            }
+
         mod = total % limit
         int_div = total // limit
 
@@ -85,6 +98,7 @@ class Dao:
             'total': total,
             'pages': pages,
             'has_prev': has_prev,
-            'has_next': has_next
+            'has_next': has_next,
+            'has_result': True
         }
 

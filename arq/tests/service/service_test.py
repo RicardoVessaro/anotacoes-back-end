@@ -6,6 +6,7 @@ from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.service.service import Service
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 from arq.util.enviroment_variable import get_test_database_url
+from arq.util.object_util import is_none_or_empty
 from arq.util.test.database_test import DatabaseTest
 
 class TestArqService:
@@ -159,6 +160,7 @@ class TestArqService:
                 assert pagination['total'] == 15
                 assert pagination['has_prev'] == False
                 assert pagination['has_next'] == True
+                assert pagination['has_result'] == True
 
                 for item in pagination['items']:
                     assert item.id in model_ids[0:5]
@@ -174,6 +176,7 @@ class TestArqService:
                 assert pagination['total'] == 15 - len(boolean_model_ids)
                 assert pagination['has_prev'] == False
                 assert pagination['has_next'] == True
+                assert pagination['has_result'] == True
 
                 for item in pagination['items']:
                     assert item.id not in boolean_model_ids
@@ -189,6 +192,7 @@ class TestArqService:
                 assert pagination['total'] == 15
                 assert pagination['has_prev'] == False
                 assert pagination['has_next'] == True
+                assert pagination['has_result'] == True
 
                 for item in pagination['items']:
                     assert item.id in model_ids[0:7]
@@ -204,6 +208,7 @@ class TestArqService:
                 assert pagination['total'] == len(boolean_model_ids)
                 assert pagination['has_prev'] == True
                 assert pagination['has_next'] == True
+                assert pagination['has_result'] == True
 
                 for item in pagination['items']:
                     assert item.id in boolean_model_ids
@@ -220,6 +225,7 @@ class TestArqService:
                 assert pagination['total'] == 15
                 assert pagination['has_prev'] == True
                 assert pagination['has_next'] == True
+                assert pagination['has_result'] == True
 
                 for item in pagination['items']:
                     assert item.id in model_ids[7:14]
@@ -234,6 +240,7 @@ class TestArqService:
                 assert pagination['total'] == 15
                 assert pagination['has_prev'] == True
                 assert pagination['has_next'] == False
+                assert pagination['has_result'] == True
 
                 for item in pagination['items']:
                     assert item.id in model_ids[14:15]
@@ -247,6 +254,19 @@ class TestArqService:
                     pagination = self.arq_service.paginate(page=4, limit=5)
 
             test_paginate_must_raise_exception_when_page_is_greater_than_pages()
+
+            def test_must_return_empty_when_not_found_in_filter():
+                pagination = self.arq_service.paginate(title='Nothing')
+
+                assert pagination['page'] == 0
+                assert pagination['limit'] == 0
+                assert pagination['total'] == 0
+                assert pagination['has_prev'] == False
+                assert pagination['has_next'] == False
+                assert pagination['has_result'] == False
+                assert is_none_or_empty(pagination['items'])
+
+            test_must_return_empty_when_not_found_in_filter()
 
         _()
 

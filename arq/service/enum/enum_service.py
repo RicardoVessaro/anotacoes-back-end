@@ -1,5 +1,5 @@
 
-from arq.data.model.enum_document import CODE, NAME
+from arq.data.model.enum_document import CODE, NAME, EnumDocument
 from arq.service.crud_service import CRUDService
 from arq.util.object_util import is_none_or_empty
 
@@ -22,9 +22,18 @@ class EnumService(CRUDService):
 
             if is_none_or_empty(db_enum_result):
                 self.insert(enum)
-                
+
             else:
                 db_enum = db_enum_result.first()
                 enum.id = db_enum.id
 
                 self.update(enum.id, enum)
+
+
+    def find_by_code(self, code) -> EnumDocument:
+        result = self.find(code=code)
+
+        if result is None:
+            return None
+
+        return result.first()

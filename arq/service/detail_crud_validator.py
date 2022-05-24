@@ -12,6 +12,7 @@ class DetailCRUDValidator(CRUDValidator):
 
         self._parent_dao = parent_dao
         self._parent_field = self._dao.model.parent_field
+        self.required_fields.extend([self._parent_field])
 
     def validate_insert(self, body):
         self._validate_parent_exists(body)

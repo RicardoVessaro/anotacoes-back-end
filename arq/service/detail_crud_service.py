@@ -14,6 +14,18 @@ class DetailCRUDService(CRUDService):
     def collection_tree(self):
         return self._collection_tree
 
+    def set_collection_tree_ids(self, ids):
+        new_collection_tree = []
+
+        for item in self.collection_tree:
+            if item.field in ids:
+                new_collection_tree.append(item._replace(id=ids[item.field]))
+            
+            else:
+                new_collection_tree.append(item)
+
+        self._collection_tree = CollectionTree(collection_tree=new_collection_tree)
+
     def validate_collection_tree(self):
         self._validator.validate_collection_tree(self.collection_tree)
 

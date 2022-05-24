@@ -1,7 +1,7 @@
 
 from collections import namedtuple
 
-CollectionItem = namedtuple('CollectionItem', 'name parent_field id dao')
+CollectionItem = namedtuple('CollectionItem', 'name parent_field id dao field')
 
 class CollectionTree:
 

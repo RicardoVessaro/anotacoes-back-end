@@ -166,9 +166,9 @@ class TestDetailCRUDService:
         @database_test.persistence_test()
         def _():
             
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao)
-            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao)
-            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao)
+            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
+            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao, field='id')
 
             collection_tree = CollectionTree(collection_tree=[arq_model_item, detail_model_item, detail_child_model_item])
 
@@ -197,9 +197,9 @@ class TestDetailCRUDService:
         database_test.add_data(self.detail_child_dao, detail_child_doc)
         @database_test.persistence_test()
         def _():
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao)
-            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao)
-            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao)
+            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
+            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao, field='id')
 
             collection_tree = CollectionTree(collection_tree=[arq_model_item, detail_model_item, detail_child_model_item])
         
@@ -217,9 +217,9 @@ class TestDetailCRUDService:
         database_test.add_data(self.dao, doc)
         @database_test.persistence_test()
         def _():
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao)
-            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao)
-            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=None, dao=self.detail_child_dao)
+            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
+            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=None, dao=self.detail_child_dao, field='id')
 
             collection_tree = CollectionTree(collection_tree=[arq_model_item, detail_model_item, detail_child_model_item])
         

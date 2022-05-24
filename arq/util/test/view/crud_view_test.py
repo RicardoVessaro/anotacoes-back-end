@@ -5,12 +5,11 @@ from arq.util.test.database_test import DatabaseTest
 from arq.util.test.view.arq_view_test import ArqViewTest
 from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 
-
 class CRUDViewTest(ArqViewTest):
 
     def test_insert(self):
 
-        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, daos_to_clean=[self.dao], enum_services_to_insert=self.enum_services_to_insert)
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, daos_to_clean=[self.dao])
         
         @database_test.persistence_test()
         def _():
@@ -30,9 +29,11 @@ class CRUDViewTest(ArqViewTest):
         _()
 
     def test_update(self):
+        
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
+
         db_model = self.get_model()
 
-        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
         database_test.add_data(self.dao, db_model)
     
         @database_test.persistence_test()
@@ -74,9 +75,9 @@ class CRUDViewTest(ArqViewTest):
         _must_return_404_not_found_when_id_not_exists()
 
     def test_delete(self):
-        db_model = self.get_model()
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
 
-        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
+        db_model = self.get_model()
         database_test.add_data(self.dao, db_model)
     
         @database_test.persistence_test()

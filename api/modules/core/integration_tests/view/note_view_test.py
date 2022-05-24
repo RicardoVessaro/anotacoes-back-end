@@ -1,4 +1,5 @@
 
+import pytest
 import requests
 
 from datetime import datetime
@@ -10,12 +11,16 @@ from arq.util.enviroment_variable import get_api_url, get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from api.modules.core.blueprints.data.model.note import Note
-from api.modules.core.blueprints.view.note_view import note_view_name
+from api.modules.core.blueprints.view.note_view import NoteView, note_view_name
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from api.modules.core.blueprints.view.tag_view import tag_view_name
 from api.modules.core.blueprints.view.mood_view import mood_view_name
 
+
+
 class TestNoteView(CRUDViewTest):
+
+    ROUTE_PREFIX = NoteView.route_prefix
 
     INTEGRATION_TEST_DB_URI = get_test_database_url()
 
@@ -27,6 +32,8 @@ class TestNoteView(CRUDViewTest):
 
     dao = NoteDAO()
 
+    filter_to_not_found = {"title": "to not found"}
+
     find_filter_results = [
         FindFilterResult(filter={}, expected_indexes=range(3)),
         FindFilterResult(filter={"pinned":True}, expected_indexes=[0,2]),
@@ -36,12 +43,12 @@ class TestNoteView(CRUDViewTest):
     ]
 
     paginate_filter_results = [
-        PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True),
-        PaginateFilterResult(filter={"pinned":False}, expected_indexes=range(8, 13), pages=2, page=1, limit=5, total=7, has_prev=False, has_next=True),
-        PaginateFilterResult(filter={"limit":7}, expected_indexes=range(7),  pages=3, page=1, limit=7, total=15, has_prev=False, has_next=True),
-        PaginateFilterResult(filter={"page":2, "limit":5},  pages=3, expected_indexes=range(5,10), page=2, limit=5, total=15, has_prev=True, has_next=True),
-        PaginateFilterResult(filter={"pinned":False, "page":2, "limit":6},  pages=2, expected_indexes=[14], page=2, limit=6, total=7, has_prev=True, has_next=False),
-        PaginateFilterResult(filter={"page":3, "limit":7},  pages=3, expected_indexes=[14], page=3, limit=7, total=15, has_prev=True, has_next=False)
+        PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"pinned":False}, expected_indexes=range(8, 13), pages=2, page=1, limit=5, total=7, has_prev=False, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"limit":7}, expected_indexes=range(7),  pages=3, page=1, limit=7, total=15, has_prev=False, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"page":2, "limit":5},  pages=3, expected_indexes=range(5,10), page=2, limit=5, total=15, has_prev=True, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"pinned":False, "page":2, "limit":6},  pages=2, expected_indexes=[14], page=2, limit=6, total=7, has_prev=True, has_next=False, has_result=True),
+        PaginateFilterResult(filter={"page":3, "limit":7},  pages=3, expected_indexes=[14], page=3, limit=7, total=15, has_prev=True, has_next=False, has_result=True)
     ]
 
     def get_model(self):
@@ -122,6 +129,7 @@ class TestNoteView(CRUDViewTest):
         def _():
             url = self.get_view_url() + '/'
 
+            ok_tag = self._find_enum_by_code(tag_view_name, OK.code)
             db_model = self.get_model()
             db_model.created_in = None
 
@@ -130,8 +138,6 @@ class TestNoteView(CRUDViewTest):
             response = requests.post(url, json=data)
 
             item = response.json()
-
-            ok_tag = self._find_enum_by_code(tag_view_name, OK.code)
 
             for k in data:
                 if k != CREATED_IN:
@@ -175,5 +181,5 @@ class TestNoteView(CRUDViewTest):
         return response_j[0]
 
     def _get_enum_find_by_code_url(self, enum_view_name, code):
-        return f'{get_api_url()}/{enum_view_name}?code={code}'   
+        return f'{self.get_view_url(with_view_name=False)}{enum_view_name}?code={code}'   
 

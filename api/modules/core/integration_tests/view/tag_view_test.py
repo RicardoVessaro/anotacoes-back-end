@@ -1,12 +1,15 @@
 
+from api.modules.core.blueprints.service.tag.tag_service import TagService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from arq.util.test.view.crud_view_test import CRUDViewTest
-from api.modules.core.blueprints.view.tag_view import tag_view_name
+from api.modules.core.blueprints.view.tag_view import TagView, tag_view_name
 from api.modules.core.blueprints.data.model.tag import Tag
 from api.modules.core.blueprints.data.dao.tag_dao import TagDAO
 
 class TestTagView(CRUDViewTest):
+
+    ROUTE_PREFIX = TagView.route_prefix
 
     INTEGRATION_TEST_DB_URI = get_test_database_url()
 
@@ -17,6 +20,12 @@ class TestTagView(CRUDViewTest):
     model = Tag
 
     dao = TagDAO()
+
+    filter_to_not_found = {"name": "to not found"}
+
+    is_enum = True
+
+    enum_service = TagService()
 
     find_filter_results = [
         FindFilterResult(filter={}, expected_indexes=range(3)),
@@ -29,11 +38,11 @@ class TestTagView(CRUDViewTest):
     ]
 
     paginate_filter_results = [
-        PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True),
-        PaginateFilterResult(filter={"limit":7}, expected_indexes=range(7),  pages=3, page=1, limit=7, total=15, has_prev=False, has_next=True),
-        PaginateFilterResult(filter={"page":2, "limit":5},  pages=3, expected_indexes=range(5,10), page=2, limit=5, total=15, has_prev=True, has_next=True),
-        PaginateFilterResult(filter={"page":3, "limit":7},  pages=3, expected_indexes=[14], page=3, limit=7, total=15, has_prev=True, has_next=False),
-        PaginateFilterResult(filter={"page":2, "limit":7, "code": list(range(10))},  pages=2, expected_indexes=[7,8,9], page=2, limit=7, total=10, has_prev=True, has_next=False)
+        PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"limit":7}, expected_indexes=range(7),  pages=3, page=1, limit=7, total=15, has_prev=False, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"page":2, "limit":5},  pages=3, expected_indexes=range(5,10), page=2, limit=5, total=15, has_prev=True, has_next=True, has_result=True),
+        PaginateFilterResult(filter={"page":3, "limit":7},  pages=3, expected_indexes=[14], page=3, limit=7, total=15, has_prev=True, has_next=False, has_result=True),
+        PaginateFilterResult(filter={"page":2, "limit":7, "code": list(range(10))},  pages=2, expected_indexes=[7,8,9], page=2, limit=7, total=10, has_prev=True, has_next=False, has_result=True)
     ]
 
     def get_model(self):

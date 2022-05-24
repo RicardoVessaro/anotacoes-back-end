@@ -1,22 +1,33 @@
 
+import pytest
 import requests
 
 from collections import namedtuple
 from abc import ABC, abstractproperty, abstractmethod
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util.enviroment_variable import get_api_url
-from arq.util.test.database_test import DatabaseTest
+from arq.util.object_util import is_none_or_empty
+from arq.util.test.database_test import DatabaseTest, clean_enums, insert_enums
 from arq.util.view.view_encoder import ViewEncoder
+from mongoengine import connect, disconnect
 
 ID_FIELD = 'id'
 
 FindFilterResult = namedtuple('FindFilterResult', 'filter expected_indexes')
 
-PaginateFilterResult = namedtuple('PaginateFilterResult', 'filter expected_indexes pages page limit total has_prev has_next')
+PaginateFilterResult = namedtuple('PaginateFilterResult', 'filter expected_indexes pages page limit total has_prev has_next has_result')
 
 class ArqViewTest(ABC):
 
     fake_id = '6248620366564103f229595f'
+
+    is_enum = False
+
+    enum_service = None
+
+    @abstractproperty
+    def ROUTE_PREFIX(self):
+        pass
 
     @abstractproperty
     def enum_services_to_insert(self):
@@ -46,6 +57,10 @@ class ArqViewTest(ABC):
     def paginate_filter_results(self):
         pass
 
+    @abstractproperty
+    def filter_to_not_found(self):
+        pass
+
     @abstractmethod
     def find_model_list(self):
         pass
@@ -62,10 +77,24 @@ class ArqViewTest(ABC):
     def get_updated_model(self):
         pass
 
+    @pytest.fixture(scope="class", autouse=True)
+    def insert_enums(self):
+        insert_enums(self.INTEGRATION_TEST_DB_URI, self.enum_services_to_insert)
+
+        yield 
+
+        clean_enums(self.INTEGRATION_TEST_DB_URI, self.enum_services_to_insert)
+
+        if self.is_enum and not self.enum_service is None:
+            connect(host=self.INTEGRATION_TEST_DB_URI)
+
+            self.enum_service.save_enums()
+
+            disconnect()
+
     def test_find_by_id(self):
 
-        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
-        database_test.insert_enums()
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
 
         db_model = self.get_model()
         database_test.add_data(self.dao, db_model)
@@ -101,7 +130,7 @@ class ArqViewTest(ABC):
 
         url = self.get_view_url()
 
-        arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, enum_services_to_insert=self.enum_services_to_insert)
+        arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
         arq_database_test.add_data(self.dao, model_list)
 
         @arq_database_test.persistence_test()
@@ -166,6 +195,7 @@ class ArqViewTest(ABC):
                 assert items['total'] == paginate_filter_result.total
                 assert items['has_prev'] == paginate_filter_result.has_prev
                 assert items['has_next'] == paginate_filter_result.has_next
+                assert items['has_result'] == paginate_filter_result.has_result
 
                 expected_ids = self.get_expected_ids(paginate_filter_result.expected_indexes, model_list)
 
@@ -190,6 +220,22 @@ class ArqViewTest(ABC):
                 assert items['status_code'] == 400
 
             _test_must_return_400_bad_reqeuest_when_page_is_higher_than_max_pages()
+
+            def _test_must_return_empty_when_not_found_in_filter():
+                response = requests.post(url, json=self.filter_to_not_found)
+
+                items = response.json()
+
+                assert items['pages'] == 0
+                assert items['page'] == 0
+                assert items['limit'] == 0
+                assert items['total'] == 0
+                assert items['has_prev'] == False
+                assert items['has_next'] == False
+                assert items['has_result'] == False
+                assert is_none_or_empty(items['items']) 
+
+            _test_must_return_empty_when_not_found_in_filter()
             
         _()
 
@@ -197,10 +243,15 @@ class ArqViewTest(ABC):
     def encode(self, db_model):
         return ViewEncoder().default(db_model)
 
-    def get_view_url(self):
+    def get_view_url(self, with_view_name=True):
         base_url = get_api_url()
 
-        return f'{base_url}/{self.view_name}'    
+        view_url = f'{base_url}/{self.ROUTE_PREFIX}'
+
+        if with_view_name:
+            view_url += f'{self.view_name}'
+        
+        return view_url
 
     def get_expected_ids(self, expected_indexes, model_list):
         expected_ids = []

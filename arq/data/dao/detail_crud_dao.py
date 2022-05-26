@@ -7,12 +7,14 @@ class DetailCRUDDAO(CRUDDAO):
     def __init__(self, model: Document) -> None:
         super().__init__(model)
 
-    def find_by_parent_id(self, parent_id, **query_filter):
+    def find(self, parent_id, **query_filter):
         query_filter[self._model.parent_field] = parent_id
 
-        return self.find(**query_filter)
+        return super().find(**query_filter)
 
-    def paginate_by_parent_id(self, parent_id, page=1, limit=5, **query_filter):
+    def paginate(self, parent_id, page=1, limit=5, **query_filter) -> dict:
         query_filter[self._model.parent_field] = parent_id
 
-        return self.paginate(page, limit, **query_filter)
+        results = self.find(parent_id, **query_filter)
+
+        return self._build_pagination(results, page, limit)

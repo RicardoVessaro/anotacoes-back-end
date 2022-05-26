@@ -54,6 +54,10 @@ class Dao:
     def paginate(self, page=1, limit=5, **query_filter) -> dict:
         results = self.find(**query_filter)
 
+        return self._build_pagination(results, page, limit)
+
+    def _build_pagination(self, results, page, limit):
+
         total = len(results)
 
         if total == 0:

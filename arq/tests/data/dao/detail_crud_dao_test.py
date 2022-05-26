@@ -45,9 +45,10 @@ class TestDetailCRUDDAO:
             arq_model_id=parent_doc.id
         )
         
-        database_test.add_data(self.detail_crud_dao, [model_doc_1, model_doc_2])
+        database_test.add_data(self.detail_crud_dao, [model_doc_1, model_doc_2], parent_ids=[self.FAKE_ID])
 
         other_parent_doc = self.parent(
+            id=self.OTHER_FAKE_ID,
             code=1,
             title='Parent'
         )
@@ -64,12 +65,12 @@ class TestDetailCRUDDAO:
             title='Model',
             arq_model_id=self.OTHER_FAKE_ID
         )
-        database_test.add_data(self.detail_crud_dao, [other_model_doc_1, other_model_doc_2])
+        database_test.add_data(self.detail_crud_dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
         @database_test.persistence_test()
         def _():
 
-            childs = self.detail_crud_dao.find_by_parent_id(parent_doc.id)
+            childs = self.detail_crud_dao.find(parent_doc.id)
 
             for child in childs:
                 child_id = child.id
@@ -101,7 +102,7 @@ class TestDetailCRUDDAO:
             arq_model_id=parent_doc.id
         )
         
-        database_test.add_data(self.detail_crud_dao, [model_doc_1, model_doc_2])
+        database_test.add_data(self.detail_crud_dao, [model_doc_1, model_doc_2], parent_ids=[self.FAKE_ID])
 
         other_parent_doc = self.parent(
             code=1,
@@ -120,12 +121,12 @@ class TestDetailCRUDDAO:
             title='Model',
             arq_model_id=self.OTHER_FAKE_ID
         )
-        database_test.add_data(self.detail_crud_dao, [other_model_doc_1, other_model_doc_2])
+        database_test.add_data(self.detail_crud_dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
         @database_test.persistence_test()
         def _():
 
-            pagination = self.detail_crud_dao.paginate_by_parent_id(parent_doc.id)
+            pagination = self.detail_crud_dao.paginate(parent_doc.id)
 
             for child in pagination['items']:
                 child_id = child.id

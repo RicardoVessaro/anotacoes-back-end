@@ -46,7 +46,7 @@ class TestDetailCRUDValidator:
 
         doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID)
         database_test = DatabaseTest(host=self.TEST_DB_URI)
-        database_test.add_data(self.dao, doc)
+        database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
         def validate_on_update():
             
@@ -77,7 +77,7 @@ class TestDetailCRUDValidator:
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
+        database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
         def validate_on_update():
             doc.arq_model_id = str(parent_doc.id)
@@ -93,8 +93,8 @@ class TestDetailCRUDValidator:
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
-        database_test.add_data(self.detail_child_dao, detail_child_doc)
+        database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
+        database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[self.FAKE_DETAIL_ID])
         @database_test.persistence_test()
         def _():
             
@@ -123,8 +123,8 @@ class TestDetailCRUDValidator:
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
-        database_test.add_data(self.detail_child_dao, detail_child_doc)
+        database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
+        database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[self.FAKE_DETAIL_ID])
         @database_test.persistence_test()
         def _():
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
@@ -142,7 +142,7 @@ class TestDetailCRUDValidator:
         
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
+        database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
         def _():
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)

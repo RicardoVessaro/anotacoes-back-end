@@ -59,9 +59,10 @@ class TestDetailCRUDService:
             arq_model_id=parent_doc.id
         )
         
-        database_test.add_data(self.dao, [model_doc_1, model_doc_2])
+        database_test.add_data(self.dao, [model_doc_1, model_doc_2], parent_ids=[parent_doc.id])
 
         other_parent_doc = self.parent(
+            id=self.OTHER_FAKE_ID,
             code=1,
             title='Parent'
         )
@@ -78,12 +79,12 @@ class TestDetailCRUDService:
             title='Model',
             arq_model_id=self.OTHER_FAKE_ID
         )
-        database_test.add_data(self.dao, [other_model_doc_1, other_model_doc_2])
+        database_test.add_data(self.dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
         @database_test.persistence_test()
         def _():
 
-            childs = self.detail_crud_service.find_by_parent_id(parent_doc.id)
+            childs = self.detail_crud_service.find(parent_doc.id)
 
             for child in childs:
                 child_id = child.id
@@ -97,7 +98,7 @@ class TestDetailCRUDService:
         database_test = DatabaseTest(host=self.TEST_DB_URI)
 
         parent_doc = self.parent(
-            id=self.FAKE_DETAIL_ID,
+            id=self.FAKE_PARENT_ID,
             code=1,
             title='Parent'
         )
@@ -115,9 +116,10 @@ class TestDetailCRUDService:
             arq_model_id=parent_doc.id
         )
         
-        database_test.add_data(self.dao, [model_doc_1, model_doc_2])
+        database_test.add_data(self.dao, [model_doc_1, model_doc_2], parent_ids=[parent_doc.id])
 
         other_parent_doc = self.parent(
+            id=self.OTHER_FAKE_ID,
             code=1,
             title='Parent'
         )
@@ -134,12 +136,12 @@ class TestDetailCRUDService:
             title='Model',
             arq_model_id=self.OTHER_FAKE_ID
         )
-        database_test.add_data(self.dao, [other_model_doc_1, other_model_doc_2])
+        database_test.add_data(self.dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
         @database_test.persistence_test()
         def _():
 
-            pagination = self.detail_crud_service.paginate_by_parent_id(parent_doc.id)
+            pagination = self.detail_crud_service.paginate(parent_doc.id)
 
             for child in pagination['items']:
                 child_id = child.id
@@ -161,8 +163,8 @@ class TestDetailCRUDService:
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
-        database_test.add_data(self.detail_child_dao, detail_child_doc)
+        database_test.add_data(self.dao, doc, parent_ids=[doc.arq_model_id])
+        database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[detail_child_doc.detail_parent_id])
         @database_test.persistence_test()
         def _():
             
@@ -181,7 +183,7 @@ class TestDetailCRUDService:
             )
 
             with raises(ArqException, match=error_msg):
-                _detail_crud_service.validate_collection_tree()
+                _detail_crud_service.validate_collection_tree(collection_tree)
 
         _()
 
@@ -193,8 +195,8 @@ class TestDetailCRUDService:
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
-        database_test.add_data(self.detail_child_dao, detail_child_doc)
+        database_test.add_data(self.dao, doc, parent_ids=[doc.arq_model_id])
+        database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[detail_child_doc.detail_parent_id])
         @database_test.persistence_test()
         def _():
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
@@ -205,7 +207,7 @@ class TestDetailCRUDService:
         
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 
-            _detail_crud_service.validate_collection_tree()
+            _detail_crud_service.validate_collection_tree(collection_tree)
         _()
 
     def test_validate_collection_tree_must_not_raise_exception_when_child_id_not_exists(self):
@@ -214,7 +216,7 @@ class TestDetailCRUDService:
         
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc)
+        database_test.add_data(self.dao, doc, parent_ids=[doc.arq_model_id])
         @database_test.persistence_test()
         def _():
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
@@ -225,5 +227,5 @@ class TestDetailCRUDService:
         
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 
-            _detail_crud_service.validate_collection_tree()
+            _detail_crud_service.validate_collection_tree(collection_tree)
         _()

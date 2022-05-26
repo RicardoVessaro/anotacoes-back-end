@@ -31,8 +31,14 @@ def _clean_enums(enum_services_to_insert):
         for enum_service in enum_services_to_insert:
             _delete_dao_data(enum_service._dao)
 
-def _delete_dao_data(dao):
-    data_to_delete_list = dao.find()
+def _delete_dao_data(dao, parent_ids=None):
+    data_to_delete_list = []
+
+    if is_none_or_empty(parent_ids):
+        data_to_delete_list = dao.find()
+    else:
+        for parent_id in parent_ids:
+            data_to_delete_list.extend(dao.find(parent_id))
 
     for data_to_delete in data_to_delete_list:
         dao.delete(data_to_delete.id)
@@ -42,18 +48,18 @@ class DatabaseTest:
     def __init__(self, host, daos_to_clean=[], enum_services_to_insert=[]) -> None:
         self.host = host
         self.data_to_insert = []
-        self._data = namedtuple('Data', ['dao', 'model', 'data_id'])
+        self._data = namedtuple('Data', ['dao', 'model', 'data_id', 'parent_ids'])
         self.daos_to_clean = daos_to_clean
         self.enum_services_to_insert = enum_services_to_insert
 
-    def add_data(self, dao, model):
+    def add_data(self, dao, model, parent_ids=[]):
         if type(model) is list:
             for m in model:
-                data = self._data(dao=dao, model=m, data_id=None)
+                data = self._data(dao=dao, model=m, data_id=None, parent_ids=parent_ids)
                 self.data_to_insert.append(data)
             
         else:
-            data = self._data(dao=dao, model=model, data_id=None)
+            data = self._data(dao=dao, model=model, data_id=None, parent_ids=parent_ids)
             self.data_to_insert.append(data)
 
     def persistence_test(self, clean_database=True):
@@ -100,7 +106,7 @@ class DatabaseTest:
             dao.insert(model)
 
             data_id = model.id
-            inserted_data.append(self._data(dao=data.dao, model=data.model, data_id=data_id))
+            inserted_data.append(self._data(dao=data.dao, model=data.model, data_id=data_id, parent_ids=data.parent_ids))
 
         self.data_to_insert = inserted_data
 
@@ -117,7 +123,7 @@ class DatabaseTest:
         for data in self.data_to_insert:
             dao = data.dao
             if dao not in already_deleted:
-                self._delete_dao_data(dao)
+                self._delete_dao_data(dao, data.parent_ids)
 
                 already_deleted.append(dao)
 
@@ -127,8 +133,8 @@ class DatabaseTest:
 
                 already_deleted.append(dao)
 
-    def _delete_dao_data(self, dao):
-        _delete_dao_data(dao)
+    def _delete_dao_data(self, dao, parent_ids=None):
+        _delete_dao_data(dao, parent_ids)
 
     def _connect(self):
         connect(host=self.host)

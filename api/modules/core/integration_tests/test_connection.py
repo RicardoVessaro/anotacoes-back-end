@@ -8,5 +8,6 @@ def test_url_connection():
 
     requests.get(base_url)
 
+# TODO
 def test_database_connection():
     pass

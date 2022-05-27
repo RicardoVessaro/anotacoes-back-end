@@ -27,6 +27,5 @@ class NoteService(CRUDService):
 
         if TAG not in body:
             body[TAG] = TagService().find_by_code(code=OK.code).id
-            print(body[TAG])
 
         return super().insert(body)

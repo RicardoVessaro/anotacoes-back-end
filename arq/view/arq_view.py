@@ -5,6 +5,16 @@ from arq.util.view.query_string_parser import QueryStringParser
 from arq.service.service import Service
 from arq.util.view.view_encoder import ViewEncoder
 
+GET = 'GET'
+POST = 'POST'
+PUT = 'PUT'
+DELETE = 'DELETE'
+
+QUERY_LIMIT = 'limit'
+QUERY_PAGE = 'page'
+
+STATUS_NO_CONTENT = 204
+
 class ArqView(FlaskView):
 
     def __init__(self, service: Service) -> None:
@@ -12,14 +22,14 @@ class ArqView(FlaskView):
 
         self._service = service
 
-    @route('<id>', methods=['GET'])
-    def find_by_id(self, id):
+    @route('<id>', methods=[GET])
+    def find_by_id(self, id, **kwargs):
         return self._to_response(self._service.find_by_id(id))
 
-    @route('', methods=['POST', 'GET'])
-    def find(self):
+    @route('', methods=[POST, GET])
+    def find(self, **kwargs):
 
-        if request.method == 'POST':
+        if request.method == POST:
             query_body = request.json
 
             parsed_query_body = QueryStringParser().parse_dict(query_body)
@@ -32,11 +42,8 @@ class ArqView(FlaskView):
 
         return self._to_response(self._service.find(**parsed_query_string))
 
-    @route('paginate', methods=['POST'])
-    def paginate(self):
-        QUERY_LIMIT = 'limit'
-        QUERY_PAGE = 'page'
-
+    @route('paginate', methods=[POST])
+    def paginate(self, **kwargs):
         query_body = request.json
         parsed_query_body = QueryStringParser().parse_dict(query_body)
 
@@ -55,6 +62,6 @@ class ArqView(FlaskView):
         answer = ViewEncoder().default(object)
 
         if answer is None:
-            answer = ('', 204)
+            answer = ('', STATUS_NO_CONTENT)
 
         return make_response(answer)

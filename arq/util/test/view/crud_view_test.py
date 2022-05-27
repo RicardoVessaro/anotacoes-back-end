@@ -9,8 +9,13 @@ class CRUDViewTest(ArqViewTest):
 
     def test_insert(self):
 
-        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, daos_to_clean=[self.dao])
-        
+        if self._is_detail_crud_dao(self.dao):
+            database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, daos_to_clean=[self.dao], parent_ids_to_clean=[self.fake_parent_id])
+            self._add_parent_data(database_test)
+
+        else :
+            database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI, daos_to_clean=[self.dao])
+
         @database_test.persistence_test()
         def _():
             url = self.get_view_url() + '/'
@@ -34,51 +39,56 @@ class CRUDViewTest(ArqViewTest):
 
         db_model = self.get_model()
 
-        database_test.add_data(self.dao, db_model)
+        self._insert_parent(database_test)
+
+        self._add_data(database_test, self.dao, db_model)
     
         @database_test.persistence_test()
         def _():
-            id = str(db_model.id)
-            url = self.get_view_url() + f'/{id}'
+            def update_sucess():
+                id = str(db_model.id)
+                url = self.get_view_url() + f'/{id}'
 
-            updated_model = self.get_updated_model()
-            updated_model.id = db_model.id
+                updated_model = self.get_updated_model()
+                updated_model.id = db_model.id
 
-            data = self.encode(updated_model)
+                data = self.encode(updated_model)
 
-            response = requests.put(url, json=data)
+                response = requests.put(url, json=data)
 
-            item = response.json()
+                item = response.json()
 
-            for k in data:
-                assert data[k] == item[k]
+                for k in data:
+                    assert data[k] == item[k]
+
+            update_sucess()
+
+            def _must_return_404_not_found_when_id_not_exists():
+                url = self.get_view_url() + f'/{self.fake_id}'
+
+                updated_model = self.get_updated_model()
+                updated_model.id = db_model.id
+
+                data = self.encode(updated_model)
+
+                response = requests.put(url, json=data)
+
+                assert response.status_code == 404
+
+                item = response.json()
+
+                assert item['status_code'] == 404
+                assert item['message'] == OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self.fake_id)
+
+            _must_return_404_not_found_when_id_not_exists()
 
         _()
-
-        def _must_return_404_not_found_when_id_not_exists():
-            url = self.get_view_url() + f'/{self.fake_id}'
-
-            updated_model = self.get_updated_model()
-            updated_model.id = db_model.id
-
-            data = self.encode(updated_model)
-
-            response = requests.put(url, json=data)
-
-            assert response.status_code == 404
-
-            item = response.json()
-
-            assert item['status_code'] == 404
-            assert item['message'] == OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self.fake_id)
-
-        _must_return_404_not_found_when_id_not_exists()
 
     def test_delete(self):
         database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
 
         db_model = self.get_model()
-        database_test.add_data(self.dao, db_model)
+        self._add_data(database_test, self.dao, db_model)
     
         @database_test.persistence_test()
         def _():
@@ -110,3 +120,7 @@ class CRUDViewTest(ArqViewTest):
             assert item['message'] == OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self.fake_id)
 
         _must_return_404_not_found_when_id_not_exists()
+
+    def _insert_parent(self, database_test):
+        if self._is_detail_crud_dao(self.dao):
+            self._add_parent_data(database_test)

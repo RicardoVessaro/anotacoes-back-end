@@ -4,6 +4,7 @@ import requests
 
 from collections import namedtuple
 from abc import ABC, abstractproperty, abstractmethod
+from arq.data.dao.detail_crud_dao import DetailCRUDDAO
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util.enviroment_variable import get_api_url
 from arq.util.object_util import is_none_or_empty
@@ -97,8 +98,8 @@ class ArqViewTest(ABC):
         database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
 
         db_model = self.get_model()
-        database_test.add_data(self.dao, db_model)
-    
+        self._add_data(database_test, self.dao, db_model)
+
         @database_test.persistence_test()
         def _():
             id = str(db_model.id)
@@ -131,7 +132,10 @@ class ArqViewTest(ABC):
         url = self.get_view_url()
 
         arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
-        arq_database_test.add_data(self.dao, model_list)
+        self._add_data(arq_database_test, self.dao, model_list)
+
+        if self._is_detail_crud_dao(self.dao):
+            self._add_parent_data(arq_database_test)
 
         @arq_database_test.persistence_test()
         def _():
@@ -179,7 +183,10 @@ class ArqViewTest(ABC):
         url = self.get_view_url() + '/paginate'
 
         arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
-        arq_database_test.add_data(self.dao, model_list)
+        self._add_data(arq_database_test, self.dao, model_list)
+
+        if self._is_detail_crud_dao(self.dao):
+            self._add_parent_data(arq_database_test)
 
         @arq_database_test.persistence_test()
         def _():
@@ -207,7 +214,8 @@ class ArqViewTest(ABC):
                     assert item['id'] in expected_ids  
 
             def _test_must_return_400_bad_reqeuest_when_page_is_higher_than_max_pages():
-                model_list_length = len(model_list)
+                model_list_length = self._get_model_list_length(model_list)
+
                 page = str(model_list_length + 1)
 
                 response = requests.post(url, json={"limit":1, "page": page })
@@ -263,7 +271,33 @@ class ArqViewTest(ABC):
         
         return expected_ids
 
+    def _add_parent_data(self, database_test):
+        self._add_data(database_test, self.parent_dao, self.get_parent_model())
 
+    def _add_data(self, database_test, dao, db_model):
+
+        if self._is_detail_crud_dao(dao):
+            database_test.add_data(dao, db_model, [self.fake_parent_id])
+
+        else:
+            database_test.add_data(dao, db_model)
+
+    def _get_model_list_length(self, model_list):
+        model_list_length = len(model_list)
+
+        if self._is_detail_crud_dao(self.dao):
+            count_by_parent_id = 0
+
+            for model in model_list:
+                if str(model[self.parent_field]) == self.fake_parent_id:
+                    count_by_parent_id += 1
+
+            model_list_length = count_by_parent_id
+
+        return model_list_length
+
+    def _is_detail_crud_dao(self, dao):
+        return isinstance(dao, DetailCRUDDAO)
 
 
 

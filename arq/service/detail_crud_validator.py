@@ -34,21 +34,22 @@ class DetailCRUDValidator(CRUDValidator):
             if not child_id is None:
                 child = child_collection_item.dao.find_by_id(child_id)
 
-                parent_collection_item = collection_tree[i]
+                if not child is None:
+                    parent_collection_item = collection_tree[i]
 
-                parent_id_in_child_doc = str(child[child_collection_item.parent_field])
+                    parent_id_in_child_doc = str(child[child_collection_item.parent_field])
 
-                if not parent_id_in_child_doc == str(parent_collection_item.id):
-                    parent_id = parent_collection_item.id
-                    
-                    raise ArqException(CHILD_NOT_FOUND_IN_PARENT.format(
-                        child_collection_item.name,
-                        child_id,
-                        child_collection_item.parent_field,
-                        parent_id_in_child_doc,
-                        parent_collection_item.name,
-                        parent_id
-                    ))
+                    if not parent_id_in_child_doc == str(parent_collection_item.id):
+                        parent_id = parent_collection_item.id
+                        
+                        raise ArqException(CHILD_NOT_FOUND_IN_PARENT.format(
+                            child_collection_item.name,
+                            child_id,
+                            child_collection_item.parent_field,
+                            parent_id_in_child_doc,
+                            parent_collection_item.name,
+                            parent_id
+                        ))
 
     def _validate_parent_exists(self, body):
 

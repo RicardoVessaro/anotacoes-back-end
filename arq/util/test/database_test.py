@@ -2,6 +2,7 @@
 import functools
 from mongoengine import connect, disconnect
 from collections import namedtuple
+from arq.data.dao.detail_crud_dao import DetailCRUDDAO
 
 from arq.util.object_util import is_none_or_empty
 
@@ -45,11 +46,12 @@ def _delete_dao_data(dao, parent_ids=None):
 
 class DatabaseTest:
 
-    def __init__(self, host, daos_to_clean=[], enum_services_to_insert=[]) -> None:
+    def __init__(self, host, daos_to_clean=[], parent_ids_to_clean=[], enum_services_to_insert=[]) -> None:
         self.host = host
         self.data_to_insert = []
         self._data = namedtuple('Data', ['dao', 'model', 'data_id', 'parent_ids'])
         self.daos_to_clean = daos_to_clean
+        self.parent_ids_to_clean = parent_ids_to_clean
         self.enum_services_to_insert = enum_services_to_insert
 
     def add_data(self, dao, model, parent_ids=[]):
@@ -129,7 +131,11 @@ class DatabaseTest:
 
         for dao in self.daos_to_clean:
             if dao not in already_deleted:
-                self._delete_dao_data(dao)
+                if isinstance(dao, DetailCRUDDAO):
+                    self._delete_dao_data(dao, self.parent_ids_to_clean)
+                    
+                else:
+                    self._delete_dao_data(dao)
 
                 already_deleted.append(dao)
 

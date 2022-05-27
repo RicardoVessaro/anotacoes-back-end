@@ -5,6 +5,7 @@ from arq.data.dao.crud_dao import CRUDDAO
 class DetailCRUDDAO(CRUDDAO):
 
     def __init__(self, model: Document) -> None:
+        # Validar no DetailCRUDDAO se existe o campo parent_field no model
         super().__init__(model)
 
     def find(self, parent_id, **query_filter):

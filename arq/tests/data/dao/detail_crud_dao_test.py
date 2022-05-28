@@ -34,7 +34,7 @@ class TestDetailCRUDDAO:
             class TestDetailCRUDDAO(DetailCRUDDAO):
                 pass
 
-            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
+            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, DetailCRUDDAO.__class__, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
                 TestDetailCRUDDAO(model=TestModel)           
         
         _test_must_raise_exception()
@@ -47,7 +47,7 @@ class TestDetailCRUDDAO:
             class TestDetailCRUDDAO(DetailCRUDDAO):
                 pass
 
-            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
+            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, DetailCRUDDAO.__class__, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
                 TestDetailCRUDDAO(model=TestModel)           
         
         _test_must_raise_exception_if_is_none()

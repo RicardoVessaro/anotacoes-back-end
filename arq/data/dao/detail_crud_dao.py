@@ -11,8 +11,7 @@ class DetailCRUDDAO(CRUDDAO):
 
     def __init__(self, model: Document) -> None:
         if not hasattr(model, self.PARENT_FIELD) or is_none_or_empty(model.parent_field):
-            raise ArqException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, self.__class__, self.PARENT_FIELD))
-        
+            raise ArqException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, DetailCRUDDAO.__class__, self.__class__, self.PARENT_FIELD))
 
         super().__init__(model)
 

@@ -6,4 +6,4 @@ DUPLICATED_ENUM_CODE = "The code {0} is duplicated."
 CLASS_MUST_BE_A_SUBCLASS_OF_ENUMSERVICE = "The class {0} must be a subclass of {1}."
 PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE = "The parent object '{0}' with ID {1} not found."
 CHILD_NOT_FOUND_IN_PARENT = "The child '{0}' with ID {1} and parent field '{2}' with ID {3} not found in Parent '{4}' with ID {5}."
-DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD = 'The model "{0}" in DetailCRUDDAO "{1}" must have an attribute called "{2}".'
+DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD = 'The model "{0}" in {1} "{2}" must have an attribute called "{3}".'

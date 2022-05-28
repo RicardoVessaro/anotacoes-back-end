@@ -1,11 +1,19 @@
 
 from xml.dom.minidom import Document
 from arq.data.dao.crud_dao import CRUDDAO
+from arq.exception.arq_exception import ArqException
+from arq.exception.exception_message import DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD
+from arq.util.object_util import is_none_or_empty
 
 class DetailCRUDDAO(CRUDDAO):
 
+    PARENT_FIELD = 'parent_field'
+
     def __init__(self, model: Document) -> None:
-        # Validar no DetailCRUDDAO se existe o campo parent_field no model
+        if not hasattr(model, self.PARENT_FIELD) or is_none_or_empty(model.parent_field):
+            raise ArqException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, self.__class__, self.PARENT_FIELD))
+        
+
         super().__init__(model)
 
     def find(self, parent_id, **query_filter):

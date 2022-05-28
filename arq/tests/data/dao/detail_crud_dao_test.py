@@ -1,10 +1,13 @@
 
+from pytest import raises
 from arq.data.dao.crud_dao import CRUDDAO
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
+from arq.exception.exception_message import DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 from arq.tests.resources.data.model.detail_test_model import DetailTestModel
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
+from arq.exception.arq_exception import ArqException
 
 class TestDetailCRUDDAO:
 
@@ -21,6 +24,45 @@ class TestDetailCRUDDAO:
     parent_dao = CRUDDAO(model=ArqTestModel)
 
     parent = parent_dao.model
+
+    def test_model_has_attribute_parent_field(self):
+        
+        def _test_must_raise_exception():
+            class TestModel:
+                pass 
+
+            class TestDetailCRUDDAO(DetailCRUDDAO):
+                pass
+
+            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
+                TestDetailCRUDDAO(model=TestModel)           
+        
+        _test_must_raise_exception()
+
+        def _test_must_raise_exception_if_is_none():
+            class TestModel:
+                parent_field = None
+                pass 
+
+            class TestDetailCRUDDAO(DetailCRUDDAO):
+                pass
+
+            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
+                TestDetailCRUDDAO(model=TestModel)           
+        
+        _test_must_raise_exception_if_is_none()
+
+        def _test_not_must_raise_exception():
+            class TestModel:
+                parent_field = 'test_parent_field'
+                pass 
+
+            class TestDetailCRUDDAO(DetailCRUDDAO):
+                pass
+
+            TestDetailCRUDDAO(model=TestModel)           
+        
+        _test_not_must_raise_exception()
 
     def test_find_by_parent_id(self):
 

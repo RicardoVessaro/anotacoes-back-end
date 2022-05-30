@@ -1,16 +1,20 @@
 
-from operator import le
+from turtle import title
 from arq.tests.resources.service.enum.fake_enum_test_service import FakeEnumTestService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest, insert_enums
 from arq.data.dao.dao import DAO
+from arq.data.dao.detail_crud_dao import DetailCRUDDAO
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.detail_test_model import DetailTestModel
 
 class TestArqDatabaseTest:
 
     TEST_DB_URI = get_test_database_url()
 
     arq_dao = DAO(model=ArqTestModel)
+
+    detail_crud_dao = DetailCRUDDAO(model=DetailTestModel)
 
     def test_add_data(self):
 
@@ -117,14 +121,18 @@ class TestArqDatabaseTest:
         test_in_decorator()
 
     def test_clean_existing_data(self):
+        fake_parent_id = '6248620366564103f229595f'
 
         def test_method():
 
             def _test_cleaning_data_to_insert():
+                
                 model = ArqTestModel(code=1, title="test_using_one_item")
+                detail = DetailTestModel(code=1, title="detail_test_using_one_item", arq_model_id=fake_parent_id)
 
                 arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
                 arq_database_test.add_data(self.arq_dao, model)
+                arq_database_test.add_data(self.detail_crud_dao, detail, parent_ids=[fake_parent_id])
 
                 arq_database_test._connect()
                 arq_database_test._clean_existing_data()
@@ -134,8 +142,10 @@ class TestArqDatabaseTest:
                 arq_database_test._clean_existing_data()
 
                 database_model = self.arq_dao.find().first()
+                database_detail_model = self.detail_crud_dao.find(fake_parent_id).first()
                 
                 assert database_model is None
+                assert database_detail_model is None
 
                 arq_database_test._delete_data()
                 arq_database_test._disconnect()
@@ -145,18 +155,22 @@ class TestArqDatabaseTest:
             def _test_cleaning_daos_to_clean():
 
                 model = ArqTestModel(code=1, title="test_using_one_item")
+                detail = DetailTestModel(code=1, title="detail_test_using_one_item", arq_model_id=fake_parent_id)
 
-                arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao])
+                arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao, self.detail_crud_dao], parent_ids_to_clean=[fake_parent_id])
                 arq_database_test._connect()
                 arq_database_test._clean_existing_data()
 
                 self.arq_dao.insert(model)
+                self.arq_dao.insert(detail)
 
                 arq_database_test._clean_existing_data()
 
                 database_model = self.arq_dao.find().first()
+                database_detail_model = self.detail_crud_dao.find(fake_parent_id).first()
                 
                 assert database_model is None
+                assert database_detail_model is None
 
                 arq_database_test._delete_data()
                 arq_database_test._disconnect()

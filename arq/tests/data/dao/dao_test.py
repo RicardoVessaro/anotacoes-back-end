@@ -1,7 +1,7 @@
 
 
 from pytest import raises
-from arq.data.dao.dao import Dao
+from arq.data.dao.dao import DAO
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.tests.resources.data.model.arq_test_model import ArqTestModel
 from arq.util.enviroment_variable import get_test_database_url
@@ -13,7 +13,7 @@ class TestDao:
 
     TEST_DB_URI = get_test_database_url()
 
-    arq_dao = Dao(model=ArqTestModel)
+    arq_dao = DAO(model=ArqTestModel)
 
     model = arq_dao.model
 

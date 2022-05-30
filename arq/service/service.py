@@ -1,5 +1,4 @@
 
-from arq.data.dao.dao import Dao
 
 class Service:
 

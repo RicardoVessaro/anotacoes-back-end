@@ -1,6 +1,6 @@
 
 from pytest import raises
-from arq.data.dao.dao import Dao
+from arq.data.dao.dao import DAO
 from arq.exception.arq_exception import ArqException
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.service.service import Service
@@ -13,7 +13,7 @@ class TestArqService:
 
     TEST_DB_URI = get_test_database_url()
 
-    arq_service = Service(dao=Dao(model=ArqTestModel))
+    arq_service = Service(dao=DAO(model=ArqTestModel))
 
     dao = arq_service._dao
 

@@ -1,6 +1,6 @@
 
 from collections import namedtuple
-from arq.data.dao.dao import Dao
+from arq.data.dao.dao import DAO
 
 from arq.exception.arq_exception import ArqException
 from arq.exception.exception_message import COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO, COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM, COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM
@@ -32,8 +32,8 @@ class CollectionTree:
             self._validate_have_dao(collection_item)
 
     def _validate_have_dao(self, collection_item):
-        if not isinstance(collection_item.dao, Dao):
-            raise ArqException(COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO.format(DAO_ATTRIBUTE, CollectionItem, Dao, collection_item.dao.__class__, collection_item.__class__, collection_item.name))
+        if not isinstance(collection_item.dao, DAO):
+            raise ArqException(COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO.format(DAO_ATTRIBUTE, CollectionItem, DAO, collection_item.dao.__class__, collection_item.__class__, collection_item.name))
 
     def _validate_is_collection_item(self, collection_item):
         if not isinstance(collection_item, CollectionItem):

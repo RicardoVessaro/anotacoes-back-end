@@ -5,7 +5,7 @@ import requests
 from datetime import datetime
 from api.modules.core.blueprints.data.dao.note_dao import NoteDAO
 from api.modules.core.blueprints.service.mood.mood_service import BORING, COOL, GREAT, SAD, MoodService
-from api.modules.core.blueprints.service.note.note_service import CREATED_IN, TAG
+from api.modules.core.blueprints.service.note.note_service import CREATED_IN, TAG, NoteService
 from api.modules.core.blueprints.service.tag.tag_service import IMPORTANT, OK, TagService
 from arq.util.enviroment_variable import get_api_url, get_test_database_url
 from arq.util.test.database_test import DatabaseTest
@@ -31,6 +31,10 @@ class TestNoteView(CRUDViewTest):
     model = Note
 
     dao = NoteDAO()
+
+    service = NoteService()
+
+    required_fields_inserted_by_default = NoteService.required_fields_inserted_by_default
 
     filter_to_not_found = {"title": "to not found"}
 

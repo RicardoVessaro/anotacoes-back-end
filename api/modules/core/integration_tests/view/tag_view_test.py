@@ -21,6 +21,8 @@ class TestTagView(CRUDViewTest):
 
     dao = TagDAO()
 
+    service = TagService()
+
     filter_to_not_found = {"name": "to not found"}
 
     is_enum = True

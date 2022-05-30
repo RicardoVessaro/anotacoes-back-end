@@ -29,7 +29,7 @@ class DetailCRUDService(CRUDService):
 
 
     def validate_collection_tree(self, collection_tree):
-        self._validator.validate_collection_tree(collection_tree)
+        self.validator.validate_collection_tree(collection_tree)
 
     def find(self, parent_id, **query_filter):
         return self._dao.find(parent_id, **query_filter)

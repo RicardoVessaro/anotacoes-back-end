@@ -8,8 +8,12 @@ class CRUDService(Service):
         self._validator = validator
         self._non_editable_fields = non_editable_fields
 
+    @property
+    def validator(self):
+        return self._validator
+
     def insert(self, body, **kwargs):
-        self._validator.validate_insert(body)
+        self.validator.validate_insert(body)
         return self._dao.insert(body, **kwargs)
 
     def update(self, id, body, **kwargs):
@@ -21,12 +25,12 @@ class CRUDService(Service):
         else :
             body = self._remove_non_editable_fields_from_model(id, body)
 
-        self._validator.validate_update(id, body)
+        self.validator.validate_update(id, body)
 
         return self._dao.update(id, body, **kwargs)
 
     def delete(self, id):
-        self._validator.validate_delete(id)
+        self.validator.validate_delete(id)
 
         return self._dao.delete(id)
 

@@ -1,4 +1,5 @@
 
+from api.modules.core.blueprints.service.mood.mood_service import MoodService
 from api.modules.core.blueprints.view.note_view import NoteView
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from arq.util.enviroment_variable import get_test_database_url
@@ -20,6 +21,8 @@ class TestMoodView(CRUDViewTest):
     model = Mood
 
     dao = MoodDao()
+
+    service = MoodService()
 
     filter_to_not_found = {"name": "to not found"}
 

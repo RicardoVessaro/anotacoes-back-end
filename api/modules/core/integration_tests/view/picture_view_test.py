@@ -32,6 +32,10 @@ class TestPictureView(DetailCRUDViewTest):
 
     dao = PictureDAO()
 
+    service = PictureService()
+
+    required_fields_inserted_by_default = PictureService.required_fields_inserted_by_default
+
     parent_dao = NoteDAO()
 
     filter_to_not_found = {"title": "to not found"}

@@ -14,7 +14,7 @@ class EnumService(CRUDService):
         self.enums = enums
 
     def save_enums(self):
-        self._validator.validate_enums(self.enums)
+        self.validator.validate_enums(self.enums)
 
         for enum in self.enums:
             

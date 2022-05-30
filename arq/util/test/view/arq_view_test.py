@@ -27,6 +27,12 @@ class ArqViewTest(ABC):
 
     enum_service = None
 
+    required_fields_inserted_by_default = []
+
+    @abstractproperty
+    def service(self):
+        pass
+
     @abstractproperty
     def ROUTE_PREFIX(self):
         pass

@@ -7,3 +7,6 @@ CLASS_MUST_BE_A_SUBCLASS_OF_ENUMSERVICE = "The class {0} must be a subclass of {
 PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE = "The parent object '{0}' with ID {1} not found."
 CHILD_NOT_FOUND_IN_PARENT = "The child '{0}' with ID {1} and parent field '{2}' with ID {3} not found in Parent '{4}' with ID {5}."
 DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD = 'The model "{0}" in {1} "{2}" must have an attribute called "{3}".'
+COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM = 'The "{0}" object must have at least 2 item a "parent" and a "child".'
+COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM = 'All items of "{0}" object must be an instance of "{1}". The object "{2}" is not.'
+COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO = 'All "{0}" attributes in "{1}" object must be an instance of "{2}". The object "{3}" in "{4} - {5}" is not.' 

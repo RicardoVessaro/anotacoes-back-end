@@ -1,6 +1,7 @@
 import requests
+from mongoengine import connect, disconnect
 
-from arq.util.enviroment_variable import get_api_url
+from arq.util.enviroment_variable import get_api_url, get_test_database_url
 
 def test_url_connection():
 
@@ -8,6 +9,10 @@ def test_url_connection():
 
     requests.get(base_url)
 
-# TODO
 def test_database_connection():
-    pass
+    
+    test_database_url = get_test_database_url()
+
+    connect(host=test_database_url)
+
+    disconnect()

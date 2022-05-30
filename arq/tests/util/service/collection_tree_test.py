@@ -1,6 +1,4 @@
 
-# TODO Testar CollectionTree
-
 from pytest import raises
 from arq.data.dao.dao import DAO
 

@@ -3,6 +3,7 @@ from api.modules.core.blueprints.data.model.picture import Picture
 from api.modules.core.blueprints.data.dao.picture_dao import PictureDAO
 from api.modules.core.blueprints.general.module_constants import REST_API_V1_BASE_URL
 from api.modules.core.blueprints.service.note.note_service import NoteService
+from api.modules.core.blueprints.service.note.picture.picture_service import PictureService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.detail_crud_view_test import DetailCRUDViewTest
 from api.modules.core.blueprints.view.picture_view import PictureView, picture_view_name
@@ -15,9 +16,11 @@ class TestPictureView(DetailCRUDViewTest):
 
     fake_parent_id = '627ffd74ee52c2e97a757b86'
 
-    parent_field = 'note_id'
+    parent_field = Picture.parent_field
 
-    ROUTE_PREFIX = parse_route(PictureView.route_prefix, {Picture.parent_field: fake_parent_id})
+    parent_name = NoteService.NAME
+
+    ROUTE_PREFIX = parse_route(PictureView.route_prefix, {parent_field: fake_parent_id})
 
     INTEGRATION_TEST_DB_URI = get_test_database_url()
 

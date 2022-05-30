@@ -130,14 +130,13 @@ class DatabaseTest:
                 already_deleted.append(dao)
 
         for dao in self.daos_to_clean:
-            if dao not in already_deleted:
-                if isinstance(dao, DetailCRUDDAO):
-                    self._delete_dao_data(dao, self.parent_ids_to_clean)
+            if isinstance(dao, DetailCRUDDAO):
+                self._delete_dao_data(dao, self.parent_ids_to_clean)
                     
-                else:
-                    self._delete_dao_data(dao)
+            else:
+                self._delete_dao_data(dao)
 
-                already_deleted.append(dao)
+            already_deleted.append(dao)
 
     def _delete_dao_data(self, dao, parent_ids=None):
         _delete_dao_data(dao, parent_ids)

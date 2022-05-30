@@ -13,6 +13,7 @@ from arq.util.view.view_encoder import ViewEncoder
 from mongoengine import connect, disconnect
 
 ID_FIELD = 'id'
+TO_MONGO_ID_FIELD = '_id'
 
 FindFilterResult = namedtuple('FindFilterResult', 'filter expected_indexes')
 

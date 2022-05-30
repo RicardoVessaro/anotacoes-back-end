@@ -1,6 +1,11 @@
 
+from abc import abstractproperty
 
 class Service:
+
+    @abstractproperty
+    def NAME(self):
+        pass
 
     def __init__(self, dao) -> None:
         self._dao = dao

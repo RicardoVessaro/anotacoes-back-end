@@ -5,9 +5,10 @@ from api.modules.core.blueprints.general.module_constants import REST_API_V1_BAS
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.detail_crud_view_test import DetailCRUDViewTest
-from api.modules.core.blueprints.view.picture_view import picture_view_name
+from api.modules.core.blueprints.view.picture_view import PictureView, picture_view_name
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from api.modules.core.blueprints.data.dao.note_dao import NoteDAO
+from arq.util.view.route_parser import parse_route
 
 
 class TestPictureView(DetailCRUDViewTest):
@@ -16,8 +17,7 @@ class TestPictureView(DetailCRUDViewTest):
 
     parent_field = 'note_id'
 
-    # TODO Sobrescrever route_prefix com o id (fixo, dps através de um util)
-    ROUTE_PREFIX = f'{REST_API_V1_BASE_URL}{NoteService.NAME}/{fake_parent_id}/'
+    ROUTE_PREFIX = parse_route(PictureView.route_prefix, {Picture.parent_field: fake_parent_id})
 
     INTEGRATION_TEST_DB_URI = get_test_database_url()
 

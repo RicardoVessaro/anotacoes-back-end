@@ -14,29 +14,7 @@ from arq.util.view.route_parser import parse_route
 
 class TestPictureView(DetailCRUDViewTest):
 
-    fake_parent_id = '627ffd74ee52c2e97a757b86'
-
-    parent_field = Picture.parent_field
-
-    parent_name = NoteService.NAME
-
-    ROUTE_PREFIX = parse_route(PictureView.route_prefix, {parent_field: fake_parent_id})
-
-    INTEGRATION_TEST_DB_URI = get_test_database_url()
-
-    enum_services_to_insert = None
-
-    view_name = picture_view_name
-
-    model = Picture
-
-    dao = PictureDAO()
-
-    service = PictureService()
-
-    required_fields_inserted_by_default = PictureService.required_fields_inserted_by_default
-
-    parent_dao = NoteDAO()
+    view = PictureView()
 
     filter_to_not_found = {"title": "to not found"}
 

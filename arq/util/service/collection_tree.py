@@ -15,14 +15,26 @@ class CollectionTree:
 
         self._collection_tree = collection_tree 
 
+    # TODO Test
     @property
     def child(self):
         return self._collection_tree[-1]
 
+    # TODO Test
     @property
     def parent(self):
         return self._collection_tree[-2]
+
+    # TODO Test
+    def is_parent(self, collection_item):
+        return collection_item.name == self.parent.name
+
+    # TODO Test
+    def is_child(self, collection_item):
+        return collection_item.name == self.child.name
+
     
+    # TODO validar se os items nao tem o mesmo nome
     def _validate_collection(self, collection_tree):
         self._validate_length(collection_tree)
 

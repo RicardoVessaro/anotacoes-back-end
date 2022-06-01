@@ -3,29 +3,58 @@ from abc import abstractproperty, abstractmethod
 
 import requests
 from arq.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT, PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
+from arq.util.service.collection_tree import CollectionTree
 from arq.util.test.database_test import DatabaseTest
 from arq.util.test.view.arq_view_test import ID_FIELD, TO_MONGO_ID_FIELD
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from arq.exception.arq_exception import ArqException
+from arq.util.view.route_parser import parse_route
+from bson import ObjectId
 
 class DetailCRUDViewTest(CRUDViewTest):
 
-    @abstractproperty
-    def fake_parent_id(self):
-        pass
+    fake_parent_id = '627ffd74ee52c2e97a757b86'
 
-    @abstractproperty
+    _params = None
+
+    @property
+    def collection_tree(self) -> CollectionTree:
+        return self.service.collection_tree
+
+    @property
+    def ROUTE_PREFIX(self):
+        if self._params is None:
+            params = {}
+
+            for item in self.collection_tree:
+                if self.collection_tree.is_parent(item):
+                    params[item.field] = self.fake_parent_id
+
+                elif self.collection_tree.is_child(item):
+                    pass
+
+                else:
+                    params[item.field] = str(ObjectId())
+
+            self._params = params
+
+        return parse_route(self.view.route_prefix, self._params)
+
+    @property
     def parent_field(self):
-        pass
+        return self.model.parent_field
 
-    @abstractproperty
+    @property
+    def parent(self):
+        return self.collection_tree.parent
+
+    @property
     def parent_name(self):
-        pass
+        return self.parent.name
 
-
-    @abstractproperty
+    @property
     def parent_dao(self):
-        pass
+        return self.parent.dao
     
     @abstractmethod
     def get_parent_model(self):

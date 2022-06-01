@@ -2,6 +2,7 @@
 from abc import abstractproperty
 import requests
 from arq.exception.arq_exception import ArqException
+from arq.util.object_util import is_none_or_empty
 
 from arq.util.test.database_test import DatabaseTest
 from arq.util.test.view.arq_view_test import ArqViewTest
@@ -48,7 +49,7 @@ class CRUDViewTest(ArqViewTest):
         def _():
 
             for required_field in self.service.validator.required_fields:
-                if required_field not in self.required_fields_inserted_by_default:
+                if is_none_or_empty(self.required_fields_inserted_by_default) or required_field not in self.required_fields_inserted_by_default:
                     url = self.get_view_url() + '/'
 
                     db_model = self.get_model()
@@ -78,7 +79,7 @@ class CRUDViewTest(ArqViewTest):
         @database_test.persistence_test()
         def _():
             for required_field in self.service.validator.required_fields:
-                if required_field not in self.required_fields_inserted_by_default:
+                if is_none_or_empty(self.required_fields_inserted_by_default) or required_field not in self.required_fields_inserted_by_default:
                     
                     id = str(db_model.id)
                     url = self.get_view_url() + f'/{id}'

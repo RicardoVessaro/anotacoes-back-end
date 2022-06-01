@@ -6,7 +6,8 @@ from collections import namedtuple
 from abc import ABC, abstractproperty, abstractmethod
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
-from arq.util.enviroment_variable import get_api_url
+from arq.service.enum.enum_service import EnumService
+from arq.util.enviroment_variable import get_api_url, get_test_database_url
 from arq.util.object_util import is_none_or_empty
 from arq.util.test.database_test import DatabaseTest, clean_enums, insert_enums
 from arq.util.view.view_encoder import ViewEncoder
@@ -23,38 +24,8 @@ class ArqViewTest(ABC):
 
     fake_id = '6248620366564103f229595f'
 
-    is_enum = False
-
-    enum_service = None
-
-    required_fields_inserted_by_default = []
-
     @abstractproperty
-    def service(self):
-        pass
-
-    @abstractproperty
-    def ROUTE_PREFIX(self):
-        pass
-
-    @abstractproperty
-    def enum_services_to_insert(self):
-        pass
-
-    @abstractproperty
-    def INTEGRATION_TEST_DB_URI(self):
-        pass
-
-    @abstractproperty        
-    def view_name(self):
-        pass
-
-    @abstractproperty
-    def model(self):
-        pass
-
-    @abstractproperty
-    def dao(self):
+    def view(self):
         pass
 
     @abstractproperty
@@ -64,6 +35,38 @@ class ArqViewTest(ABC):
     @abstractproperty
     def paginate_filter_results(self):
         pass
+
+    @property
+    def ROUTE_PREFIX(self):
+        return self.view.route_prefix
+
+    @property
+    def service(self):
+        return self.view.service
+
+    @property
+    def is_enum(self):
+        return isinstance(self.service, EnumService)
+
+    @property
+    def required_fields_inserted_by_default(self):
+        return self.service.required_fields_inserted_by_default
+
+    @property
+    def INTEGRATION_TEST_DB_URI(self):
+        return get_test_database_url()
+
+    @property        
+    def view_name(self):
+        return self.view.get_route_base()
+
+    @property
+    def dao(self):
+        return self.service.dao
+
+    @property
+    def model(self):
+        return self.dao.model
 
     @abstractproperty
     def filter_to_not_found(self):
@@ -87,16 +90,12 @@ class ArqViewTest(ABC):
 
     @pytest.fixture(scope="class", autouse=True)
     def insert_enums(self):
-        insert_enums(self.INTEGRATION_TEST_DB_URI, self.enum_services_to_insert)
-
         yield 
 
-        clean_enums(self.INTEGRATION_TEST_DB_URI, self.enum_services_to_insert)
-
-        if self.is_enum and not self.enum_service is None:
+        if self.is_enum:
             connect(host=self.INTEGRATION_TEST_DB_URI)
 
-            self.enum_service.save_enums()
+            self.service.save_enums()
 
             disconnect()
 

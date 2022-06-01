@@ -20,21 +20,7 @@ from api.modules.core.blueprints.view.mood_view import mood_view_name
 
 class TestNoteView(CRUDViewTest):
 
-    ROUTE_PREFIX = NoteView.route_prefix
-
-    INTEGRATION_TEST_DB_URI = get_test_database_url()
-
-    enum_services_to_insert = [TagService(), MoodService()]
-
-    view_name = note_view_name
-
-    model = Note
-
-    dao = NoteDAO()
-
-    service = NoteService()
-
-    required_fields_inserted_by_default = NoteService.required_fields_inserted_by_default
+    view = NoteView()
 
     filter_to_not_found = {"title": "to not found"}
 

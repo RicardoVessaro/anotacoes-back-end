@@ -9,25 +9,9 @@ from api.modules.core.blueprints.data.dao.tag_dao import TagDAO
 
 class TestTagView(CRUDViewTest):
 
-    ROUTE_PREFIX = TagView.route_prefix
-
-    INTEGRATION_TEST_DB_URI = get_test_database_url()
-
-    enum_services_to_insert = None
-
-    view_name = tag_view_name
-
-    model = Tag
-
-    dao = TagDAO()
-
-    service = TagService()
+    view = TagView()
 
     filter_to_not_found = {"name": "to not found"}
-
-    is_enum = True
-
-    enum_service = TagService()
 
     find_filter_results = [
         FindFilterResult(filter={}, expected_indexes=range(3)),
@@ -49,14 +33,14 @@ class TestTagView(CRUDViewTest):
 
     def get_model(self):
         return self.model(
-            code=1,
+            code=-1,
             name="test",
             priority="1"
         )
 
     def get_updated_model(self):
         return self.model(
-            code=1,
+            code=-1,
             name="test UPDATED",
             priority=1
         )

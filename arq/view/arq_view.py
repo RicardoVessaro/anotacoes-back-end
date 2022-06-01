@@ -22,6 +22,10 @@ class ArqView(FlaskView):
 
         self._service = service
 
+    @property
+    def service(self):
+        return self._service
+
     @route('<id>', methods=[GET])
     def find_by_id(self, id, **kwargs):
         return self._to_response(self._service.find_by_id(id))

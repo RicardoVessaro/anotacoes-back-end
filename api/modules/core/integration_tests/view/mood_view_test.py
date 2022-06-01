@@ -4,25 +4,13 @@ from api.modules.core.blueprints.view.note_view import NoteView
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
-from api.modules.core.blueprints.view.mood_view import mood_view_name
+from api.modules.core.blueprints.view.mood_view import MoodView, mood_view_name
 from api.modules.core.blueprints.data.model.mood import Mood
 from api.modules.core.blueprints.data.dao.mood_dao import MoodDao
 
 class TestMoodView(CRUDViewTest):
 
-    ROUTE_PREFIX = NoteView.route_prefix
-
-    INTEGRATION_TEST_DB_URI = get_test_database_url()
-
-    enum_services_to_insert = None
-
-    view_name = mood_view_name 
-
-    model = Mood
-
-    dao = MoodDao()
-
-    service = MoodService()
+    view = MoodView()
 
     filter_to_not_found = {"name": "to not found"}
 
@@ -44,13 +32,13 @@ class TestMoodView(CRUDViewTest):
 
     def get_model(self):
         return self.model(
-            code=1,
+            code=-1,
             name="test"
         )
 
     def get_updated_model(self):
         return self.model(
-            code=1,
+            code=-1,
             name="test UPDATED"
         )
 

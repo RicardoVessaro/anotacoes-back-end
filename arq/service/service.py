@@ -3,12 +3,18 @@ from abc import abstractproperty
 
 class Service:
 
+    required_fields_inserted_by_default = None
+    
     @abstractproperty
     def NAME(self):
         pass
 
     def __init__(self, dao) -> None:
         self._dao = dao
+
+    @property
+    def dao(self):
+        return self._dao
 
     def insert(self, body: dict, **kwargs):
         return self._dao.insert(body, **kwargs)

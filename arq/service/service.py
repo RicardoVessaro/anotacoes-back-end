@@ -3,7 +3,7 @@ from abc import abstractproperty
 
 class Service:
 
-    required_fields_inserted_by_default = None
+    fields_inserted_by_default = None
     
     @abstractproperty
     def NAME(self):

@@ -11,7 +11,7 @@ class PictureService(DetailCRUDService):
 
     NAME = 'picture'
 
-    required_fields_inserted_by_default = [Picture.parent_field]
+    fields_inserted_by_default = [Picture.parent_field]
 
     def __init__(self) -> None:        
         picture_dao = PictureDAO()

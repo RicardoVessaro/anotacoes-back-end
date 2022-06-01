@@ -49,8 +49,8 @@ class ArqViewTest(ABC):
         return isinstance(self.service, EnumService)
 
     @property
-    def required_fields_inserted_by_default(self):
-        return self.service.required_fields_inserted_by_default
+    def fields_inserted_by_default(self):
+        return self.service.fields_inserted_by_default
 
     @property
     def INTEGRATION_TEST_DB_URI(self):

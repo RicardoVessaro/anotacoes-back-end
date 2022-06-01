@@ -49,7 +49,7 @@ class CRUDViewTest(ArqViewTest):
         def _():
 
             for required_field in self.service.validator.required_fields:
-                if is_none_or_empty(self.required_fields_inserted_by_default) or required_field not in self.required_fields_inserted_by_default:
+                if is_none_or_empty(self.fields_inserted_by_default) or required_field not in self.fields_inserted_by_default:
                     url = self.get_view_url() + '/'
 
                     db_model = self.get_model()
@@ -79,7 +79,7 @@ class CRUDViewTest(ArqViewTest):
         @database_test.persistence_test()
         def _():
             for required_field in self.service.validator.required_fields:
-                if is_none_or_empty(self.required_fields_inserted_by_default) or required_field not in self.required_fields_inserted_by_default:
+                if is_none_or_empty(self.fields_inserted_by_default) or required_field not in self.fields_inserted_by_default:
                     
                     id = str(db_model.id)
                     url = self.get_view_url() + f'/{id}'

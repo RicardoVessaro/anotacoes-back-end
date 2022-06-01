@@ -13,7 +13,7 @@ class NoteService(CRUDService):
 
     NAME = 'note'
 
-    required_fields_inserted_by_default = [CREATED_IN]
+    fields_inserted_by_default = [CREATED_IN]
 
     def __init__(self) -> None:
         dao = NoteDAO()

@@ -11,7 +11,7 @@ class LinkService(DetailCRUDService):
 
     NAME = 'link'
 
-    required_fields_inserted_by_default = [Link.parent_field]
+    fields_inserted_by_default = [Link.parent_field]
 
     def __init__(self) -> None:
         link_dao = LinkDAO()

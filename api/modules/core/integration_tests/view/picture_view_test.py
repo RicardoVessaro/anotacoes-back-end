@@ -5,7 +5,7 @@ from api.modules.core.blueprints.general.module_constants import REST_API_V1_BAS
 from api.modules.core.blueprints.service.note.note_service import NoteService
 from api.modules.core.blueprints.service.note.picture.picture_service import PictureService
 from arq.util.enviroment_variable import get_test_database_url
-from arq.util.test.detail_crud_view_test import DetailCRUDViewTest
+from arq.util.test.view.detail_crud_view_test import DetailCRUDViewTest
 from api.modules.core.blueprints.view.picture_view import PictureView, picture_view_name
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from api.modules.core.blueprints.data.dao.note_dao import NoteDAO
@@ -17,10 +17,6 @@ class TestPictureView(DetailCRUDViewTest):
     view = PictureView()
 
     filter_to_not_found = {"title": "to not found"}
-
-    is_enum = False
-
-    enum_service = None
 
     find_filter_results = [
         FindFilterResult(filter={}, expected_indexes=range(3)),

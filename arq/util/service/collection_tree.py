@@ -3,7 +3,7 @@ from collections import namedtuple
 from arq.data.dao.dao import DAO
 
 from arq.exception.arq_exception import ArqException
-from arq.exception.exception_message import COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO, COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM, COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM
+from arq.exception.exception_message import COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO, COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM, COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES, COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM
 
 DAO_ATTRIBUTE = "dao"
 CollectionItem = namedtuple('CollectionItem', f'name parent_field id {DAO_ATTRIBUTE} field')
@@ -15,33 +15,40 @@ class CollectionTree:
 
         self._collection_tree = collection_tree 
 
-    # TODO Test
     @property
     def child(self):
         return self._collection_tree[-1]
 
-    # TODO Test
     @property
     def parent(self):
         return self._collection_tree[-2]
 
-    # TODO Test
     def is_parent(self, collection_item):
         return collection_item.name == self.parent.name
 
-    # TODO Test
     def is_child(self, collection_item):
         return collection_item.name == self.child.name
 
-    
-    # TODO validar se os items nao tem o mesmo nome
     def _validate_collection(self, collection_tree):
         self._validate_length(collection_tree)
 
+        used_names = []        
         for collection_item in collection_tree:
             self._validate_is_collection_item(collection_item)
 
+            used_names = self._validate_unique_name(collection_item, used_names)
+
             self._validate_have_dao(collection_item)
+
+    def _validate_unique_name(self, collection_item, used_names):
+        name = collection_item.name
+
+        if name in used_names:
+            raise ArqException(COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES.format(name, CollectionItem))
+        else:
+            used_names.append(name)
+
+        return used_names        
 
     def _validate_have_dao(self, collection_item):
         if not isinstance(collection_item.dao, DAO):

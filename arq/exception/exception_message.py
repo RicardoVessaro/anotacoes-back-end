@@ -10,3 +10,4 @@ DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD = 'The model "{0}" in {1} "{2}" must 
 COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM = 'The "{0}" object must have at least 2 item a "parent" and a "child".'
 COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM = 'All items of "{0}" object must be an instance of "{1}". The object "{2}" is not.'
 COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO = 'All "{0}" attributes in "{1}" object must be an instance of "{2}". The object "{3}" in "{4} - {5}" is not.' 
+COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES = 'The name "{0}" is duplicated in {1}.'

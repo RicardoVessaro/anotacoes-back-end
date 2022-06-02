@@ -70,7 +70,6 @@ class CollectionTree:
     def __getitem__(self, index):
         return self._collection_tree[index]
 
-    # TODO test / use self.__class__ e nao 'CollectionTree'
     def __repr__(self):
         repr = f'{self.__class__}: '
 

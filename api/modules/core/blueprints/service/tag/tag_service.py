@@ -12,6 +12,8 @@ LATER = Tag(code=3, name="LATER", priority=3)
 @arq_enum()
 class TagService(EnumService):   
 
+    NAME = 'tags'
+
     def __init__(self) -> None:
 
         enums = [

@@ -13,6 +13,8 @@ class LinkView(DetailCRUDView):
 
     route_prefix = f'{REST_API_V1_BASE_URL}{NoteService.NAME}/<{Link.parent_field}>/'
 
+    route_base = link_view_name
+
     def __init__(self) -> None:
         super().__init__(service=LinkService())
 

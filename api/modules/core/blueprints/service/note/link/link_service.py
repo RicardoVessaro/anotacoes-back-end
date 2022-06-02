@@ -9,7 +9,7 @@ from api.modules.core.blueprints.service.note.note_service import NoteService
 
 class LinkService(DetailCRUDService):
 
-    NAME = 'link'
+    NAME = 'links'
 
     fields_inserted_by_default = [Link.parent_field]
 

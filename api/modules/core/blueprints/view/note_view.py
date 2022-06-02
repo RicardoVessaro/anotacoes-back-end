@@ -11,6 +11,8 @@ class NoteView(CRUDView):
 
     route_prefix = REST_API_V1_BASE_URL
 
+    route_base = note_view_name
+
     def __init__(self) -> None:
         super().__init__(
             service=NoteService()

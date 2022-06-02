@@ -13,6 +13,8 @@ class PictureView(DetailCRUDView):
 
     route_prefix = f'{REST_API_V1_BASE_URL}{NoteService.NAME}/<{Picture.parent_field}>/'
 
+    route_base = picture_view_name
+
     def __init__(self) -> None:
         super().__init__(service=PictureService())
 

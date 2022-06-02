@@ -15,8 +15,9 @@ class CommentView(DetailCRUDView):
 
     route_prefix = f'{REST_API_V1_BASE_URL}{PictureService.NAME}/<{Comment.parent_field}>/'
 
+    route_base = comment_view_name
+
     def __init__(self) -> None:
         super().__init__(service=CommentService())
-
 
 CommentView.register(comment_blueprint)

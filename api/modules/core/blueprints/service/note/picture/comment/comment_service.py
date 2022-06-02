@@ -10,7 +10,7 @@ from api.modules.core.blueprints.service.note.picture.comment.comment_validator 
 
 class CommentService(DetailCRUDService):
 
-    NAME = 'comment'
+    NAME = 'comments'
 
     fields_inserted_by_default = [Comment.parent_field]   
 

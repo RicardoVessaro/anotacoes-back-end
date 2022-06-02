@@ -11,7 +11,7 @@ TAG = 'tag'
 
 class NoteService(CRUDService):
 
-    NAME = 'note'
+    NAME = 'notes'
 
     fields_inserted_by_default = [CREATED_IN]
 

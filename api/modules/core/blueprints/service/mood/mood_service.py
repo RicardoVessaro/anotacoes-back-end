@@ -16,6 +16,8 @@ GREAT = Mood(code=6, name='Great')
 @arq_enum()
 class MoodService(EnumService):
 
+    NAME = 'moods'
+
     def __init__(self) -> None:
 
         enums = [

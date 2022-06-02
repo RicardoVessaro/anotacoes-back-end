@@ -9,7 +9,7 @@ from arq.util.service.collection_tree import CollectionItem, CollectionTree
 
 class PictureService(DetailCRUDService):
 
-    NAME = 'picture'
+    NAME = 'pictures'
 
     fields_inserted_by_default = [Picture.parent_field]
 

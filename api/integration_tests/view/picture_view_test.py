@@ -1,14 +1,14 @@
 
-from api.annotation.blueprints.data.model.picture import Picture
-from api.annotation.blueprints.data.dao.picture_dao import PictureDAO
-from api.annotation.blueprints.general.module_constants import REST_API_V1_BASE_URL
-from api.annotation.blueprints.service.note.note_service import NoteService
-from api.annotation.blueprints.service.note.picture.picture_service import PictureService
+from api.annotation.data.model.picture import Picture
+from api.annotation.data.dao.picture_dao import PictureDAO
+from api.annotation.general.module_constants import REST_API_V1_BASE_URL
+from api.annotation.service.note.note_service import NoteService
+from api.annotation.service.note.picture.picture_service import PictureService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.view.detail_crud_view_test import DetailCRUDViewTest
-from api.annotation.blueprints.view.picture_view import PictureView, picture_view_name
+from api.annotation.view.picture_view import PictureView, picture_view_name
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
-from api.annotation.blueprints.data.dao.note_dao import NoteDAO
+from api.annotation.data.dao.note_dao import NoteDAO
 from arq.util.view.route_parser import parse_route
 
 

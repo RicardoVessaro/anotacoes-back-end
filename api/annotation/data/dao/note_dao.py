@@ -1,5 +1,5 @@
 
-from api.annotation.blueprints.data.model.note import Note
+from api.annotation.data.model.note import Note
 
 from arq.data.dao.crud_dao import CRUDDAO
 

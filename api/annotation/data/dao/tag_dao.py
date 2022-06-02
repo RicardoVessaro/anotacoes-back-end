@@ -1,6 +1,6 @@
 
 from arq.data.dao.crud_dao import CRUDDAO
-from api.annotation.blueprints.data.model.tag import Tag
+from api.annotation.data.model.tag import Tag
 
 class TagDAO(CRUDDAO):
 

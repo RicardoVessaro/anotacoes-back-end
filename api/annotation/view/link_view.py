@@ -1,10 +1,10 @@
 
 from flask import Blueprint
-from api.annotation.blueprints.general.module_constants import REST_API_V1_BASE_URL
-from api.annotation.blueprints.service.note.note_service import NoteService
+from api.annotation.general.module_constants import REST_API_V1_BASE_URL
+from api.annotation.service.note.note_service import NoteService
 from arq.view.detail_crud_view import DetailCRUDView
-from api.annotation.blueprints.service.note.link.link_service import LinkService
-from api.annotation.blueprints.data.model.link import Link
+from api.annotation.service.note.link.link_service import LinkService
+from api.annotation.data.model.link import Link
 
 link_view_name = LinkService.NAME
 link_blueprint = Blueprint(link_view_name, __name__)

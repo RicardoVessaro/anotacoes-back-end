@@ -1,7 +1,7 @@
 
-from api.annotation.blueprints.data.dao.tag_dao import TagDAO
-from api.annotation.blueprints.data.model.tag import Tag
-from api.annotation.blueprints.service.tag.tag_validator import TagValidator
+from api.annotation.data.dao.tag_dao import TagDAO
+from api.annotation.data.model.tag import Tag
+from api.annotation.service.tag.tag_validator import TagValidator
 from arq.service.enum.arq_enum import arq_enum
 from arq.service.enum.enum_service import EnumService
 

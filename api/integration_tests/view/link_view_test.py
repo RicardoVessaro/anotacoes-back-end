@@ -1,7 +1,7 @@
 
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from arq.util.test.view.detail_crud_view_test import DetailCRUDViewTest
-from api.annotation.blueprints.view.link_view import LinkView
+from api.annotation.view.link_view import LinkView
 
 class TestLinkView(DetailCRUDViewTest):
 

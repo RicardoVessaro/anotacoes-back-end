@@ -1,5 +1,5 @@
 
-from api.annotation.blueprints.data.model.mood import Mood
+from api.annotation.data.model.mood import Mood
 from arq.data.dao.crud_dao import CRUDDAO
 
 class MoodDao(CRUDDAO):

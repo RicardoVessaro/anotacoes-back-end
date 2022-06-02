@@ -1,9 +1,9 @@
 
-from api.annotation.blueprints.data.dao.note_dao import NoteDAO
-from api.annotation.blueprints.data.dao.picture_dao import PictureDAO
-from api.annotation.blueprints.data.model.picture import Picture
-from api.annotation.blueprints.service.note.note_service import NoteService
-from api.annotation.blueprints.service.note.picture.picture_validator import PictureValidator
+from api.annotation.data.dao.note_dao import NoteDAO
+from api.annotation.data.dao.picture_dao import PictureDAO
+from api.annotation.data.model.picture import Picture
+from api.annotation.service.note.note_service import NoteService
+from api.annotation.service.note.picture.picture_validator import PictureValidator
 from arq.service.detail_crud_service import DetailCRUDService
 from arq.util.service.collection_tree import CollectionItem, CollectionTree
 

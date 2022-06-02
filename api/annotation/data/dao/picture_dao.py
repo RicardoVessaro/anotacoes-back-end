@@ -1,6 +1,6 @@
 
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
-from api.annotation.blueprints.data.model.picture import Picture
+from api.annotation.data.model.picture import Picture
 
 class PictureDAO(DetailCRUDDAO):
 

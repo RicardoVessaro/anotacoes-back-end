@@ -1,12 +1,12 @@
 
 from unicodedata import name
-from api.annotation.blueprints.data.dao.picture_dao import PictureDAO
-from api.annotation.blueprints.service.note.picture.picture_service import PictureService
+from api.annotation.data.dao.picture_dao import PictureDAO
+from api.annotation.service.note.picture.picture_service import PictureService
 from arq.service.detail_crud_service import DetailCRUDService
-from api.annotation.blueprints.data.model.comment import Comment
-from api.annotation.blueprints.data.dao.comment_dao import CommentDAO
+from api.annotation.data.model.comment import Comment
+from api.annotation.data.dao.comment_dao import CommentDAO
 from arq.util.service.collection_tree import CollectionItem, CollectionTree
-from api.annotation.blueprints.service.note.picture.comment.comment_validator import CommentValidator
+from api.annotation.service.note.picture.comment.comment_validator import CommentValidator
 
 class CommentService(DetailCRUDService):
 

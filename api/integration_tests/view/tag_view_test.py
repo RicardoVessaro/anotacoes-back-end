@@ -1,11 +1,11 @@
 
-from api.annotation.blueprints.service.tag.tag_service import TagService
+from api.annotation.service.tag.tag_service import TagService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
 from arq.util.test.view.crud_view_test import CRUDViewTest
-from api.annotation.blueprints.view.tag_view import TagView, tag_view_name
-from api.annotation.blueprints.data.model.tag import Tag
-from api.annotation.blueprints.data.dao.tag_dao import TagDAO
+from api.annotation.view.tag_view import TagView, tag_view_name
+from api.annotation.data.model.tag import Tag
+from api.annotation.data.dao.tag_dao import TagDAO
 
 class TestTagView(CRUDViewTest):
 

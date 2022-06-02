@@ -1,7 +1,7 @@
 
-from api.annotation.blueprints.data.model.mood import Mood
-from api.annotation.blueprints.data.dao.mood_dao import MoodDao
-from api.annotation.blueprints.service.mood.mood_validator import MoodValidator
+from api.annotation.data.model.mood import Mood
+from api.annotation.data.dao.mood_dao import MoodDao
+from api.annotation.service.mood.mood_validator import MoodValidator
 from arq.service.enum.arq_enum import arq_enum
 from arq.service.enum.enum_service import EnumService
 

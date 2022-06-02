@@ -1,7 +1,7 @@
 
 from flask import Blueprint
-from api.annotation.blueprints.service.note.note_service import NoteService
-from api.annotation.blueprints.general.module_constants import REST_API_V1_BASE_URL
+from api.annotation.service.note.note_service import NoteService
+from api.annotation.general.module_constants import REST_API_V1_BASE_URL
 from arq.view.crud_view import CRUDView
 
 note_view_name = NoteService.NAME

@@ -1,10 +1,9 @@
 
-from unicodedata import name
 from unittest.mock import patch
-from api.annotation.blueprints.data.model.note import Note
-from api.annotation.blueprints.data.model.tag import Tag
-from api.annotation.blueprints.service.note.note_service import NoteService
-from api.annotation.blueprints.service.tag.tag_service import TagService
+from api.annotation.data.model.note import Note
+from api.annotation.data.model.tag import Tag
+from api.annotation.service.note.note_service import NoteService
+from api.annotation.service.tag.tag_service import TagService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest, clean_enums, insert_enums
 

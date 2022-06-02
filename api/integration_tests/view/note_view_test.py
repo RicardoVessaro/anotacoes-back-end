@@ -3,18 +3,18 @@ import pytest
 import requests
 
 from datetime import datetime
-from api.annotation.blueprints.data.dao.note_dao import NoteDAO
-from api.annotation.blueprints.service.mood.mood_service import BORING, COOL, GREAT, SAD, MoodService
-from api.annotation.blueprints.service.note.note_service import CREATED_IN, TAG, NoteService
-from api.annotation.blueprints.service.tag.tag_service import IMPORTANT, OK, TagService
+from api.annotation.data.dao.note_dao import NoteDAO
+from api.annotation.service.mood.mood_service import BORING, COOL, GREAT, SAD, MoodService
+from api.annotation.service.note.note_service import CREATED_IN, TAG, NoteService
+from api.annotation.service.tag.tag_service import IMPORTANT, OK, TagService
 from arq.util.enviroment_variable import get_api_url, get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
-from api.annotation.blueprints.data.model.note import Note
-from api.annotation.blueprints.view.note_view import NoteView, note_view_name
+from api.annotation.data.model.note import Note
+from api.annotation.view.note_view import NoteView, note_view_name
 from arq.util.test.view.crud_view_test import CRUDViewTest
-from api.annotation.blueprints.view.tag_view import tag_view_name
-from api.annotation.blueprints.view.mood_view import mood_view_name
+from api.annotation.view.tag_view import tag_view_name
+from api.annotation.view.mood_view import mood_view_name
 
 
 

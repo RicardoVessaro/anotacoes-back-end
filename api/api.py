@@ -3,7 +3,7 @@ import os
 
 from flask import Flask
 from api.db import db, set_database_config
-from api.modules.annotation.blueprints.view import note_view, tag_view, mood_view, picture_view, comment_view, link_view
+from api.annotation.blueprints.view import note_view, tag_view, mood_view, picture_view, comment_view, link_view
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception import error_handler
 from arq.flask_subclass.arq_flask import ArqFlask

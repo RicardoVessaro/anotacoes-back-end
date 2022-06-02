@@ -83,8 +83,8 @@ class TestCollectionTree:
         child = CollectionItem('child', 'parent_field', None, DAO(self.TestModel), 'child_field_id')
 
         collection_tree = CollectionTree(parent=parent, child=child)
-        expect = f'{CollectionTree}: /parent/child'
+        expect = f'{CollectionTree}: parent/child'
 
-        assert str(collection_tree)
+        assert expect == str(collection_tree)
 
         

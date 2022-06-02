@@ -8,6 +8,7 @@ from arq.util.view.view_encoder import ViewEncoder
 GET = 'GET'
 POST = 'POST'
 PUT = 'PUT'
+PATCH = 'PATCH'
 DELETE = 'DELETE'
 
 QUERY_LIMIT = 'limit'

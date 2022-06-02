@@ -90,7 +90,7 @@ class CRUDViewTest(ArqViewTest):
                     data = self.encode(updated_model)
                     data[required_field] = None
 
-                    response = requests.put(url, json=data)
+                    response = requests.patch(url, json=data)
                     response_data = response.json()
 
                     error_message = REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)
@@ -121,7 +121,7 @@ class CRUDViewTest(ArqViewTest):
 
                 data = self.encode(updated_model)
 
-                response = requests.put(url, json=data)
+                response = requests.patch(url, json=data)
 
                 item = response.json()
 
@@ -138,7 +138,7 @@ class CRUDViewTest(ArqViewTest):
 
                 data = self.encode(updated_model)
 
-                response = requests.put(url, json=data)
+                response = requests.patch(url, json=data)
 
                 assert response.status_code == 404
 

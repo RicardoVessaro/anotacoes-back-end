@@ -2,7 +2,7 @@
 from flask import request
 from flask_classful import route
 from arq.service.crud_service import CRUDService
-from arq.view.arq_view import DELETE, POST, PUT, ArqView
+from arq.view.arq_view import DELETE, PATCH, POST, ArqView
 
 
 class CRUDView(ArqView):
@@ -21,7 +21,7 @@ class CRUDView(ArqView):
         return self._to_response(model)
 
 
-    @route('<id>', methods=[PUT])
+    @route('<id>', methods=[PATCH])
     def update(self, id, **kwargs):
         body = request.json
 

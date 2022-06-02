@@ -100,7 +100,7 @@ class DetailCRUDViewTest(CRUDViewTest):
 
             data = self.encode(updated_model)
 
-            response = requests.put(url, json=data)
+            response = requests.patch(url, json=data)
 
             response_data = response.json()
             error_message = CHILD_NOT_FOUND_IN_PARENT.format(

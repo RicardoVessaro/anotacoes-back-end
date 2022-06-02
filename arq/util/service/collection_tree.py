@@ -33,6 +33,28 @@ class CollectionTree:
     def is_child(self, collection_item):
         return collection_item.name == self.child.name
 
+    def get_url(self):
+        url = ''
+
+        first = True
+
+        count = 1
+        for c in self:
+
+            if not first:
+                url += '/'
+
+            if count == len(self):
+                url += f'{c.name}/'
+
+            else:
+                url += f'{c.name}/<{c.field}>'
+
+            first = False
+            count += 1
+
+        return url
+
     def _validate_collection(self, collection_tree):
 
         used_names = []        

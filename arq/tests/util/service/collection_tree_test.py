@@ -86,5 +86,16 @@ class TestCollectionTree:
         expect = f'{CollectionTree}: parent/child'
 
         assert expect == str(collection_tree)
+    
+    def test_get_url(self):
+
+        parent = CollectionItem('parent', None, None, DAO(self.TestModel), 'parent_field_id')
+        child = CollectionItem('child', 'parent_field', None, DAO(self.TestModel), 'child_field_id')
+
+        collection_tree = CollectionTree(parent=parent, child=child)
+        expect = 'parent/<parent_field_id>/child/'
+
+        assert expect == collection_tree.get_url()
+    
 
         

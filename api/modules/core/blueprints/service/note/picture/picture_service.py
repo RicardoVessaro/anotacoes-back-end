@@ -16,22 +16,22 @@ class PictureService(DetailCRUDService):
     def __init__(self) -> None:        
         picture_dao = PictureDAO()
         
-        collection_tree = CollectionTree(collection_tree=[
-            CollectionItem(
+        collection_tree = CollectionTree(
+            parent=CollectionItem(
                 name=NoteService.NAME,
                 dao=NoteDAO(),
                 parent_field=None,
                 id=None,
                 field=picture_dao.model.parent_field
             ),
-            CollectionItem(
+            child=CollectionItem(
                 name=self.NAME,
                 parent_field=picture_dao.model.parent_field,
                 dao=picture_dao,
                 id=None,
                 field='id'
             )
-        ])
+        )
 
         super().__init__(
             dao=collection_tree.child.dao,

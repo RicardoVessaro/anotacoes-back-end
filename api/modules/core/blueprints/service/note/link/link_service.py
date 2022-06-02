@@ -16,22 +16,22 @@ class LinkService(DetailCRUDService):
     def __init__(self) -> None:
         link_dao = LinkDAO()
 
-        collection_tree = CollectionTree([
-            CollectionItem(
+        collection_tree = CollectionTree(
+            parent=CollectionItem(
                 name=NoteService.NAME,
                 parent_field=None,
                 id=None,
                 dao=NoteDAO(),
                 field=link_dao.model.parent_field
             ),
-            CollectionItem(
+            child=CollectionItem(
                 name=self.NAME,
                 parent_field=link_dao.model.parent_field,
                 id=None,
                 dao=link_dao,
                 field='id'
             )
-        ])
+        )
 
         super().__init__(
             dao=link_dao, 

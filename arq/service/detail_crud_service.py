@@ -25,7 +25,7 @@ class DetailCRUDService(CRUDService):
             else:
                 new_collection_tree.append(item)
 
-        return CollectionTree(collection_tree=new_collection_tree)
+        return CollectionTree(parent=new_collection_tree[0], child=new_collection_tree[1])
 
 
     def validate_collection_tree(self, collection_tree):

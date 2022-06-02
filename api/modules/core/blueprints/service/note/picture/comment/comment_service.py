@@ -18,22 +18,22 @@ class CommentService(DetailCRUDService):
         comment_dao = CommentDAO()
         picture_dao = PictureDAO()
 
-        collection_tree = CollectionTree([
-            CollectionItem(
+        collection_tree = CollectionTree(
+            parent=CollectionItem(
                 name=PictureService.NAME,
                 parent_field=picture_dao.model.parent_field,
                 dao=picture_dao,
                 id=None,
                 field=comment_dao.model.parent_field
             ),
-            CollectionItem(
+            child=CollectionItem(
                 name=self.NAME,
                 parent_field=comment_dao.model.parent_field,
                 dao=comment_dao,
                 id=None,
                 field='id'
             )
-        ])
+        )
 
         super().__init__(
             dao=collection_tree.child.dao, 

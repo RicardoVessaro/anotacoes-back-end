@@ -10,18 +10,22 @@ CollectionItem = namedtuple('CollectionItem', f'name parent_field id {DAO_ATTRIB
 
 class CollectionTree:
 
-    def __init__(self, collection_tree) -> None:
+    def __init__(self, parent, child) -> None:
+        collection_tree = [parent, child] 
         self._validate_collection(collection_tree)
 
-        self._collection_tree = collection_tree 
+        self._parent = parent
+        self._child = child
+
+        self._collection_tree = collection_tree
 
     @property
     def child(self):
-        return self._collection_tree[-1]
+        return self._child
 
     @property
     def parent(self):
-        return self._collection_tree[-2]
+        return self._parent
 
     def is_parent(self, collection_item):
         return collection_item.name == self.parent.name
@@ -33,7 +37,6 @@ class CollectionTree:
         return self._collection_tree.copy()
 
     def _validate_collection(self, collection_tree):
-        self._validate_length(collection_tree)
 
         used_names = []        
         for collection_item in collection_tree:
@@ -61,18 +64,15 @@ class CollectionTree:
         if not isinstance(collection_item, CollectionItem):
             raise ArqException(COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM.format(CollectionItem, CollectionItem, collection_item.__class__))
 
-    def _validate_length(self, collection_tree):
-        if len(collection_tree) < 2:
-            raise ArqException(COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM.format(CollectionTree.__class__))
-
     def __len__(self):
         return len(self._collection_tree)
 
     def __getitem__(self, index):
         return self._collection_tree[index]
 
+    # TODO test / use self.__class__ e nao 'CollectionTree'
     def __repr__(self):
-        repr = 'CollectionTree: '
+        repr = f'{self.__class__}: '
 
         first = True
 

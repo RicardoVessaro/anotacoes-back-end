@@ -169,10 +169,9 @@ class TestDetailCRUDService:
         def _():
             
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
-            detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
-            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao, field='id')
+            detail_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao, field='id')
 
-            collection_tree = CollectionTree(collection_tree=[arq_model_item, detail_model_item, detail_child_model_item])
+            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
 
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 
@@ -201,9 +200,8 @@ class TestDetailCRUDService:
         def _():
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
-            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao, field='id')
 
-            collection_tree = CollectionTree(collection_tree=[arq_model_item, detail_model_item, detail_child_model_item])
+            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
         
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 
@@ -221,9 +219,8 @@ class TestDetailCRUDService:
         def _():
             arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
-            detail_child_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=None, dao=self.detail_child_dao, field='id')
 
-            collection_tree = CollectionTree(collection_tree=[arq_model_item, detail_model_item, detail_child_model_item])
+            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
         
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 

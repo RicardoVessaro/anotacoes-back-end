@@ -29,6 +29,9 @@ class CollectionTree:
     def is_child(self, collection_item):
         return collection_item.name == self.child.name
 
+    def copy(self):
+        return self._collection_tree.copy()
+
     def _validate_collection(self, collection_tree):
         self._validate_length(collection_tree)
 

@@ -3,7 +3,7 @@ import os
 
 from flask import Flask
 from api.db import db, set_database_config
-from api.modules.core.blueprints.view import note_view, tag_view, mood_view, picture_view, link_view
+from api.modules.core.blueprints.view import note_view, tag_view, mood_view, picture_view, comment_view, link_view
 from arq.exception.arq_exception import ArqException
 from arq.exception.arq_exception import error_handler
 from arq.flask_subclass.arq_flask import ArqFlask
@@ -29,10 +29,11 @@ def _register_blueprint(flask_app: Flask):
 
 
 def _register_core_blueprint(flask_app: Flask):
-    flask_app.register_blueprint(note_view.note_blueprint)
     flask_app.register_blueprint(tag_view.tag_blueprint)
     flask_app.register_blueprint(mood_view.mood_blueprint)
+    flask_app.register_blueprint(note_view.note_blueprint)
     flask_app.register_blueprint(picture_view.picture_blueprint)
+    flask_app.register_blueprint(comment_view.comment_blueprint)
     flask_app.register_blueprint(link_view.link_blueprint)
 
 

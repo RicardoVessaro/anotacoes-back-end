@@ -1,5 +1,5 @@
 
-from arq.service.enum.enum_validator import EnumValidator
+from ipsum.service.enum.enum_validator import EnumValidator
 
 class MoodValidator(EnumValidator):
 

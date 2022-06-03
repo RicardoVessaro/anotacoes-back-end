@@ -4,8 +4,8 @@ from api.annotation.data.dao.picture_dao import PictureDAO
 from api.annotation.data.model.picture import Picture
 from api.annotation.service.note.note_service import NoteService
 from api.annotation.service.note.picture.picture_validator import PictureValidator
-from arq.service.detail_crud_service import DetailCRUDService
-from arq.util.service.collection_tree import CollectionItem, CollectionTree
+from ipsum.service.detail_crud_service import DetailCRUDService
+from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
 
 class PictureService(DetailCRUDService):
 

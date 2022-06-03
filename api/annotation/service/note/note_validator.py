@@ -1,5 +1,5 @@
 
-from arq.service.crud_validator import CRUDValidator
+from ipsum.service.crud_validator import CRUDValidator
 
 class NoteValidator(CRUDValidator):
 

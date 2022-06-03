@@ -3,7 +3,7 @@ import os
 from flask import Flask
 from flask_mongoengine import MongoEngine
 
-from arq.util.enviroment_variable import get_database_url, get_test_database_url, is_test_enviroment
+from ipsum.util.enviroment_variable import get_database_url, get_test_database_url, is_test_enviroment
 
 db = MongoEngine()
 

@@ -2,9 +2,9 @@
 from api.annotation.data.dao.link_dao import LinkDAO
 from api.annotation.data.model.link import Link
 from api.annotation.service.note.link.link_validator import LinkValidator
-from arq.service.detail_crud_service import DetailCRUDService
+from ipsum.service.detail_crud_service import DetailCRUDService
 from api.annotation.data.dao.note_dao import NoteDAO
-from arq.util.service.collection_tree import CollectionItem, CollectionTree
+from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
 from api.annotation.service.note.note_service import NoteService
 
 class LinkService(DetailCRUDService):

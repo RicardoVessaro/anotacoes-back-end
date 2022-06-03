@@ -2,8 +2,8 @@
 from api.annotation.data.model.mood import Mood
 from api.annotation.data.dao.mood_dao import MoodDao
 from api.annotation.service.mood.mood_validator import MoodValidator
-from arq.service.enum.ipsum_enum import ipsum_enum
-from arq.service.enum.enum_service import EnumService
+from ipsum.service.enum.ipsum_enum import ipsum_enum
+from ipsum.service.enum.enum_service import EnumService
 
 
 COOL = Mood(code=1, name='Cool')

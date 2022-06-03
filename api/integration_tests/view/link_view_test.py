@@ -1,6 +1,6 @@
 
-from arq.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
-from arq.util.test.view.detail_crud_view_test import DetailCRUDViewTest
+from ipsum.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
+from ipsum.util.test.view.detail_crud_view_test import DetailCRUDViewTest
 from api.annotation.view.link_view import LinkView
 
 class TestLinkView(DetailCRUDViewTest):

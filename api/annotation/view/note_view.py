@@ -2,7 +2,7 @@
 from flask import Blueprint
 from api.annotation.service.note.note_service import NoteService
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
-from arq.view.crud_view import CRUDView
+from ipsum.view.crud_view import CRUDView
 
 note_view_name = NoteService.NAME
 note_blueprint = Blueprint(note_view_name, __name__)

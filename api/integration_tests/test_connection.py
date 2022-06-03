@@ -1,7 +1,7 @@
 import requests
 from mongoengine import connect, disconnect
 
-from arq.util.enviroment_variable import get_api_url, get_test_database_url
+from ipsum.util.enviroment_variable import get_api_url, get_test_database_url
 
 def test_url_connection():
 

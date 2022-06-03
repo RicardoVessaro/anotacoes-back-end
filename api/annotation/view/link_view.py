@@ -2,7 +2,7 @@
 from flask import Blueprint
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
 from api.annotation.service.note.note_service import NoteService
-from arq.view.detail_crud_view import DetailCRUDView
+from ipsum.view.detail_crud_view import DetailCRUDView
 from api.annotation.service.note.link.link_service import LinkService
 from api.annotation.data.model.link import Link
 

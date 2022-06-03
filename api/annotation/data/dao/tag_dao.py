@@ -1,5 +1,5 @@
 
-from arq.data.dao.crud_dao import CRUDDAO
+from ipsum.data.dao.crud_dao import CRUDDAO
 from api.annotation.data.model.tag import Tag
 
 class TagDAO(CRUDDAO):

@@ -3,7 +3,7 @@ import datetime
 from api.annotation.data.dao.note_dao import NoteDAO
 from api.annotation.service.note.note_validator import NoteValidator
 from api.annotation.service.tag.tag_service import OK
-from arq.service.crud_service import CRUDService
+from ipsum.service.crud_service import CRUDService
 from api.annotation.service.tag.tag_service import TagService
 
 CREATED_IN = 'created_in'

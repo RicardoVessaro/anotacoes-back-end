@@ -4,10 +4,10 @@ import os
 from flask import Flask
 from api.db import db, set_database_config
 from api.annotation.view import note_view, tag_view, mood_view, picture_view, comment_view, link_view
-from arq.exception.ipsum_exception import IpsumException
-from arq.exception.ipsum_exception import error_handler
-from arq.flask_subclass.impsum_flask import IpsumFlask
-from arq.service.enum.ipsum_enum import save_enums
+from ipsum.exception.ipsum_exception import IpsumException
+from ipsum.exception.ipsum_exception import error_handler
+from ipsum.flask_subclass.impsum_flask import IpsumFlask
+from ipsum.service.enum.ipsum_enum import save_enums
 
 def create_flask_app():
     

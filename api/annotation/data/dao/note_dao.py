@@ -1,7 +1,7 @@
 
 from api.annotation.data.model.note import Note
 
-from arq.data.dao.crud_dao import CRUDDAO
+from ipsum.data.dao.crud_dao import CRUDDAO
 
 class NoteDAO(CRUDDAO):
 

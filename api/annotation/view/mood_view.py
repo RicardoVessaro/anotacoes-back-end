@@ -1,7 +1,7 @@
 
 from flask import Blueprint
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
-from arq.view.crud_view import CRUDView
+from ipsum.view.crud_view import CRUDView
 from api.annotation.service.mood.mood_service import MoodService
 
 mood_view_name = MoodService.NAME

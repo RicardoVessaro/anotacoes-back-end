@@ -1,4 +1,4 @@
-from arq.service.detail_crud_validator import DetailCRUDValidator
+from ipsum.service.detail_crud_validator import DetailCRUDValidator
 
 class LinkValidator(DetailCRUDValidator):
 

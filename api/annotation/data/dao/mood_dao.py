@@ -1,6 +1,6 @@
 
 from api.annotation.data.model.mood import Mood
-from arq.data.dao.crud_dao import CRUDDAO
+from ipsum.data.dao.crud_dao import CRUDDAO
 
 class MoodDao(CRUDDAO):
 

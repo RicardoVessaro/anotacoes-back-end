@@ -36,15 +36,5 @@ class CRUDDAO(DAO):
         return model.save(**kwargs)
 
     def delete(self, id):
-        model = self.find_by_id(id)
-
-        if model is None:
-            exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
-            raise IpsumException(exception_message, status_code=404)
-
-        deleted_id = model.id
-
-        model.delete()
-
-        return str(deleted_id)
+        return super().delete(id, validate_if_none=True)
 

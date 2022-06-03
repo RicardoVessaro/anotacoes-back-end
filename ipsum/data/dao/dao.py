@@ -2,7 +2,7 @@
 from mongoengine import Document
 from bson import ObjectId
 from ipsum.exception.ipsum_exception import IpsumException
-from ipsum.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.util import object_util
 from ipsum.util.data.query_filter_builder import QueryFilterBuilder
 
@@ -20,11 +20,16 @@ class DAO:
 
         return model_data
 
-    def delete(self, id):
+    def delete(self, id, validate_if_none=False):
         model = self.find_by_id(id)
 
         if model is None:
-            return None
+            if validate_if_none:
+                exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
+                raise IpsumException(exception_message, status_code=404)
+
+            else:
+                return None
 
         deleted_id = model.id
 
@@ -105,4 +110,3 @@ class DAO:
             'has_next': has_next,
             'has_result': True
         }
-

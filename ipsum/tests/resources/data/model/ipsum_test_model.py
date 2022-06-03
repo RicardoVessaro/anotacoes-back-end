@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, IntField, BooleanField, ListField
+from mongoengine import Document, StringField, IntField, BooleanField, ListField, DateTimeField
 
 class IpsumTestModel(Document):
 
@@ -9,5 +9,7 @@ class IpsumTestModel(Document):
     boolean = BooleanField()
 
     tags = ListField(StringField())
+
+    day = DateTimeField()
 
 

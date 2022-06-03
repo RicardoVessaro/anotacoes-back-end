@@ -1,4 +1,5 @@
 
+import datetime
 from pytest import raises
 from ipsum.data.dao.dao import DAO
 from ipsum.exception.ipsum_exception import IpsumException
@@ -78,9 +79,11 @@ class TestService:
         _()
 
     def test_find(self):
+        today = datetime.date.today()
+
         ipsum_test_model_1 = IpsumTestModel(code=1, title='test_find_TestService_1', boolean=True, tags=['A', 'B', 'C'])
-        ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestService_2', boolean=False, tags=['A', 'B', 'D'])
-        ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestService_3', boolean=True, tags=['B', 'C', 'D'])
+        ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestService_2', boolean=False, tags=['A', 'B', 'D'], day=today)
+        ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestService_3', boolean=True, tags=['B', 'C', 'D'], day=today)
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.dao, ipsum_test_model_1)
@@ -138,6 +141,11 @@ class TestService:
 
             expected_ids = [ipsum_test_model_1.id, ipsum_test_model_2.id, ipsum_test_model_3.id]
             results = self.service.find(tags=['A', 'B'])
+            for result in results:
+                assert result.id in expected_ids
+
+            expected_ids = [ipsum_test_model_2.id, ipsum_test_model_3.id]
+            results = self.service.find(day=today)
             for result in results:
                 assert result.id in expected_ids
 

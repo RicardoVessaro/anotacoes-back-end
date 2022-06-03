@@ -1,5 +1,6 @@
 
 
+import datetime
 from pytest import raises
 from ipsum.data.dao.dao import DAO
 from ipsum.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
@@ -76,9 +77,11 @@ class TestDao:
         _()
 
     def test_find(self):
+        today = datetime.date.today()
+
         ipsum_test_model_1 = IpsumTestModel(code=1, title='test_find_TestDao_1', boolean=True, tags=['A', 'B', 'C'])
-        ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestDao_2', boolean=False, tags=['A', 'B', 'D'])
-        ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestDao_3', boolean=True, tags=['B', 'C', 'D'])
+        ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestDao_2', boolean=False, tags=['A', 'B', 'D'], day=today)
+        ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestDao_3', boolean=True, tags=['B', 'C', 'D'], day=today)
 
         ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
         ipsum_database_test.add_data(self.dao, ipsum_test_model_1)
@@ -136,6 +139,11 @@ class TestDao:
 
             expected_ids = [ipsum_test_model_1.id, ipsum_test_model_2.id, ipsum_test_model_3.id]
             results = self.dao.find(tags=['A', 'B'])
+            for result in results:
+                assert result.id in expected_ids
+
+            expected_ids = [ipsum_test_model_2.id, ipsum_test_model_3.id]
+            results = self.dao.find(day=today)
             for result in results:
                 assert result.id in expected_ids
 

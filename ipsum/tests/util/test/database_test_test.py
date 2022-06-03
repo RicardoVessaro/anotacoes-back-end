@@ -8,38 +8,38 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 
-class TestArqDatabaseTest:
+class TestDatabaseTest:
 
     TEST_DB_URI = get_test_database_url()
 
-    arq_dao = DAO(model=IpsumTestModel)
+    dao = DAO(model=IpsumTestModel)
 
     detail_crud_dao = DetailCRUDDAO(model=DetailTestModel)
 
     def test_add_data(self):
 
         def test_using_one_item():
-            arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest(host=self.TEST_DB_URI)
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
-            arq_database_test.add_data(self.arq_dao, model)
+            database_test.add_data(self.dao, model)
             
-            assert len(arq_database_test.data_to_insert) == 1
-            data_to_insert_0 = arq_database_test.data_to_insert[0]
-            assert data_to_insert_0[0] == self.arq_dao
+            assert len(database_test.data_to_insert) == 1
+            data_to_insert_0 = database_test.data_to_insert[0]
+            assert data_to_insert_0[0] == self.dao
             assert data_to_insert_0[1] == model
 
             other_model = IpsumTestModel(code=2, title="test_using_one_item 2")
-            arq_database_test.add_data(self.arq_dao, other_model)
+            database_test.add_data(self.dao, other_model)
             
-            assert len(arq_database_test.data_to_insert) == 2
+            assert len(database_test.data_to_insert) == 2
 
-            data_to_insert_0 = arq_database_test.data_to_insert[0]
-            assert data_to_insert_0[0] == self.arq_dao
+            data_to_insert_0 = database_test.data_to_insert[0]
+            assert data_to_insert_0[0] == self.dao
             assert data_to_insert_0[1] == model
 
-            data_to_insert_1 = arq_database_test.data_to_insert[1]
-            assert data_to_insert_1[0] == self.arq_dao
+            data_to_insert_1 = database_test.data_to_insert[1]
+            assert data_to_insert_1[0] == self.dao
             assert data_to_insert_1[1] == other_model
 
         test_using_one_item()
@@ -49,31 +49,31 @@ class TestArqDatabaseTest:
             model_0 = IpsumTestModel(code=0, title="test_using_one_item")
             model_1 = IpsumTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-            arq_database_test.add_data(self.arq_dao, [model_0, model_1])
-            assert len(arq_database_test.data_to_insert) == 2
+            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test.add_data(self.dao, [model_0, model_1])
+            assert len(database_test.data_to_insert) == 2
 
-            data_to_insert_0 = arq_database_test.data_to_insert[0]
-            assert data_to_insert_0[0] == self.arq_dao
+            data_to_insert_0 = database_test.data_to_insert[0]
+            assert data_to_insert_0[0] == self.dao
             assert data_to_insert_0[1] == model_0
 
-            data_to_insert_1 = arq_database_test.data_to_insert[1]
-            assert data_to_insert_1[0] == self.arq_dao
+            data_to_insert_1 = database_test.data_to_insert[1]
+            assert data_to_insert_1[0] == self.dao
             assert data_to_insert_1[1] == model_1
 
 
             model_2 = IpsumTestModel(code=2, title="test_using_one_item")
             model_3 = IpsumTestModel(code=3, title="test_using_one_item")
 
-            arq_database_test.add_data(self.arq_dao, [model_2, model_3])
-            assert len(arq_database_test.data_to_insert) == 4
+            database_test.add_data(self.dao, [model_2, model_3])
+            assert len(database_test.data_to_insert) == 4
 
-            data_to_insert_2 = arq_database_test.data_to_insert[2]
-            assert data_to_insert_2[0] == self.arq_dao
+            data_to_insert_2 = database_test.data_to_insert[2]
+            assert data_to_insert_2[0] == self.dao
             assert data_to_insert_2[1] == model_2
 
-            data_to_insert_3 = arq_database_test.data_to_insert[3]
-            assert data_to_insert_3[0] == self.arq_dao
+            data_to_insert_3 = database_test.data_to_insert[3]
+            assert data_to_insert_3[0] == self.dao
             assert data_to_insert_3[1] == model_3
 
         test_using_list()
@@ -83,21 +83,21 @@ class TestArqDatabaseTest:
         def test_method():
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-            arq_database_test.add_data(self.arq_dao, model)
+            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test.add_data(self.dao, model)
 
-            arq_database_test._connect()
-            arq_database_test._clean_existing_data()
+            database_test._connect()
+            database_test._clean_existing_data()
 
-            arq_database_test._insert_data()
+            database_test._insert_data()
 
-            database_model = self.arq_dao.find().first()
+            database_model = self.dao.find().first()
             
             assert not database_model is None
             assert database_model.id == model.id
 
-            arq_database_test._delete_data()
-            arq_database_test._disconnect()
+            database_test._delete_data()
+            database_test._disconnect()
 
 
         test_method()
@@ -106,12 +106,12 @@ class TestArqDatabaseTest:
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-            arq_database_test.add_data(self.arq_dao, model)
+            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test.add_data(self.dao, model)
             
-            @arq_database_test.persistence_test()
+            @database_test.persistence_test()
             def _():
-                database_model = self.arq_dao.find().first()
+                database_model = self.dao.find().first()
                 
                 assert not database_model is None
                 assert database_model.id == model.id
@@ -128,52 +128,52 @@ class TestArqDatabaseTest:
             def _test_cleaning_data_to_insert():
                 
                 model = IpsumTestModel(code=1, title="test_using_one_item")
-                detail = DetailTestModel(code=1, title="detail_test_using_one_item", arq_model_id=fake_parent_id)
+                detail = DetailTestModel(code=1, title="detail_test_using_one_item", ipsum_model_id=fake_parent_id)
 
-                arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-                arq_database_test.add_data(self.arq_dao, model)
-                arq_database_test.add_data(self.detail_crud_dao, detail, parent_ids=[fake_parent_id])
+                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test.add_data(self.dao, model)
+                database_test.add_data(self.detail_crud_dao, detail, parent_ids=[fake_parent_id])
 
-                arq_database_test._connect()
-                arq_database_test._clean_existing_data()
+                database_test._connect()
+                database_test._clean_existing_data()
 
-                arq_database_test._insert_data()
+                database_test._insert_data()
 
-                arq_database_test._clean_existing_data()
+                database_test._clean_existing_data()
 
-                database_model = self.arq_dao.find().first()
+                database_model = self.dao.find().first()
                 database_detail_model = self.detail_crud_dao.find(fake_parent_id).first()
                 
                 assert database_model is None
                 assert database_detail_model is None
 
-                arq_database_test._delete_data()
-                arq_database_test._disconnect()
+                database_test._delete_data()
+                database_test._disconnect()
 
             _test_cleaning_data_to_insert()
 
             def _test_cleaning_daos_to_clean():
 
                 model = IpsumTestModel(code=1, title="test_using_one_item")
-                detail = DetailTestModel(code=1, title="detail_test_using_one_item", arq_model_id=fake_parent_id)
+                detail = DetailTestModel(code=1, title="detail_test_using_one_item", ipsum_model_id=fake_parent_id)
 
-                arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao, self.detail_crud_dao], parent_ids_to_clean=[fake_parent_id])
-                arq_database_test._connect()
-                arq_database_test._clean_existing_data()
+                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao, self.detail_crud_dao], parent_ids_to_clean=[fake_parent_id])
+                database_test._connect()
+                database_test._clean_existing_data()
 
-                self.arq_dao.insert(model)
-                self.arq_dao.insert(detail)
+                self.dao.insert(model)
+                self.dao.insert(detail)
 
-                arq_database_test._clean_existing_data()
+                database_test._clean_existing_data()
 
-                database_model = self.arq_dao.find().first()
+                database_model = self.dao.find().first()
                 database_detail_model = self.detail_crud_dao.find(fake_parent_id).first()
                 
                 assert database_model is None
                 assert database_detail_model is None
 
-                arq_database_test._delete_data()
-                arq_database_test._disconnect()
+                database_test._delete_data()
+                database_test._disconnect()
 
             _test_cleaning_daos_to_clean()
 
@@ -186,14 +186,14 @@ class TestArqDatabaseTest:
 
                 model = IpsumTestModel(code=1, title="test_using_one_item")
 
-                arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-                arq_database_test.add_data(self.arq_dao, model)
+                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test.add_data(self.dao, model)
                 
-                @arq_database_test.persistence_test()
+                @database_test.persistence_test()
                 def _():
-                    arq_database_test._clean_existing_data()
+                    database_test._clean_existing_data()
 
-                    database_model = self.arq_dao.find().first()
+                    database_model = self.dao.find().first()
 
                     assert database_model is None
 
@@ -204,14 +204,14 @@ class TestArqDatabaseTest:
             def _test_cleaning_daos_to_clean():
                 model = IpsumTestModel(code=1, title="test_using_one_item")
 
-                arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao])
-                @arq_database_test.persistence_test()
+                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+                @database_test.persistence_test()
                 def _():
-                    self.arq_dao.insert(model)
+                    self.dao.insert(model)
 
-                    arq_database_test._clean_existing_data()
+                    database_test._clean_existing_data()
 
-                    database_model = self.arq_dao.find().first()
+                    database_model = self.dao.find().first()
                     
                     assert database_model is None
                 _()
@@ -226,22 +226,22 @@ class TestArqDatabaseTest:
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-            arq_database_test.add_data(self.arq_dao, model)
+            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test.add_data(self.dao, model)
 
-            arq_database_test._connect()
-            arq_database_test._clean_existing_data()
+            database_test._connect()
+            database_test._clean_existing_data()
 
-            arq_database_test._insert_data()
+            database_test._insert_data()
 
-            arq_database_test._delete_data()
+            database_test._delete_data()
 
-            database_model = self.arq_dao.find().first()
+            database_model = self.dao.find().first()
             
             assert database_model is None
 
-            arq_database_test._delete_data()
-            arq_database_test._disconnect()
+            database_test._delete_data()
+            database_test._disconnect()
 
         test_method()
 
@@ -249,14 +249,14 @@ class TestArqDatabaseTest:
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-            arq_database_test.add_data(self.arq_dao, model)
+            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test.add_data(self.dao, model)
             
-            @arq_database_test.persistence_test()
+            @database_test.persistence_test()
             def _():
-                arq_database_test._delete_data()
+                database_test._delete_data()
 
-                database_model = self.arq_dao.find().first()
+                database_model = self.dao.find().first()
 
                 assert database_model is None
 

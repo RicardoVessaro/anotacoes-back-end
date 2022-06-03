@@ -50,13 +50,13 @@ class TestDetailCRUDService:
         model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
 
         model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
         
         database_test.add_data(self.dao, [model_doc_1, model_doc_2], parent_ids=[parent_doc.id])
@@ -71,13 +71,13 @@ class TestDetailCRUDService:
         other_model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
 
         other_model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
         database_test.add_data(self.dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
@@ -107,13 +107,13 @@ class TestDetailCRUDService:
         model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
 
         model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
         
         database_test.add_data(self.dao, [model_doc_1, model_doc_2], parent_ids=[parent_doc.id])
@@ -128,13 +128,13 @@ class TestDetailCRUDService:
         other_model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
 
         other_model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
         database_test.add_data(self.dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
@@ -157,21 +157,21 @@ class TestDetailCRUDService:
         _()
 
     def test_validate_collection_tree_must_raise_exception_when_child_not_in_parent(self):
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         detail_child_doc = self.detail_child_model(code=1, title='Detail', detail_parent_id=self.FAKE_DETAIL_ID)
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc, parent_ids=[doc.arq_model_id])
+        database_test.add_data(self.dao, doc, parent_ids=[doc.ipsum_model_id])
         database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[detail_child_doc.detail_parent_id])
         @database_test.persistence_test()
         def _():
             
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=str(detail_child_doc.id), dao=self.detail_child_dao, field='id')
 
-            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
+            collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
 
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 
@@ -187,21 +187,21 @@ class TestDetailCRUDService:
         _()
 
     def test_validate_collection_tree_must_not_raise_exception(self):
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         
         detail_child_doc = self.detail_child_model(code=1, title='Detail', detail_parent_id=self.FAKE_DETAIL_ID)
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc, parent_ids=[doc.arq_model_id])
+        database_test.add_data(self.dao, doc, parent_ids=[doc.ipsum_model_id])
         database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[detail_child_doc.detail_parent_id])
         @database_test.persistence_test()
         def _():
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
 
-            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
+            collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
         
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 
@@ -209,18 +209,18 @@ class TestDetailCRUDService:
         _()
 
     def test_validate_collection_tree_must_not_raise_exception_when_child_id_not_exists(self):
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.parent_dao, parent_doc)
-        database_test.add_data(self.dao, doc, parent_ids=[doc.arq_model_id])
+        database_test.add_data(self.dao, doc, parent_ids=[doc.ipsum_model_id])
         @database_test.persistence_test()
         def _():
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
 
-            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
+            collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
         
             _detail_crud_service = DetailCRUDService(dao=self.dao, validator=self.detail_crud_validator, collection_tree=collection_tree)
 

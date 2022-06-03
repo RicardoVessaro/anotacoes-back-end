@@ -10,7 +10,7 @@ class TestCRUDValidator:
 
     dao = CRUDDAO(model=IpsumTestModel)
     
-    arq_crud_validator = CRUDValidator(dao, required_fields=['code', 'title'])
+    crud_validator = CRUDValidator(dao, required_fields=['code', 'title'])
 
     def test_validate_insert(self):
 
@@ -18,16 +18,16 @@ class TestCRUDValidator:
 
             body = {
                 'code': 1,
-                'title': 'test_validate_insert_ArqCRUDValidator',
+                'title': 'test_validate_insert_CRUDValidator',
                 'boolean': True,
                 'tag': ['A', 'B']
             }
 
-            for required_field in self.arq_crud_validator.required_fields:
+            for required_field in self.crud_validator.required_fields:
                 poped_value = body.pop(required_field)
 
                 with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
-                    self.arq_crud_validator.validate_insert(body)
+                    self.crud_validator.validate_insert(body)
 
                 body[required_field] = poped_value
 
@@ -37,18 +37,18 @@ class TestCRUDValidator:
 
             body = {
                 'code': 1,
-                'title': 'test_validate_insert_ArqCRUDValidator',
+                'title': 'test_validate_insert_CRUDValidator',
                 'boolean': True,
                 'tag': ['A', 'B']
             }
 
-            for required_field in self.arq_crud_validator.required_fields:
+            for required_field in self.crud_validator.required_fields:
                 value = body[required_field]
 
                 body[required_field] = None
 
                 with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
-                    self.arq_crud_validator.validate_insert(body)
+                    self.crud_validator.validate_insert(body)
 
                 body[required_field] = value
 
@@ -58,17 +58,17 @@ class TestCRUDValidator:
 
             model = IpsumTestModel(
                 code=1,
-                title='test_validate_insert_ArqCRUDValidator',
+                title='test_validate_insert_CRUDValidator',
                 boolean=True,
                 tags=['A', 'B']
             )
 
-            for required_field in self.arq_crud_validator.required_fields:
+            for required_field in self.crud_validator.required_fields:
                 poped_value = model[required_field]
                 model[required_field] = None
 
                 with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)):
-                    self.arq_crud_validator.validate_insert(model)
+                    self.crud_validator.validate_insert(model)
 
                 model[required_field] = poped_value
 
@@ -86,13 +86,13 @@ class TestCRUDValidator:
             }
 
             for field in body.keys():
-                if field in self.arq_crud_validator.required_fields:
+                if field in self.crud_validator.required_fields:
                     value = body[field]
 
                     body[field] = None
 
                     with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(field)):
-                        self.arq_crud_validator.validate_update(fake_id, body)
+                        self.crud_validator.validate_update(fake_id, body)
 
                     body[field] = value
 
@@ -104,17 +104,17 @@ class TestCRUDValidator:
         
             model = IpsumTestModel(
                 code=1, 
-                title='test_update_ArqCRUDValidator',
+                title='test_update_CRUDValidator',
             )
 
             for field in model.to_mongo().keys():
-                if field in self.arq_crud_validator.required_fields:
+                if field in self.crud_validator.required_fields:
                     value = model[field]
 
                     model[field] = None
 
                     with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(field)):
-                        self.arq_crud_validator.validate_update(fake_id, model)
+                        self.crud_validator.validate_update(fake_id, model)
 
                     model[field] = value
 

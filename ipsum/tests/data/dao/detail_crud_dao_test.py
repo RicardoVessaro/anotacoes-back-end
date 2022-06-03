@@ -78,13 +78,13 @@ class TestDetailCRUDDAO:
         model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
 
         model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
         
         database_test.add_data(self.detail_crud_dao, [model_doc_1, model_doc_2], parent_ids=[self.FAKE_ID])
@@ -99,13 +99,13 @@ class TestDetailCRUDDAO:
         other_model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
 
         other_model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
         database_test.add_data(self.detail_crud_dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 
@@ -135,13 +135,13 @@ class TestDetailCRUDDAO:
         model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
 
         model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=parent_doc.id
+            ipsum_model_id=parent_doc.id
         )
         
         database_test.add_data(self.detail_crud_dao, [model_doc_1, model_doc_2], parent_ids=[self.FAKE_ID])
@@ -155,13 +155,13 @@ class TestDetailCRUDDAO:
         other_model_doc_1 = self.model(
             code=11,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
 
         other_model_doc_2 = self.model(
             code=12,
             title='Model',
-            arq_model_id=self.OTHER_FAKE_ID
+            ipsum_model_id=self.OTHER_FAKE_ID
         )
         database_test.add_data(self.detail_crud_dao, [other_model_doc_1, other_model_doc_2], parent_ids=[self.OTHER_FAKE_ID])
 

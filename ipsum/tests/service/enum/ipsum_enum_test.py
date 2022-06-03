@@ -36,7 +36,7 @@ class IpsumEnumService(EnumService):
             enums=enums
         )
 
-@ipsum_enum(1, 'ArqEnumServiceWithArgs', description="A Decorator Test", number=10)
+@ipsum_enum(1, 'IpsumEnumServiceWithArgs', description="A Decorator Test", number=10)
 class IpsumEnumServiceWithArgs(EnumService):
     
     def __init__(self, id, name, description=None, number=None):
@@ -54,15 +54,15 @@ class IpsumEnumServiceWithArgs(EnumService):
         self.number = number
 
 
-class TestArqEnum:
+class TestIpsumEnum:
 
     TEST_DB_URI = get_test_database_url()
 
     def test_must_add_decorated_enums(self):
 
-        ArqEnumServiceToInsert = EnumToInsert(clazz=IpsumEnumService, args=(), kwargs={})
-        ArqEnumServiceWithArgsToInsert = EnumToInsert(
-            clazz=IpsumEnumServiceWithArgs, args=(1, 'ArqEnumServiceWithArgs'), 
+        IpsumEnumServiceToInsert = EnumToInsert(clazz=IpsumEnumService, args=(), kwargs={})
+        IpsumEnumServiceWithArgsToInsert = EnumToInsert(
+            clazz=IpsumEnumServiceWithArgs, args=(1, 'IpsumEnumServiceWithArgs'), 
             kwargs={'description':"A Decorator Test", 'number':10}
         )
 
@@ -73,15 +73,15 @@ class TestArqEnum:
 
             if e.clazz == IpsumEnumService:
 
-                assert e.clazz == ArqEnumServiceToInsert.clazz
-                assert e.args == ArqEnumServiceToInsert.args
-                assert e.kwargs == ArqEnumServiceToInsert.kwargs
+                assert e.clazz == IpsumEnumServiceToInsert.clazz
+                assert e.args == IpsumEnumServiceToInsert.args
+                assert e.kwargs == IpsumEnumServiceToInsert.kwargs
 
             elif e.clazz == IpsumEnumServiceWithArgs:
 
-                assert e.clazz == ArqEnumServiceWithArgsToInsert.clazz
-                assert e.args == ArqEnumServiceWithArgsToInsert.args
-                assert e.kwargs == ArqEnumServiceWithArgsToInsert.kwargs
+                assert e.clazz == IpsumEnumServiceWithArgsToInsert.clazz
+                assert e.args == IpsumEnumServiceWithArgsToInsert.args
+                assert e.kwargs == IpsumEnumServiceWithArgsToInsert.kwargs
 
     def test_must_save_decorated_enums(self):
         

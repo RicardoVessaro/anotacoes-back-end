@@ -29,8 +29,8 @@ class TestNoteService:
 
         mock_find_by_code.return_value = mock_tag
 
-        arq_database_test = DatabaseTest(host=self.DB_URI)
-        @arq_database_test.persistence_test()
+        database_test = DatabaseTest(host=self.DB_URI)
+        @database_test.persistence_test()
         def _():
             def _test_dict():
 

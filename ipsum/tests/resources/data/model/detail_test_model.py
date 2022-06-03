@@ -3,7 +3,7 @@ from mongoengine import Document, StringField, IntField, BooleanField, ListField
 
 class DetailTestModel(Document):
 
-    parent_field = 'arq_model_id'
+    parent_field = 'ipsum_model_id'
 
     code = IntField()
 
@@ -13,4 +13,4 @@ class DetailTestModel(Document):
 
     tags = ListField(StringField())
 
-    arq_model_id = ObjectIdField()
+    ipsum_model_id = ObjectIdField()

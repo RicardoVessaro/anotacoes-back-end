@@ -9,24 +9,24 @@ from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
 
-class TestArqService:
+class TestService:
 
     TEST_DB_URI = get_test_database_url()
 
-    arq_service = Service(dao=DAO(model=IpsumTestModel))
+    service = Service(dao=DAO(model=IpsumTestModel))
 
-    dao = arq_service._dao
+    dao = service._dao
 
     model = dao.model
 
     def test_insert(self):
-        arq_test_model = IpsumTestModel(code=1, title='test_insert_TestArqDao')
+        ipsum_test_model = IpsumTestModel(code=1, title='test_insert_TestService')
 
-        arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
-        @arq_database_test.persistence_test()
+        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+        @database_test.persistence_test()
         def _():
             
-            inserted_model = self.arq_service.insert(arq_test_model)
+            inserted_model = self.service.insert(ipsum_test_model)
             db_model = self.model.objects().first()
 
             assert inserted_model.id == db_model.id
@@ -34,126 +34,126 @@ class TestArqService:
         _()
 
     def test_delete(self):
-        arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_delete_TestArqDao')
+        ipsum_test_model, database_test = self._build_default_model_and_ipsum_test(1, 'test_delete_TestService')
         
-        @arq_database_test.persistence_test()
+        @database_test.persistence_test()
         def _():
-            arq_test_model_id = str(arq_test_model.id)
+            ipsum_test_model_id = str(ipsum_test_model.id)
 
-            deleted_id = self.arq_service.delete(arq_test_model_id)
+            deleted_id = self.service.delete(ipsum_test_model_id)
 
-            assert deleted_id == arq_test_model_id
+            assert deleted_id == ipsum_test_model_id
 
-            assert self.arq_service.find_by_id(arq_test_model_id) is None
+            assert self.service.find_by_id(ipsum_test_model_id) is None
 
         _()
 
     def test_find_by_id(self):
-        arq_test_model, arq_database_test = self._build_default_model_and_arq_test(1, 'test_find_by_idTestArqDao')
-        @arq_database_test.persistence_test()
+        ipsum_test_model, database_test = self._build_default_model_and_ipsum_test(1, 'test_find_by_idTestService')
+        @database_test.persistence_test()
         def _():
 
             def test_find_by_id_using_string():
-                arq_test_model_id_str = str(arq_test_model.id)
+                ipsum_test_model_id_str = str(ipsum_test_model.id)
 
-                bd_model = self.arq_service.find_by_id(arq_test_model_id_str)
+                bd_model = self.service.find_by_id(ipsum_test_model_id_str)
 
-                assert bd_model.id == arq_test_model.id
-                assert bd_model.code == arq_test_model.code
-                assert bd_model.title == arq_test_model.title
+                assert bd_model.id == ipsum_test_model.id
+                assert bd_model.code == ipsum_test_model.code
+                assert bd_model.title == ipsum_test_model.title
 
             test_find_by_id_using_string()
 
             def test_find_by_id_using_object_id():
-                arq_test_model_id = arq_test_model.id
+                ipsum_test_model_id = ipsum_test_model.id
 
-                bd_model = self.arq_service.find_by_id(arq_test_model_id)
+                bd_model = self.service.find_by_id(ipsum_test_model_id)
 
-                assert bd_model.id == arq_test_model.id
-                assert bd_model.code == arq_test_model.code
-                assert bd_model.title == arq_test_model.title
+                assert bd_model.id == ipsum_test_model.id
+                assert bd_model.code == ipsum_test_model.code
+                assert bd_model.title == ipsum_test_model.title
 
             test_find_by_id_using_object_id()
 
         _()
 
     def test_find(self):
-        arq_test_model_1 = IpsumTestModel(code=1, title='test_find_TestArqDao_1', boolean=True, tags=['A', 'B', 'C'])
-        arq_test_model_2 = IpsumTestModel(code=2, title='test_find_TestArqDao_2', boolean=False, tags=['A', 'B', 'D'])
-        arq_test_model_3 = IpsumTestModel(code=3, title='test_find_TestArqDao_3', boolean=True, tags=['B', 'C', 'D'])
+        ipsum_test_model_1 = IpsumTestModel(code=1, title='test_find_TestService_1', boolean=True, tags=['A', 'B', 'C'])
+        ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestService_2', boolean=False, tags=['A', 'B', 'D'])
+        ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestService_3', boolean=True, tags=['B', 'C', 'D'])
 
-        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-        arq_database_test.add_data(self.dao, arq_test_model_1)
-        arq_database_test.add_data(self.dao, arq_test_model_2)
-        arq_database_test.add_data(self.dao, arq_test_model_3)
-        @arq_database_test.persistence_test()
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test.add_data(self.dao, ipsum_test_model_1)
+        database_test.add_data(self.dao, ipsum_test_model_2)
+        database_test.add_data(self.dao, ipsum_test_model_3)
+        @database_test.persistence_test()
         def _():
 
-            expected_ids = [arq_test_model_1.id, arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_service.find()
+            expected_ids = [ipsum_test_model_1.id, ipsum_test_model_2.id, ipsum_test_model_3.id]
+            results = self.service.find()
             for result in results:
                 assert result.id in expected_ids
 
-            results = self.arq_service.find(code=2)
+            results = self.service.find(code=2)
             for result in results:
-                assert result.id == arq_test_model_2.id
+                assert result.id == ipsum_test_model_2.id
 
-            results = self.arq_service.find(title='test_find_TestArqDao_3')
+            results = self.service.find(title='test_find_TestService_3')
             for result in results:
-                assert result.id == arq_test_model_3.id
+                assert result.id == ipsum_test_model_3.id
 
-            expected_ids = [arq_test_model_1.id, arq_test_model_3.id]
-            results = self.arq_service.find(boolean=True)
+            expected_ids = [ipsum_test_model_1.id, ipsum_test_model_3.id]
+            results = self.service.find(boolean=True)
             for result in results:
                 assert result.id in expected_ids
 
-            results = self.arq_service.find(boolean=True, code=3)
+            results = self.service.find(boolean=True, code=3)
             for resultd in results:
-                assert resultd.id == arq_test_model_3.id
+                assert resultd.id == ipsum_test_model_3.id
 
-            expected_ids = [arq_test_model_1.id, arq_test_model_2.id]
-            results = self.arq_service.find(code=[1, 2])
+            expected_ids = [ipsum_test_model_1.id, ipsum_test_model_2.id]
+            results = self.service.find(code=[1, 2])
             for result in results:
                 assert result.id in expected_ids
 
-            expected_ids = [arq_test_model_1.id, arq_test_model_3.id]
-            results = self.arq_service.find(title=['test_find_TestArqDao_1', 'test_find_TestArqDao_3'])
+            expected_ids = [ipsum_test_model_1.id, ipsum_test_model_3.id]
+            results = self.service.find(title=['test_find_TestService_1', 'test_find_TestService_3'])
             for result in results:
                 assert result.id in expected_ids
 
-            expected_ids = [arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_service.find(tags='D')
+            expected_ids = [ipsum_test_model_2.id, ipsum_test_model_3.id]
+            results = self.service.find(tags='D')
             for result in results:
                 assert result.id in expected_ids
 
-            expected_ids = [arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_service.find(tags=['D'])
+            expected_ids = [ipsum_test_model_2.id, ipsum_test_model_3.id]
+            results = self.service.find(tags=['D'])
             for result in results:
                 assert result.id in expected_ids
 
-            expected_ids = [arq_test_model_1.id, arq_test_model_2.id]
-            results = self.arq_service.find(tags=['A'])
+            expected_ids = [ipsum_test_model_1.id, ipsum_test_model_2.id]
+            results = self.service.find(tags=['A'])
             for result in results:
                 assert result.id in expected_ids
 
-            expected_ids = [arq_test_model_1.id, arq_test_model_2.id, arq_test_model_3.id]
-            results = self.arq_service.find(tags=['A', 'B'])
+            expected_ids = [ipsum_test_model_1.id, ipsum_test_model_2.id, ipsum_test_model_3.id]
+            results = self.service.find(tags=['A', 'B'])
             for result in results:
                 assert result.id in expected_ids
 
         _()
 
     def test_paginate(self):
-        arq_test_model_list = self._build_arq_test_model_list()
+        ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-        arq_database_test.add_data(self.dao, arq_test_model_list)
-        @arq_database_test.persistence_test()
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test.add_data(self.dao, ipsum_test_model_list)
+        @database_test.persistence_test()
         def _():
-            model_ids, boolean_model_ids = self._get_model_ids(arq_test_model_list)
+            model_ids, boolean_model_ids = self._get_model_ids(ipsum_test_model_list)
 
             def test_default_pagination():
-                pagination = self.arq_service.paginate()
+                pagination = self.service.paginate()
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 5
@@ -169,7 +169,7 @@ class TestArqService:
 
 
             def test_paginate_with_filter():
-                pagination = self.arq_service.paginate(boolean=False)
+                pagination = self.service.paginate(boolean=False)
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 5
@@ -185,7 +185,7 @@ class TestArqService:
 
 
             def test_paginate_limit_7_in_results():
-                pagination = self.arq_service.paginate(limit=7)
+                pagination = self.service.paginate(limit=7)
 
                 assert pagination['page'] == 1
                 assert pagination['limit'] == 7
@@ -201,7 +201,7 @@ class TestArqService:
 
             
             def test_paginate_with_filter_and_limit_3_in_results():
-                pagination = self.arq_service.paginate(boolean=True, limit=3, page=2)
+                pagination = self.service.paginate(boolean=True, limit=3, page=2)
 
                 assert pagination['page'] == 2
                 assert pagination['limit'] == 3
@@ -218,7 +218,7 @@ class TestArqService:
 
 
             def test_paginate_limit_7_page_2_in_results():
-                pagination = self.arq_service.paginate(limit=7, page=2)
+                pagination = self.service.paginate(limit=7, page=2)
 
                 assert pagination['page'] == 2
                 assert pagination['limit'] == 7
@@ -233,7 +233,7 @@ class TestArqService:
             test_paginate_limit_7_page_2_in_results()
 
             def test_paginate_limit_7_page_3_in_results():
-                pagination = self.arq_service.paginate(limit=7, page=3)
+                pagination = self.service.paginate(limit=7, page=3)
 
                 assert pagination['page'] == 3
                 assert pagination['limit'] == 7
@@ -251,12 +251,12 @@ class TestArqService:
             def test_paginate_must_raise_exception_when_page_is_greater_than_pages():
 
                 with raises(IpsumException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
-                    pagination = self.arq_service.paginate(page=4, limit=5)
+                    pagination = self.service.paginate(page=4, limit=5)
 
             test_paginate_must_raise_exception_when_page_is_greater_than_pages()
 
             def test_must_return_empty_when_not_found_in_filter():
-                pagination = self.arq_service.paginate(title='Nothing')
+                pagination = self.service.paginate(title='Nothing')
 
                 assert pagination['page'] == 0
                 assert pagination['limit'] == 0
@@ -270,22 +270,22 @@ class TestArqService:
 
         _()
 
-    def _build_arq_test_model_list(self):
-        arq_test_model_list = []
+    def _build_ipsum_test_model_list(self):
+        ipsum_test_model_list = []
         
         boolean = True
         for i in range(15):
-            arq_test_model = IpsumTestModel(
+            ipsum_test_model = IpsumTestModel(
                 code=i, 
-                title='test_find_TestArqDao_'+str(i), 
+                title='test_find_TestService_'+str(i), 
                 boolean=boolean
             )
 
             boolean = not boolean
 
-            arq_test_model_list.append(arq_test_model)
+            ipsum_test_model_list.append(ipsum_test_model)
 
-        return arq_test_model_list
+        return ipsum_test_model_list
 
     def _get_model_ids(self, models):
         ids = []
@@ -300,10 +300,10 @@ class TestArqService:
 
         return ids, boolean_ids
 
-    def _build_default_model_and_arq_test(self, code, title):
-        arq_test_model = IpsumTestModel(code=code, title=title)
+    def _build_default_model_and_ipsum_test(self, code, title):
+        ipsum_test_model = IpsumTestModel(code=code, title=title)
 
-        arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
-        arq_database_test.add_data(self.dao, arq_test_model)
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test.add_data(self.dao, ipsum_test_model)
         
-        return arq_test_model, arq_database_test
+        return ipsum_test_model, database_test

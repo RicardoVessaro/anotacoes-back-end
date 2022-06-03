@@ -137,13 +137,13 @@ class IpsumViewTest(ABC):
 
         url = self.get_view_url()
 
-        arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
-        self._add_data(arq_database_test, self.dao, model_list)
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
+        self._add_data(database_test, self.dao, model_list)
 
         if self._is_detail_crud_dao(self.dao):
-            self._add_parent_data(arq_database_test)
+            self._add_parent_data(database_test)
 
-        @arq_database_test.persistence_test()
+        @database_test.persistence_test()
         def _():
 
             def test_POST():
@@ -188,13 +188,13 @@ class IpsumViewTest(ABC):
 
         url = self.get_view_url() + '/paginate'
 
-        arq_database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
-        self._add_data(arq_database_test, self.dao, model_list)
+        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
+        self._add_data(database_test, self.dao, model_list)
 
         if self._is_detail_crud_dao(self.dao):
-            self._add_parent_data(arq_database_test)
+            self._add_parent_data(database_test)
 
-        @arq_database_test.persistence_test()
+        @database_test.persistence_test()
         def _():
             
             for paginate_filter_result in self.paginate_filter_results:

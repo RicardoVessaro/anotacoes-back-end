@@ -39,12 +39,12 @@ class TestDetailCRUDValidator:
             parent_field = self.dao.model.parent_field
             with raises(IpsumException, match=PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(parent_field, self.FAKE_PARENT_ID)):
 
-                doc = {'code':1, 'title': 'Detail', 'arq_model_id': self.FAKE_PARENT_ID}
+                doc = {'code':1, 'title': 'Detail', 'ipsum_model_id': self.FAKE_PARENT_ID}
                 self.detail_crud_validator.validate_insert(doc)
 
         validate_on_insert()
 
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID)
         database_test = DatabaseTest(host=self.TEST_DB_URI)
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
@@ -66,13 +66,13 @@ class TestDetailCRUDValidator:
         @database_test.persistence_test()
         def validate_on_insert():
             
-            doc = {'code':1, 'title': 'Detail', 'arq_model_id': str(parent_doc.id)}
+            doc = {'code':1, 'title': 'Detail', 'ipsum_model_id': str(parent_doc.id)}
             self.detail_crud_validator.validate_insert(doc)
 
         validate_on_insert()
 
 
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID)
         parent_doc = self.parent(code=1, title='Parent')
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
@@ -80,14 +80,14 @@ class TestDetailCRUDValidator:
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
         def validate_on_update():
-            doc.arq_model_id = str(parent_doc.id)
+            doc.ipsum_model_id = str(parent_doc.id)
 
             self.detail_crud_validator.validate_update(doc.id, doc)
 
         validate_on_update()
 
     def test_validate_collection_tree_must_raise_exception_when_child_not_in_parent(self):
-        doc = self.model(code=1, title='Detail', arq_model_id='624786f6590c79c2fb3af557')
+        doc = self.model(code=1, title='Detail', ipsum_model_id='624786f6590c79c2fb3af557')
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
 
         database_test = DatabaseTest(host=self.TEST_DB_URI)
@@ -96,14 +96,14 @@ class TestDetailCRUDValidator:
         @database_test.persistence_test()
         def _():
             
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
 
-            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
+            collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
 
             error_msg = CHILD_NOT_FOUND_IN_PARENT.format(
                 collection_tree.child.name, collection_tree.child.id, 
-                collection_tree.child.parent_field, str(doc.arq_model_id),
+                collection_tree.child.parent_field, str(doc.ipsum_model_id),
                 collection_tree.parent.name, collection_tree.parent.id
             )
 
@@ -113,7 +113,7 @@ class TestDetailCRUDValidator:
         _()
 
     def test_validate_collection_tree_must_not_raise_exception(self):
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         
         detail_child_doc = self.detail_child_model(code=1, title='Detail', detail_parent_id=self.FAKE_DETAIL_ID)
@@ -124,16 +124,16 @@ class TestDetailCRUDValidator:
         database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[self.FAKE_DETAIL_ID])
         @database_test.persistence_test()
         def _():
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_model', parent_field=self.model.parent_field, id=str(doc.id), dao=self.dao, field=self.detail_child_model.parent_field)
 
-            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
+            collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
         
             self.detail_crud_validator.validate_collection_tree(collection_tree)
         _()
 
     def test_validate_collection_tree_must_not_raise_exception_when_child_id_not_exists(self):
-        doc = self.model(code=1, title='Detail', arq_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
+        doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         
         database_test = DatabaseTest(host=self.TEST_DB_URI)
@@ -141,10 +141,10 @@ class TestDetailCRUDValidator:
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
         def _():
-            arq_model_item = CollectionItem(name='arq_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
+            ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
             detail_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=None, dao=self.detail_child_dao, field='id')
 
-            collection_tree = CollectionTree(parent=arq_model_item, child=detail_model_item)
+            collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
         
             self.detail_crud_validator.validate_collection_tree(collection_tree)
         _()

@@ -16,7 +16,7 @@ QUERY_PAGE = 'page'
 
 STATUS_NO_CONTENT = 204
 
-class ArqView(FlaskView):
+class IpsumView(FlaskView):
 
     def __init__(self, service: Service) -> None:
         super().__init__()

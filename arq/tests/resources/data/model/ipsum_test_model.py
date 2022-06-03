@@ -1,6 +1,6 @@
 from mongoengine import Document, StringField, IntField, BooleanField, ListField
 
-class ArqTestModel(Document):
+class IpsumTestModel(Document):
 
     code = IntField()
 

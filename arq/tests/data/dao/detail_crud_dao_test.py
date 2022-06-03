@@ -3,11 +3,11 @@ from pytest import raises
 from arq.data.dao.crud_dao import CRUDDAO
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
 from arq.exception.exception_message import DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from arq.tests.resources.data.model.detail_test_model import DetailTestModel
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 
 class TestDetailCRUDDAO:
 
@@ -21,7 +21,7 @@ class TestDetailCRUDDAO:
 
     model = detail_crud_dao.model
 
-    parent_dao = CRUDDAO(model=ArqTestModel)
+    parent_dao = CRUDDAO(model=IpsumTestModel)
 
     parent = parent_dao.model
 
@@ -34,7 +34,7 @@ class TestDetailCRUDDAO:
             class TestDetailCRUDDAO(DetailCRUDDAO):
                 pass
 
-            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, DetailCRUDDAO.__class__, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
+            with raises(IpsumException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, DetailCRUDDAO.__class__, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
                 TestDetailCRUDDAO(model=TestModel)           
         
         _test_must_raise_exception()
@@ -47,7 +47,7 @@ class TestDetailCRUDDAO:
             class TestDetailCRUDDAO(DetailCRUDDAO):
                 pass
 
-            with raises(ArqException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, DetailCRUDDAO.__class__, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
+            with raises(IpsumException, match=DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(TestModel, DetailCRUDDAO.__class__, TestDetailCRUDDAO, TestDetailCRUDDAO.PARENT_FIELD)):
                 TestDetailCRUDDAO(model=TestModel)           
         
         _test_must_raise_exception_if_is_none()

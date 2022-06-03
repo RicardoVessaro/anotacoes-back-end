@@ -1,7 +1,7 @@
 
 from api.annotation.service.tag.tag_service import TagService
 from arq.util.enviroment_variable import get_test_database_url
-from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
+from arq.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from api.annotation.view.tag_view import TagView, tag_view_name
 from api.annotation.data.model.tag import Tag

@@ -2,7 +2,7 @@
 from api.annotation.data.model.mood import Mood
 from api.annotation.data.dao.mood_dao import MoodDao
 from api.annotation.service.mood.mood_validator import MoodValidator
-from arq.service.enum.arq_enum import arq_enum
+from arq.service.enum.ipsum_enum import ipsum_enum
 from arq.service.enum.enum_service import EnumService
 
 
@@ -13,7 +13,7 @@ SAD = Mood(code=4, name='Sad')
 LOVE = Mood(code=5, name='Love')
 GREAT = Mood(code=6, name='Great')
 
-@arq_enum()
+@ipsum_enum()
 class MoodService(EnumService):
 
     NAME = 'moods'

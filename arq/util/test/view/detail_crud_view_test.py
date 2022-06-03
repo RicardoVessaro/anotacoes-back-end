@@ -5,9 +5,9 @@ import requests
 from arq.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT, PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.util.service.collection_tree import CollectionTree
 from arq.util.test.database_test import DatabaseTest
-from arq.util.test.view.arq_view_test import ID_FIELD, TO_MONGO_ID_FIELD
+from arq.util.test.view.ipsum_view_test import ID_FIELD, TO_MONGO_ID_FIELD
 from arq.util.test.view.crud_view_test import CRUDViewTest
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.util.view.route_parser import parse_route
 from bson import ObjectId
 
@@ -72,7 +72,7 @@ class DetailCRUDViewTest(CRUDViewTest):
         response_data = response.json()
 
         error_message = PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self.parent_field, data[self.parent_field])
-        assert response_data["status_code"] == ArqException.BAD_REQUEST
+        assert response_data["status_code"] == IpsumException.BAD_REQUEST
         assert response_data['message'] == error_message
 
     def test_validate_collection_tree_must_raise_exception_when_child_not_in_parent(self):
@@ -111,7 +111,7 @@ class DetailCRUDViewTest(CRUDViewTest):
                 self.parent_name,
                 self.fake_parent_id
             )
-            assert response_data["status_code"] == ArqException.BAD_REQUEST
+            assert response_data["status_code"] == IpsumException.BAD_REQUEST
             assert response_data["message"] == error_message
 
             

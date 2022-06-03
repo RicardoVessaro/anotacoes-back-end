@@ -20,7 +20,7 @@ FindFilterResult = namedtuple('FindFilterResult', 'filter expected_indexes')
 
 PaginateFilterResult = namedtuple('PaginateFilterResult', 'filter expected_indexes pages page limit total has_prev has_next has_result')
 
-class ArqViewTest(ABC):
+class IpsumViewTest(ABC):
 
     fake_id = '6248620366564103f229595f'
 

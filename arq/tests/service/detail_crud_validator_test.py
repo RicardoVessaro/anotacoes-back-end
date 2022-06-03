@@ -3,14 +3,14 @@ from pytest import raises
 from arq.data.dao.crud_dao import CRUDDAO
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
 from arq.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT, PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from arq.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 from arq.tests.resources.data.model.detail_test_model import DetailTestModel
 from arq.service.detail_crud_validator import DetailCRUDValidator
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.service.collection_tree import CollectionItem, CollectionTree
 from arq.util.test.database_test import DatabaseTest
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 
 class TestDetailCRUDValidator:
 
@@ -20,7 +20,7 @@ class TestDetailCRUDValidator:
 
     TEST_DB_URI = get_test_database_url()
 
-    parent_dao = CRUDDAO(model=ArqTestModel)
+    parent_dao = CRUDDAO(model=IpsumTestModel)
     parent = parent_dao.model
 
     dao = DetailCRUDDAO(model=DetailTestModel)
@@ -37,7 +37,7 @@ class TestDetailCRUDValidator:
         def validate_on_insert():
             
             parent_field = self.dao.model.parent_field
-            with raises(ArqException, match=PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(parent_field, self.FAKE_PARENT_ID)):
+            with raises(IpsumException, match=PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(parent_field, self.FAKE_PARENT_ID)):
 
                 doc = {'code':1, 'title': 'Detail', 'arq_model_id': self.FAKE_PARENT_ID}
                 self.detail_crud_validator.validate_insert(doc)
@@ -51,7 +51,7 @@ class TestDetailCRUDValidator:
         def validate_on_update():
             
             parent_field = self.dao.model.parent_field
-            with raises(ArqException, match=PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(parent_field, self.FAKE_PARENT_ID)):
+            with raises(IpsumException, match=PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(parent_field, self.FAKE_PARENT_ID)):
                 
                 self.detail_crud_validator.validate_update(doc.id, doc)
 
@@ -107,7 +107,7 @@ class TestDetailCRUDValidator:
                 collection_tree.parent.name, collection_tree.parent.id
             )
 
-            with raises(ArqException, match=error_msg):
+            with raises(IpsumException, match=error_msg):
                 self.detail_crud_validator.validate_collection_tree(collection_tree)
 
         _()

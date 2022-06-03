@@ -1,6 +1,6 @@
 
 from functools import singledispatch
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 LEN = '__len__'
@@ -98,4 +98,4 @@ def _is_dict_values_none_or_empty(dct: dict):
 def _validate_type(value):
     tipe = type(value) 
     if tipe in NOT_SUPPORTED_TYPES:
-        raise ArqException(NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(tipe))
+        raise IpsumException(NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(tipe))

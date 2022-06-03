@@ -1,7 +1,7 @@
 
 from flask import request
 from arq.util.view.query_string_parser import QueryStringParser
-from arq.view.arq_view import GET, PATCH, POST, QUERY_LIMIT, QUERY_PAGE
+from arq.view.ipsum_view import GET, PATCH, POST, QUERY_LIMIT, QUERY_PAGE
 from arq.view.crud_view import CRUDView
 from flask_classful import route
 

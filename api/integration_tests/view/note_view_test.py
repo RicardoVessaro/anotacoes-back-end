@@ -9,7 +9,7 @@ from api.annotation.service.note.note_service import CREATED_IN, TAG, NoteServic
 from api.annotation.service.tag.tag_service import IMPORTANT, OK, TagService
 from arq.util.enviroment_variable import get_api_url, get_test_database_url
 from arq.util.test.database_test import DatabaseTest
-from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
+from arq.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
 from api.annotation.data.model.note import Note
 from api.annotation.view.note_view import NoteView, note_view_name
 from arq.util.test.view.crud_view_test import CRUDViewTest

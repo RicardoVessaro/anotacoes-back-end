@@ -1,10 +1,10 @@
 
 from pytest import raises
 from arq.data.model.enum_document import CODE, NAME
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import CLASS_MUST_BE_A_SUBCLASS_OF_ENUMSERVICE
 from arq.service.enum.enum_service import EnumService
-from arq.service.enum.arq_enum import arq_enum, enums_to_insert, EnumToInsert, save_enums
+from arq.service.enum.ipsum_enum import ipsum_enum, enums_to_insert, EnumToInsert, save_enums
 from arq.service.enum.enum_validator import EnumValidator
 from arq.tests.resources.data.model.enum_test_model import EnumTestModel
 from arq.data.dao.crud_dao import CRUDDAO
@@ -24,8 +24,8 @@ enums_to_save = [
     EnumTestModel(code=5, name="ENUM 5")
 ]
 
-@arq_enum()
-class ArqEnumService(EnumService):
+@ipsum_enum()
+class IpsumEnumService(EnumService):
 
     def __init__(self):
         enums = enums_to_save[0:3]
@@ -36,8 +36,8 @@ class ArqEnumService(EnumService):
             enums=enums
         )
 
-@arq_enum(1, 'ArqEnumServiceWithArgs', description="A Decorator Test", number=10)
-class ArqEnumServiceWithArgs(EnumService):
+@ipsum_enum(1, 'ArqEnumServiceWithArgs', description="A Decorator Test", number=10)
+class IpsumEnumServiceWithArgs(EnumService):
     
     def __init__(self, id, name, description=None, number=None):
         enums = enums_to_save[3:]
@@ -60,24 +60,24 @@ class TestArqEnum:
 
     def test_must_add_decorated_enums(self):
 
-        ArqEnumServiceToInsert = EnumToInsert(clazz=ArqEnumService, args=(), kwargs={})
+        ArqEnumServiceToInsert = EnumToInsert(clazz=IpsumEnumService, args=(), kwargs={})
         ArqEnumServiceWithArgsToInsert = EnumToInsert(
-            clazz=ArqEnumServiceWithArgs, args=(1, 'ArqEnumServiceWithArgs'), 
+            clazz=IpsumEnumServiceWithArgs, args=(1, 'ArqEnumServiceWithArgs'), 
             kwargs={'description':"A Decorator Test", 'number':10}
         )
 
-        expected_enums = [ArqEnumService, ArqEnumServiceWithArgs]
+        expected_enums = [IpsumEnumService, IpsumEnumServiceWithArgs]
 
         for e in enums_to_insert:
             e.clazz in expected_enums
 
-            if e.clazz == ArqEnumService:
+            if e.clazz == IpsumEnumService:
 
                 assert e.clazz == ArqEnumServiceToInsert.clazz
                 assert e.args == ArqEnumServiceToInsert.args
                 assert e.kwargs == ArqEnumServiceToInsert.kwargs
 
-            elif e.clazz == ArqEnumServiceWithArgs:
+            elif e.clazz == IpsumEnumServiceWithArgs:
 
                 assert e.clazz == ArqEnumServiceWithArgsToInsert.clazz
                 assert e.args == ArqEnumServiceWithArgsToInsert.args
@@ -108,6 +108,6 @@ class TestArqEnum:
         class ClazzToTest():
             pass 
 
-        with raises(ArqException, match=CLASS_MUST_BE_A_SUBCLASS_OF_ENUMSERVICE.format(ClazzToTest, EnumService)):
-            arq_enum()(ClazzToTest)      
+        with raises(IpsumException, match=CLASS_MUST_BE_A_SUBCLASS_OF_ENUMSERVICE.format(ClazzToTest, EnumService)):
+            ipsum_enum()(ClazzToTest)      
 

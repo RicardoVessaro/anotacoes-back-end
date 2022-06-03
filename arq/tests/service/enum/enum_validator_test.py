@@ -5,7 +5,7 @@ from arq.data.model.enum_document import CODE, NAME
 from arq.exception.exception_message import DUPLICATED_ENUM_CODE, REQUIRED_FIELD_EXCEPTION_MESSAGE
 from arq.service.enum.enum_validator import EnumValidator
 from arq.tests.resources.data.model.enum_test_model import EnumTestModel
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 
@@ -30,7 +30,7 @@ class TestEnumValidator:
                 EnumTestModel(code=2, name='Test 4', integer=40),
             ]
 
-            with raises(ArqException, match=DUPLICATED_ENUM_CODE.format(2)):
+            with raises(IpsumException, match=DUPLICATED_ENUM_CODE.format(2)):
                 self.enum_validator.validate_enums(enums)
 
         _must_raise_exception_when_code_is_duplicated()

@@ -2,7 +2,7 @@
 from collections import namedtuple
 from arq.data.dao.dao import DAO
 
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO, COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM, COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES, COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM
 
 DAO_ATTRIBUTE = "dao"
@@ -69,7 +69,7 @@ class CollectionTree:
         name = collection_item.name
 
         if name in used_names:
-            raise ArqException(COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES.format(name, CollectionItem))
+            raise IpsumException(COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES.format(name, CollectionItem))
         else:
             used_names.append(name)
 
@@ -77,11 +77,11 @@ class CollectionTree:
 
     def _validate_have_dao(self, collection_item):
         if not isinstance(collection_item.dao, DAO):
-            raise ArqException(COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO.format(DAO_ATTRIBUTE, CollectionItem, DAO, collection_item.dao.__class__, collection_item.__class__, collection_item.name))
+            raise IpsumException(COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO.format(DAO_ATTRIBUTE, CollectionItem, DAO, collection_item.dao.__class__, collection_item.__class__, collection_item.name))
 
     def _validate_is_collection_item(self, collection_item):
         if not isinstance(collection_item, CollectionItem):
-            raise ArqException(COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM.format(CollectionItem, CollectionItem, collection_item.__class__))
+            raise IpsumException(COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM.format(CollectionItem, CollectionItem, collection_item.__class__))
 
     def __len__(self):
         return len(self._collection_tree)

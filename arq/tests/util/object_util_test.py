@@ -1,7 +1,7 @@
 from pytest import raises
 from collections import namedtuple
 from array import array
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.util.object_util import is_none_or_empty, NOT_SUPPORTED_TYPES, NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 def test_none_value():
@@ -129,5 +129,5 @@ def test_not_supported_type():
 
         str_type = str(type(type_call))
 
-        with raises(ArqException, match=NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(str_type)):
+        with raises(IpsumException, match=NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(str_type)):
             is_none_or_empty(type_call)

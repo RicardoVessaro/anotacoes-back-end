@@ -7,7 +7,7 @@ from api.annotation.service.note.picture.picture_service import PictureService
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.view.detail_crud_view_test import DetailCRUDViewTest
 from api.annotation.view.picture_view import PictureView, picture_view_name
-from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
+from arq.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
 from api.annotation.data.dao.note_dao import NoteDAO
 from arq.util.view.route_parser import parse_route
 

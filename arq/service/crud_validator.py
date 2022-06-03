@@ -1,4 +1,4 @@
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import REQUIRED_FIELD_EXCEPTION_MESSAGE
 from arq.util.object_util import is_none_or_empty
 
@@ -45,5 +45,5 @@ class CRUDValidator:
                 self._raise_required_field_exception(field)
 
     def _raise_required_field_exception(self, required_field: str):
-        raise ArqException(REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field))
+        raise IpsumException(REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field))
         

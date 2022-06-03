@@ -1,7 +1,7 @@
 
 from xml.dom.minidom import Document
 from arq.data.dao.crud_dao import CRUDDAO
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD
 from arq.util.object_util import is_none_or_empty
 
@@ -11,7 +11,7 @@ class DetailCRUDDAO(CRUDDAO):
 
     def __init__(self, model: Document) -> None:
         if not hasattr(model, self.PARENT_FIELD) or is_none_or_empty(model.parent_field):
-            raise ArqException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, DetailCRUDDAO.__class__, self.__class__, self.PARENT_FIELD))
+            raise IpsumException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, DetailCRUDDAO.__class__, self.__class__, self.PARENT_FIELD))
 
         super().__init__(model)
 

@@ -2,7 +2,7 @@
 from pytest import raises
 from arq.data.dao.dao import DAO
 
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO, COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM, COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES, COLLECTION_TREE_MUST_HAVE_AT_LEAST_2_ITEM
 from arq.util.service.collection_tree import DAO_ATTRIBUTE, CollectionItem, CollectionTree
 
@@ -20,7 +20,7 @@ class TestCollectionTree:
         class TestClass(CollectionItem):
             pass
 
-        with raises(ArqException, match=COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM.format(CollectionItem, CollectionItem, ErrorTestClass)):
+        with raises(IpsumException, match=COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM.format(CollectionItem, CollectionItem, ErrorTestClass)):
 
             CollectionTree(parent=TestClass('test 2', 'test_parent_field', None, DAO(self.TestModel), 'test_field'), child=ErrorTestClass())
 
@@ -36,13 +36,13 @@ class TestCollectionTree:
 
         error_item = TestCollectionItem('test 3', 'test_parent_field', None, NotDAO(), 'test_field')
 
-        with raises(ArqException, match=COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO.format(DAO_ATTRIBUTE, CollectionItem, DAO, NotDAO, TestCollectionItem, error_item.name)):
+        with raises(IpsumException, match=COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO.format(DAO_ATTRIBUTE, CollectionItem, DAO, NotDAO, TestCollectionItem, error_item.name)):
             CollectionTree(parent=CollectionItem('test 1', 'test_parent_field', None, DAO(self.TestModel), 'test_field'), child=error_item)
 
     def test_must_raise_exception_when_collection_item_have_duplicated_name(self):
         name = 'duplicated test'
 
-        with raises(ArqException, match=COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES.format(name, CollectionItem)):
+        with raises(IpsumException, match=COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES.format(name, CollectionItem)):
             CollectionTree(parent=CollectionItem(name, None, None, DAO(self.TestModel), 'test_field_1'), child=CollectionItem(name, 'test_parent_field', None, DAO(self.TestModel), 'test_field_4'))
 
     def test_child(self):

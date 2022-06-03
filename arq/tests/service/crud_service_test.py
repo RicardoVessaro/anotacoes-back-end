@@ -1,11 +1,11 @@
 
 from pytest import raises
 from arq.data.dao.crud_dao import CRUDDAO
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.service.crud_service import CRUDService
 from arq.service.crud_validator import CRUDValidator
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest
 
@@ -13,7 +13,7 @@ class TestCRUDServices:
 
     TEST_DB_URI = get_test_database_url()
 
-    dao = CRUDDAO(model=ArqTestModel)
+    dao = CRUDDAO(model=IpsumTestModel)
 
     arq_crud_service = CRUDService(dao=dao, validator=CRUDValidator(dao), non_editable_fields=["code"])
 
@@ -22,7 +22,7 @@ class TestCRUDServices:
     model = dao._model
 
     def test_insert(self):
-        arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
+        arq_test_model = IpsumTestModel(code=1, title='test_insert_TestArqDao')
 
         arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
         def _():
@@ -63,7 +63,7 @@ class TestCRUDServices:
 
             assert self.arq_crud_service.find_by_id(arq_test_model_id) is None
 
-            with raises(ArqException, match=OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
+            with raises(IpsumException, match=OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(deleted_id)):
                 self.arq_crud_service.delete(deleted_id)
 
         _()
@@ -162,7 +162,7 @@ class TestCRUDServices:
         test_remove_non_editable_fields_from_model()
 
     def _build_default_model_and_arq_test(self, code, title, boolean=False):
-        arq_test_model = ArqTestModel(code=code, title=title, boolean=boolean)
+        arq_test_model = IpsumTestModel(code=code, title=title, boolean=boolean)
 
         arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.dao, arq_test_model)

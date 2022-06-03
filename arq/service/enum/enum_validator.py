@@ -1,6 +1,6 @@
 
 from arq.data.model.enum_document import CODE, NAME
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import DUPLICATED_ENUM_CODE
 from arq.service.crud_validator import CRUDValidator
 
@@ -24,4 +24,4 @@ class EnumValidator(CRUDValidator):
                 count += 1
 
             if count > 1:
-                raise ArqException(DUPLICATED_ENUM_CODE.format(enum.code))
+                raise IpsumException(DUPLICATED_ENUM_CODE.format(enum.code))

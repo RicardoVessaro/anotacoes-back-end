@@ -3,7 +3,7 @@ from api.annotation.service.mood.mood_service import MoodService
 from api.annotation.view.note_view import NoteView
 from arq.util.test.view.crud_view_test import CRUDViewTest
 from arq.util.enviroment_variable import get_test_database_url
-from arq.util.test.view.arq_view_test import FindFilterResult, PaginateFilterResult
+from arq.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
 from api.annotation.view.mood_view import MoodView, mood_view_name
 from api.annotation.data.model.mood import Mood
 from api.annotation.data.dao.mood_dao import MoodDao

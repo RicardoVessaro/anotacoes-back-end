@@ -1,14 +1,14 @@
 
 from abc import abstractproperty
 import requests
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.util.object_util import is_none_or_empty
 
 from arq.util.test.database_test import DatabaseTest
-from arq.util.test.view.arq_view_test import ArqViewTest
+from arq.util.test.view.ipsum_view_test import IpsumViewTest
 from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, REQUIRED_FIELD_EXCEPTION_MESSAGE
 
-class CRUDViewTest(ArqViewTest):
+class CRUDViewTest(IpsumViewTest):
 
     def test_insert(self):
 
@@ -63,7 +63,7 @@ class CRUDViewTest(ArqViewTest):
                     response_data = response.json()
 
                     error_message = REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)
-                    assert response_data["status_code"] == ArqException.BAD_REQUEST
+                    assert response_data["status_code"] == IpsumException.BAD_REQUEST
                     assert response_data["message"] == error_message
         _()
 
@@ -94,7 +94,7 @@ class CRUDViewTest(ArqViewTest):
                     response_data = response.json()
 
                     error_message = REQUIRED_FIELD_EXCEPTION_MESSAGE.format(required_field)
-                    assert response_data["status_code"] == ArqException.BAD_REQUEST
+                    assert response_data["status_code"] == IpsumException.BAD_REQUEST
                     assert response_data["message"] == error_message
 
         _()

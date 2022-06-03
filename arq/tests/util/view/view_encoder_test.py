@@ -4,7 +4,7 @@ from dateutil.parser import isoparse
 from arq.util.view.view_encoder import ViewEncoder
 from bson import ObjectId
 
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 
 
 class TestViewEncoder:
@@ -38,7 +38,7 @@ class TestViewEncoder:
         title = "Doc"
         code = 1
 
-        test_model = ArqTestModel(id=document_id, code=code, title=title, boolean=True, tags=['A', 'B', 'C'])
+        test_model = IpsumTestModel(id=document_id, code=code, title=title, boolean=True, tags=['A', 'B', 'C'])
 
         expected_encoded_doc = {
             "id": id,

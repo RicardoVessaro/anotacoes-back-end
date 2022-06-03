@@ -1,7 +1,7 @@
 
 from pytest import raises
 from arq.data.model.enum_document import CODE, NAME
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import REQUIRED_FIELD_EXCEPTION_MESSAGE
 from arq.service.enum.enum_service import EnumService
 from arq.data.dao.crud_dao import CRUDDAO
@@ -25,7 +25,7 @@ class TestEnumService:
             database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
             @database_test.persistence_test()
             def _():
-                with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
+                with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
                     enum_service.save_enums()
             _()
         
@@ -40,7 +40,7 @@ class TestEnumService:
                 @database_test.persistence_test()
                 def _():
 
-                    with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(NAME)):
+                    with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(NAME)):
                         enum_service.save_enums()
 
                 _()
@@ -59,7 +59,7 @@ class TestEnumService:
                 @database_test.persistence_test()
                 def _():
 
-                    with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(INTEGER)):
+                    with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(INTEGER)):
                         enum_service.save_enums()
                 _()
         
@@ -96,7 +96,7 @@ class TestEnumService:
                 
                 @database_test.persistence_test()
                 def _():
-                    with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
+                    with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
                         enum_service.save_enums()
                 _()
         
@@ -114,7 +114,7 @@ class TestEnumService:
                 @database_test.persistence_test()
                 def _():
 
-                    with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(NAME)):
+                    with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(NAME)):
                         enum_service.save_enums()
 
                 _()
@@ -135,7 +135,7 @@ class TestEnumService:
                 
                 @database_test.persistence_test()
                 def _():
-                    with raises(ArqException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(INTEGER)):
+                    with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(INTEGER)):
                         enum_service.save_enums()
                 _()
         

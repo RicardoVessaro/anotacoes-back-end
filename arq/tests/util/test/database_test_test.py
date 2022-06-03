@@ -5,14 +5,14 @@ from arq.util.enviroment_variable import get_test_database_url
 from arq.util.test.database_test import DatabaseTest, insert_enums
 from arq.data.dao.dao import DAO
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from arq.tests.resources.data.model.detail_test_model import DetailTestModel
 
 class TestArqDatabaseTest:
 
     TEST_DB_URI = get_test_database_url()
 
-    arq_dao = DAO(model=ArqTestModel)
+    arq_dao = DAO(model=IpsumTestModel)
 
     detail_crud_dao = DetailCRUDDAO(model=DetailTestModel)
 
@@ -21,7 +21,7 @@ class TestArqDatabaseTest:
         def test_using_one_item():
             arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
 
-            model = ArqTestModel(code=1, title="test_using_one_item")
+            model = IpsumTestModel(code=1, title="test_using_one_item")
             arq_database_test.add_data(self.arq_dao, model)
             
             assert len(arq_database_test.data_to_insert) == 1
@@ -29,7 +29,7 @@ class TestArqDatabaseTest:
             assert data_to_insert_0[0] == self.arq_dao
             assert data_to_insert_0[1] == model
 
-            other_model = ArqTestModel(code=2, title="test_using_one_item 2")
+            other_model = IpsumTestModel(code=2, title="test_using_one_item 2")
             arq_database_test.add_data(self.arq_dao, other_model)
             
             assert len(arq_database_test.data_to_insert) == 2
@@ -46,8 +46,8 @@ class TestArqDatabaseTest:
 
         def test_using_list():
 
-            model_0 = ArqTestModel(code=0, title="test_using_one_item")
-            model_1 = ArqTestModel(code=1, title="test_using_one_item")
+            model_0 = IpsumTestModel(code=0, title="test_using_one_item")
+            model_1 = IpsumTestModel(code=1, title="test_using_one_item")
 
             arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
             arq_database_test.add_data(self.arq_dao, [model_0, model_1])
@@ -62,8 +62,8 @@ class TestArqDatabaseTest:
             assert data_to_insert_1[1] == model_1
 
 
-            model_2 = ArqTestModel(code=2, title="test_using_one_item")
-            model_3 = ArqTestModel(code=3, title="test_using_one_item")
+            model_2 = IpsumTestModel(code=2, title="test_using_one_item")
+            model_3 = IpsumTestModel(code=3, title="test_using_one_item")
 
             arq_database_test.add_data(self.arq_dao, [model_2, model_3])
             assert len(arq_database_test.data_to_insert) == 4
@@ -81,7 +81,7 @@ class TestArqDatabaseTest:
     def test_insert_data(self):
 
         def test_method():
-            model = ArqTestModel(code=1, title="test_using_one_item")
+            model = IpsumTestModel(code=1, title="test_using_one_item")
 
             arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
             arq_database_test.add_data(self.arq_dao, model)
@@ -104,7 +104,7 @@ class TestArqDatabaseTest:
 
         def test_in_decorator():
 
-            model = ArqTestModel(code=1, title="test_using_one_item")
+            model = IpsumTestModel(code=1, title="test_using_one_item")
 
             arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
             arq_database_test.add_data(self.arq_dao, model)
@@ -127,7 +127,7 @@ class TestArqDatabaseTest:
 
             def _test_cleaning_data_to_insert():
                 
-                model = ArqTestModel(code=1, title="test_using_one_item")
+                model = IpsumTestModel(code=1, title="test_using_one_item")
                 detail = DetailTestModel(code=1, title="detail_test_using_one_item", arq_model_id=fake_parent_id)
 
                 arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
@@ -154,7 +154,7 @@ class TestArqDatabaseTest:
 
             def _test_cleaning_daos_to_clean():
 
-                model = ArqTestModel(code=1, title="test_using_one_item")
+                model = IpsumTestModel(code=1, title="test_using_one_item")
                 detail = DetailTestModel(code=1, title="detail_test_using_one_item", arq_model_id=fake_parent_id)
 
                 arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao, self.detail_crud_dao], parent_ids_to_clean=[fake_parent_id])
@@ -184,7 +184,7 @@ class TestArqDatabaseTest:
 
             def _test_cleaning_data_to_insert():
 
-                model = ArqTestModel(code=1, title="test_using_one_item")
+                model = IpsumTestModel(code=1, title="test_using_one_item")
 
                 arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
                 arq_database_test.add_data(self.arq_dao, model)
@@ -202,7 +202,7 @@ class TestArqDatabaseTest:
             _test_cleaning_data_to_insert()
 
             def _test_cleaning_daos_to_clean():
-                model = ArqTestModel(code=1, title="test_using_one_item")
+                model = IpsumTestModel(code=1, title="test_using_one_item")
 
                 arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao])
                 @arq_database_test.persistence_test()
@@ -224,7 +224,7 @@ class TestArqDatabaseTest:
 
         def test_method():
 
-            model = ArqTestModel(code=1, title="test_using_one_item")
+            model = IpsumTestModel(code=1, title="test_using_one_item")
 
             arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
             arq_database_test.add_data(self.arq_dao, model)
@@ -247,7 +247,7 @@ class TestArqDatabaseTest:
 
         def test_decorator():
 
-            model = ArqTestModel(code=1, title="test_using_one_item")
+            model = IpsumTestModel(code=1, title="test_using_one_item")
 
             arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
             arq_database_test.add_data(self.arq_dao, model)

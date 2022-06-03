@@ -1,6 +1,6 @@
 
 from flask import Request
 
-class ArqRequest(Request):
+class IpsumRequest(Request):
 
     collection_tree = None

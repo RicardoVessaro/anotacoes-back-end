@@ -2,7 +2,7 @@
 from arq.data.dao.dao import DAO
 from mongoengine import Document
 
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 
 class CRUDDAO(DAO):
@@ -23,7 +23,7 @@ class CRUDDAO(DAO):
     def update(self, id, model_data, **kwargs):
         if self.find_by_id(id) is None:
             exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
-            raise ArqException(exception_message, status_code=404)
+            raise IpsumException(exception_message, status_code=404)
             
         model = model_data
         
@@ -40,7 +40,7 @@ class CRUDDAO(DAO):
 
         if model is None:
             exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
-            raise ArqException(exception_message, status_code=404)
+            raise IpsumException(exception_message, status_code=404)
 
         deleted_id = model.id
 

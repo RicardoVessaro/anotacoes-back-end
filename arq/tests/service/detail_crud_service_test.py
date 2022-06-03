@@ -3,11 +3,11 @@
 from pytest import raises
 from arq.data.dao.crud_dao import CRUDDAO
 from arq.data.dao.detail_crud_dao import DetailCRUDDAO
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT
 from arq.service.detail_crud_service import DetailCRUDService
 from arq.service.detail_crud_validator import DetailCRUDValidator
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from arq.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 from arq.tests.resources.data.model.detail_test_model import DetailTestModel
 from arq.util.enviroment_variable import get_test_database_url
@@ -25,7 +25,7 @@ class TestDetailCRUDService:
 
     TEST_DB_URI = get_test_database_url()
 
-    parent_dao = CRUDDAO(model=ArqTestModel)
+    parent_dao = CRUDDAO(model=IpsumTestModel)
     parent = parent_dao.model
 
     dao = DetailCRUDDAO(model=DetailTestModel)
@@ -181,7 +181,7 @@ class TestDetailCRUDService:
                 collection_tree.parent.name, collection_tree.parent.id
             )
 
-            with raises(ArqException, match=error_msg):
+            with raises(IpsumException, match=error_msg):
                 _detail_crud_service.validate_collection_tree(collection_tree)
 
         _()

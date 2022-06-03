@@ -1,5 +1,5 @@
 
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 from arq.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT, PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from arq.service.crud_validator import CRUDValidator
 from arq.util.service.collection_tree import CollectionTree
@@ -42,7 +42,7 @@ class DetailCRUDValidator(CRUDValidator):
                     if not parent_id_in_child_doc == str(parent_collection_item.id):
                         parent_id = parent_collection_item.id
                         
-                        raise ArqException(CHILD_NOT_FOUND_IN_PARENT.format(
+                        raise IpsumException(CHILD_NOT_FOUND_IN_PARENT.format(
                             child_collection_item.name,
                             child_id,
                             child_collection_item.parent_field,
@@ -58,6 +58,6 @@ class DetailCRUDValidator(CRUDValidator):
         parent = self._parent_dao.find_by_id(parent_id)
 
         if parent is None:
-            raise ArqException(PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self._parent_field, parent_id))
+            raise IpsumException(PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(self._parent_field, parent_id))
 
 

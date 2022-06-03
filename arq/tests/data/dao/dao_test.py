@@ -3,22 +3,22 @@
 from pytest import raises
 from arq.data.dao.dao import DAO
 from arq.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
-from arq.tests.resources.data.model.arq_test_model import ArqTestModel
+from arq.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from arq.util.enviroment_variable import get_test_database_url
 from arq.util.object_util import is_none_or_empty
 from arq.util.test.database_test import DatabaseTest
-from arq.exception.arq_exception import ArqException
+from arq.exception.ipsum_exception import IpsumException
 
 class TestDao:
 
     TEST_DB_URI = get_test_database_url()
 
-    arq_dao = DAO(model=ArqTestModel)
+    arq_dao = DAO(model=IpsumTestModel)
 
     model = arq_dao.model
 
     def test_insert(self):
-        arq_test_model = ArqTestModel(code=1, title='test_insert_TestArqDao')
+        arq_test_model = IpsumTestModel(code=1, title='test_insert_TestArqDao')
 
         arq_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.arq_dao])
         @arq_database_test.persistence_test()
@@ -76,9 +76,9 @@ class TestDao:
         _()
 
     def test_find(self):
-        arq_test_model_1 = ArqTestModel(code=1, title='test_find_TestArqDao_1', boolean=True, tags=['A', 'B', 'C'])
-        arq_test_model_2 = ArqTestModel(code=2, title='test_find_TestArqDao_2', boolean=False, tags=['A', 'B', 'D'])
-        arq_test_model_3 = ArqTestModel(code=3, title='test_find_TestArqDao_3', boolean=True, tags=['B', 'C', 'D'])
+        arq_test_model_1 = IpsumTestModel(code=1, title='test_find_TestArqDao_1', boolean=True, tags=['A', 'B', 'C'])
+        arq_test_model_2 = IpsumTestModel(code=2, title='test_find_TestArqDao_2', boolean=False, tags=['A', 'B', 'D'])
+        arq_test_model_3 = IpsumTestModel(code=3, title='test_find_TestArqDao_3', boolean=True, tags=['B', 'C', 'D'])
 
         arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.arq_dao, arq_test_model_1)
@@ -247,7 +247,7 @@ class TestDao:
 
             def test_paginate_must_raise_exception_when_page_is_greater_than_pages():
 
-                with raises(ArqException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
+                with raises(IpsumException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
                     pagination = self.arq_dao.paginate(page=4, limit=5)
 
             test_paginate_must_raise_exception_when_page_is_greater_than_pages()
@@ -272,7 +272,7 @@ class TestDao:
         
         boolean = True
         for i in range(15):
-            arq_test_model = ArqTestModel(
+            arq_test_model = IpsumTestModel(
                 code=i, 
                 title='test_find_TestArqDao_'+str(i), 
                 boolean=boolean
@@ -299,7 +299,7 @@ class TestDao:
 
 
     def _build_default_model_and_arq_test(self, code, title):
-        arq_test_model = ArqTestModel(code=code, title=title)
+        arq_test_model = IpsumTestModel(code=code, title=title)
 
         arq_database_test = DatabaseTest(host=self.TEST_DB_URI)
         arq_database_test.add_data(self.arq_dao, arq_test_model)

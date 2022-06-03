@@ -9,7 +9,7 @@ def error_handler(exception):
 
     return make_response(response, exception.status_code)
 
-class ArqException(Exception):
+class IpsumException(Exception):
 
     BAD_REQUEST = 400
 

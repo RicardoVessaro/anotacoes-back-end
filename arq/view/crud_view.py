@@ -2,10 +2,10 @@
 from flask import request
 from flask_classful import route
 from arq.service.crud_service import CRUDService
-from arq.view.arq_view import DELETE, PATCH, POST, ArqView
+from arq.view.ipsum_view import DELETE, PATCH, POST, IpsumView
 
 
-class CRUDView(ArqView):
+class CRUDView(IpsumView):
 
     def __init__(self, service: CRUDService) -> None:
         super().__init__(

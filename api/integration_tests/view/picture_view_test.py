@@ -35,7 +35,8 @@ class TestPictureView(DetailCRUDViewTest):
     def get_model(self):
         return self.model(
             title = 'Test Picture',
-            note_id = self.fake_parent_id
+            note_id = self.fake_parent_id,
+            created_in = '2022-06-04T20:46:00.000000'
         )
 
     def get_parent_model(self):
@@ -65,6 +66,7 @@ class TestPictureView(DetailCRUDViewTest):
 
             db_model = self.model(
                 title = f'Picture {i}',
+                created_in = '2022-06-04T20:46:00.000000',
                 note_id = parent_id
             )
 

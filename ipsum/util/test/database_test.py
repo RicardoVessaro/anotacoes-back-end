@@ -121,12 +121,19 @@ class DatabaseTest:
             if data.data_id is not None and dao.find_by_id(data.data_id) is not None:
                 dao.delete(data.data_id)
 
-            model_data = data.model
-            model_data.id = None
+            new_data = self._refresh_data(data)
 
-            cleaned_data_to_insert.append(self._data(dao=data.dao, model=model_data, data_id=None, parent_ids=data.parent_ids))
+            cleaned_data_to_insert.append(new_data)
 
         self.data_to_insert = cleaned_data_to_insert
+
+    def _refresh_data(self, data):
+        model_data = data.model
+        model_data = model_data.to_mongo()
+        model_data['id'] = model_data.pop('_id')
+        model_data = data.dao.model(**model_data)
+
+        return self._data(dao=data.dao, model=model_data, data_id=None, parent_ids=data.parent_ids)
     
     def _clean_existing_data(self):
         already_deleted = []

@@ -288,3 +288,26 @@ class TestDatabaseTest:
             assert enum_test_service_fake_2.save_enums_called == False
         
         not_insert_if_not_given()
+
+    def test_must_reinsert_data_BUG_data_not_reinserted_when_uses_same_database_test_object(self):
+
+        model = IpsumTestModel(code=1, title="test_using_one_item")
+
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test.add_data(self.dao, model)
+        
+        @database_test.persistence_test()
+        def _():
+            database_model = self.dao.find().first()
+
+            assert not database_model is None
+
+        _()
+
+        @database_test.persistence_test()
+        def _():
+            database_model = self.dao.find().first()
+
+            assert not database_model is None
+
+        _()

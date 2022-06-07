@@ -311,3 +311,28 @@ class TestDatabaseTest:
             assert not database_model is None
 
         _()
+
+    def test_must_reinsert_data_BUG_data_not_reinserted_when_uses_same_database_test_object_and_delete_added_data(self):
+
+        model = IpsumTestModel(code=1, title="test_using_one_item")
+
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test.add_data(self.dao, model)
+        
+        @database_test.persistence_test()
+        def _():
+            database_model = self.dao.find().first()
+
+            assert not database_model is None
+
+            self.dao.delete(database_model.id)
+
+        _()
+
+        @database_test.persistence_test()
+        def _():
+            database_model = self.dao.find().first()
+
+            assert not database_model is None
+
+        _()

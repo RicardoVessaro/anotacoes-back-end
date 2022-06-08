@@ -117,7 +117,7 @@ class TestNoteView(CRUDViewTest):
         
         @database_test.persistence_test()
         def _():
-            url = self.get_view_url() + '/'
+            url = self.get_view_url()
 
             ok_tag = self._find_enum_by_code(tag_view_name, OK.code)
             db_model = self.get_model()
@@ -143,7 +143,7 @@ class TestNoteView(CRUDViewTest):
         
         @database_test.persistence_test()
         def _():
-            url = self.get_view_url() + '/'
+            url = self.get_view_url()
 
             db_model = self.get_model()
 

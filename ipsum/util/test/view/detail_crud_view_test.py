@@ -61,7 +61,7 @@ class DetailCRUDViewTest(CRUDViewTest):
         pass
 
     def test_validate_collection_tree_must_raise_exception_when_parent_not_exists(self):
-        url = self.get_view_url() + '/'
+        url = self.get_view_url()
 
         db_model = self.get_model()
 

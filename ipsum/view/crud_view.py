@@ -12,7 +12,7 @@ class CRUDView(IpsumView):
             service=service
         )
 
-    @route('/', methods=[POST])
+    @route('', methods=[POST])
     def insert(self, **kwargs):
         body = request.json
 

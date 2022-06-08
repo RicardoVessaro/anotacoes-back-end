@@ -18,7 +18,7 @@ class DetailCRUDView(CRUDView):
 
         request.collection_tree = collection_tree
 
-    @route('/', methods=[POST])
+    @route('', methods=[POST])
     def insert(self, **kwargs):
         collection_tree = request.collection_tree
         parent = collection_tree.parent
@@ -37,18 +37,9 @@ class DetailCRUDView(CRUDView):
 
         return super().update(id, **kwargs)
 
-    @route('', methods=[POST, GET])
+    @route('', methods=[GET])
     def find(self, **kwargs):
         parent_id = request.collection_tree.parent.id
-
-        if request.method == POST:
-            query_body = request.json
-
-            parsed_query_body = QueryStringParser().parse_dict(query_body)
-
-            return self._to_response(
-                self._service.find(parent_id, **parsed_query_body)
-            )
 
         request_query_string = request.query_string
 

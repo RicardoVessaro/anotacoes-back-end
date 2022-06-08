@@ -31,15 +31,8 @@ class IpsumView(FlaskView):
     def find_by_id(self, id, **kwargs):
         return self._to_response(self._service.find_by_id(id))
 
-    @route('', methods=[POST, GET])
+    @route('', methods=[GET])
     def find(self, **kwargs):
-
-        if request.method == POST:
-            query_body = request.json
-
-            parsed_query_body = QueryStringParser().parse_dict(query_body)
-
-            return self._to_response(self._service.find(**parsed_query_body))
 
         request_query_string = request.query_string
 

@@ -21,7 +21,7 @@ class CRUDViewTest(IpsumViewTest):
 
         @database_test.persistence_test()
         def _():
-            url = self.get_view_url() + '/'
+            url = self.get_view_url()
 
             db_model = self.get_model()
 
@@ -50,7 +50,7 @@ class CRUDViewTest(IpsumViewTest):
 
             for required_field in self.service.validator.required_fields:
                 if is_none_or_empty(self.fields_inserted_by_default) or required_field not in self.fields_inserted_by_default:
-                    url = self.get_view_url() + '/'
+                    url = self.get_view_url()
 
                     db_model = self.get_model()
 

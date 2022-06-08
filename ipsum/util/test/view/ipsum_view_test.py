@@ -145,40 +145,19 @@ class IpsumViewTest(ABC):
 
         @database_test.persistence_test()
         def _():
-
-            def test_POST():
                 
-                for find_filter_result in self.find_filter_results:
-                    
-                    response = requests.post(url, json=find_filter_result.filter)
-
-                    expected_ids = self.get_expected_ids(find_filter_result.expected_indexes, model_list)
-
-                    items = response.json()
-
-                    assert len(items) == len(expected_ids)
-
-                    for item in items:
-                        assert item['id'] in expected_ids         
-            
-            test_POST()
-
-            def test_GET():
+            for find_filter_result in self.find_filter_results:
                 
-                for find_filter_result in self.find_filter_results:
-                    
-                    response = requests.get(url, params=find_filter_result.filter)
+                response = requests.get(url, params=find_filter_result.filter)
 
-                    expected_ids = self.get_expected_ids(find_filter_result.expected_indexes, model_list)
+                expected_ids = self.get_expected_ids(find_filter_result.expected_indexes, model_list)
 
-                    items = response.json()
+                items = response.json()
 
-                    assert len(items) == len(expected_ids)
+                assert len(items) == len(expected_ids)
 
-                    for item in items:
-                        assert item['id'] in expected_ids         
-            
-            test_GET()
+                for item in items:
+                    assert item['id'] in expected_ids         
             
         _()
 

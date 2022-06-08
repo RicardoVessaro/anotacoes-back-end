@@ -2,7 +2,7 @@ from pytest import raises
 from collections import namedtuple
 from array import array
 from ipsum.exception.ipsum_exception import IpsumException
-from ipsum.util.object_util import is_none_or_empty, NOT_SUPPORTED_TYPES, NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
+from ipsum.util.object_util import is_iterable, is_none_or_empty, NOT_SUPPORTED_TYPES, NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE
 
 def test_none_value():
     assert is_none_or_empty(None)
@@ -131,3 +131,11 @@ def test_not_supported_type():
 
         with raises(IpsumException, match=NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE.format(str_type)):
             is_none_or_empty(type_call)
+
+def test_is_iterable():
+
+    assert True == is_iterable([])
+    assert True == is_iterable("string")
+    assert True == is_iterable({})
+    assert False == is_iterable(1)
+    assert False == is_iterable(1.0)

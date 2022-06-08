@@ -10,6 +10,16 @@ NOT_SUPPORTED_TYPES = [
     bytes, bytearray, memoryview
 ]
 
+def is_iterable(value):
+    try:
+        iter(value)
+    
+    except TypeError:
+        return False
+    
+    else:
+        return True
+
 def is_none_or_empty(value, verify_iterable_values=True):
     _validate_type(value)
 

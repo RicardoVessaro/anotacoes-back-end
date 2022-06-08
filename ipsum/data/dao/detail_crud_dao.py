@@ -9,11 +9,10 @@ class DetailCRUDDAO(CRUDDAO):
 
     PARENT_FIELD = 'parent_field'
 
-    def __init__(self, model: Document) -> None:
-        if not hasattr(model, self.PARENT_FIELD) or is_none_or_empty(model.parent_field):
-            raise IpsumException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, DetailCRUDDAO.__class__, self.__class__, self.PARENT_FIELD))
+    def __init__(self, model: Document, cascade=None) -> None:
+        self._validate_model_has_parent_field(model)
 
-        super().__init__(model)
+        super().__init__(model, cascade)
 
     def find(self, parent_id, **query_filter):
         query_filter[self._model.parent_field] = parent_id
@@ -26,3 +25,7 @@ class DetailCRUDDAO(CRUDDAO):
         results = self.find(parent_id, **query_filter)
 
         return self._build_pagination(results, page, limit)
+
+    def _validate_model_has_parent_field(self, model):
+        if not hasattr(model, self.PARENT_FIELD) or is_none_or_empty(model.parent_field):
+            raise IpsumException(DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD.format(model, DetailCRUDDAO.__class__, self.__class__, self.PARENT_FIELD))

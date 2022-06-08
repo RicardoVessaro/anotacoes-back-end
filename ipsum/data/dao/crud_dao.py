@@ -7,8 +7,8 @@ from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 
 class CRUDDAO(DAO):
 
-    def __init__(self, model:Document) -> None:
-        super().__init__(model)
+    def __init__(self, model:Document, cascade=None) -> None:
+        super().__init__(model, cascade)
 
     def insert(self, model_data, **kwargs) -> str:
         model = model_data
@@ -35,6 +35,6 @@ class CRUDDAO(DAO):
 
         return model.save(**kwargs)
 
-    def delete(self, id):
-        return super().delete(id, validate_if_none=True)
+    def delete(self, data):
+        return super().delete(data, validate_if_none=True)
 

@@ -8,35 +8,62 @@ from ipsum.util.data.query_filter_builder import QueryFilterBuilder
 
 class DAO:
 
-    def __init__(self, model:Document) -> None:
+    def __init__(self, model:Document, cascade=None) -> None:
         self._model = model
+        self._cascade = cascade
 
     @property
     def model(self):
         return self._model
+
+    @property
+    def cascade(self):
+        return self._cascade
 
     def insert(self, model_data, **kwargs) -> str:
         model_data.save(**kwargs)
 
         return model_data
 
-    def delete(self, id, validate_if_none=False):
-        model = self.find_by_id(id)
+    def delete(self, data, validate_if_none=False):
 
-        if model is None:
-            if validate_if_none:
-                exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(id)
-                raise IpsumException(exception_message, status_code=404)
+        is_single_item = not object_util.is_iterable(data) or isinstance(data, str) or isinstance(data, Document)
 
-            else:
-                return None
+        if is_single_item:
+            return self._delete(data, validate_if_none)
+
+        deleted_ids = []
+        for d in data:
+            deleted_id = self._delete(d.id, validate_if_none)
+
+            if deleted_id is not None:
+                deleted_ids.append(deleted_id)
+
+        return deleted_ids
+        
+    def _delete(self, data, validate_if_none=False):
+
+        model = data
+
+        if isinstance(data, str) or isinstance(data, ObjectId):
+            model = self.find_by_id(data)
+
+            if model is None:
+                if validate_if_none:
+                    exception_message = OBJECT_NOT_FOUND_EXCEPTION_MESSAGE.format(data)
+                    raise IpsumException(exception_message, status_code=404)
+
+                else:
+                    return None
 
         deleted_id = model.id
 
         model.delete()
 
-        return str(deleted_id)
+        if self.has_cascade():
+            self.cascade.delete(deleted_id)
 
+        return str(deleted_id)
         
     def find_by_id(self, id):
         _id = id
@@ -60,6 +87,9 @@ class DAO:
         results = self.find(**query_filter)
 
         return self._build_pagination(results, page, limit)
+
+    def has_cascade(self):
+        return not self.cascade is None and not object_util.is_none_or_empty(self.cascade.childs)
 
     def _build_pagination(self, results, page, limit):
 

@@ -2,13 +2,17 @@
 
 import datetime
 from pytest import raises
+from ipsum.data.cascade import Cascade
 from ipsum.data.dao.dao import DAO
+from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
+from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
+from ipsum.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 
 class TestDao:
 
@@ -32,8 +36,8 @@ class TestDao:
 
         _()
 
-    def test_delete(self):
-        ipsum_test_model, ipsum_database_test = self._build_default_model_and_ipsum_test(1, 'test_delete_TestDao')
+    def test_delete_using_str(self):
+        ipsum_test_model, ipsum_database_test = self._build_default_model_and_ipsum_test(1, 'test_delete_using_str')
         
         @ipsum_database_test.persistence_test()
         def _():
@@ -44,6 +48,94 @@ class TestDao:
             assert deleted_id == ipsum_test_model_id
 
             assert self.dao.find_by_id(ipsum_test_model_id) is None
+
+        _()
+
+    def test_has_cascade(self):
+        class FakeDetailChildDAO(DetailCRUDDAO):
+
+            def __init__(self) -> None:
+                super().__init__(model=DetailChildTestModel)
+
+        class FakeDetailDAO(DetailCRUDDAO):
+            def __init__(self) -> None:
+                super().__init__(
+                    model=DetailTestModel,
+                    cascade=Cascade(childs=[
+                        FakeDetailChildDAO()
+                    ])
+                )
+
+        class FakeParentDAO(DAO):
+            def __init__(self) -> None:
+                super().__init__(
+                    model=IpsumTestModel, 
+                    cascade=Cascade(childs=[
+                        FakeDetailDAO()
+                    ])
+                )
+
+        class EmptyChildDAO(DAO):
+            def __init__(self) -> None:
+                super().__init__(
+                    model=IpsumTestModel, 
+                    cascade=Cascade(childs=[])
+                )
+
+        assert True == FakeParentDAO().has_cascade()
+        assert True == FakeDetailDAO().has_cascade()
+        assert False == FakeDetailChildDAO().has_cascade()
+        assert False == EmptyChildDAO().has_cascade()
+
+
+    def test_delete_using_object_id(self):
+        ipsum_test_model, ipsum_database_test = self._build_default_model_and_ipsum_test(1, 'test_delete_using_object_id')
+        
+        @ipsum_database_test.persistence_test()
+        def _():
+            ipsum_test_model_id = ipsum_test_model.id
+
+            deleted_id = self.dao.delete(ipsum_test_model_id)
+
+            assert deleted_id == str(ipsum_test_model_id)
+
+            assert self.dao.find_by_id(ipsum_test_model_id) is None
+
+        _()
+
+    def test_delete_using_model(self):
+        ipsum_test_model, ipsum_database_test = self._build_default_model_and_ipsum_test(1, 'test_delete_using_model')
+        
+        @ipsum_database_test.persistence_test()
+        def _():
+            ipsum_test_model_id = str(ipsum_test_model.id)
+
+            deleted_id = self.dao.delete(ipsum_test_model)
+
+            assert deleted_id == str(ipsum_test_model_id)
+
+            assert self.dao.find_by_id(ipsum_test_model_id) is None
+
+        _()
+
+    def test_delete_using_iterable(self):
+        ipsum_test_model_1 = IpsumTestModel(code=1, title="model 1")
+        ipsum_test_model_2 = IpsumTestModel(code=2, title="model 2")
+
+        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test.add_data(self.dao, [ipsum_test_model_1, ipsum_test_model_2])
+
+        @database_test.persistence_test()
+        def _():
+            models = self.dao.find()
+            
+            deleted_ids = self.dao.delete(models)
+
+            assert str(ipsum_test_model_1.id) in deleted_ids
+            assert str(ipsum_test_model_2.id) in deleted_ids
+
+            assert self.dao.find_by_id(ipsum_test_model_1.id) is None
+            assert self.dao.find_by_id(ipsum_test_model_2.id) is None
 
         _()
 

@@ -12,3 +12,6 @@ COLLECTION_TREE_ALL_ITEMS_MUST_BE_A_COLLECTION_ITEM = 'All items of "{0}" object
 COLLECTION_TREE_ALL_DAO_ATTRIBUTES_MUST_BE_A_DAO = 'All "{0}" attributes in "{1}" object must be an instance of "{2}". The object "{3}" in "{4} - {5}" is not.' 
 COLLECTION_TREE_ITEMS_WITH_DUPLICATED_NAMES = 'The name "{0}" is duplicated in {1}.'
 CASCADE_CHILDS_MUST_BE_INSTANCE_OF_DAO = 'The "{0}" items in "{1}" attribute must be an instance of "{2}". "{3}" is not.'
+DEPENDENT_DEPENDENCY_IS_NOT_DEPENDENCY_TYPE = 'The attribute "{0}" in {1} must be an {2}. {3} is not.'
+DEPENDENCY_DAO_IS_NOT_DAO_TYPE = 'The attribute "{0}" in {1} must be an {2}. {3} is not.'
+DEPENDENT_DEPENDENCY_HAS_DATA = 'Cannot delete "{0}" with ID {1} because {2} with ID {3} uses it.'

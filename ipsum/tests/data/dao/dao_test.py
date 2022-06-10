@@ -5,6 +5,7 @@ from pytest import raises
 from ipsum.data.cascade import Cascade
 from ipsum.data.dao.dao import DAO
 from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
+from ipsum.data.dependent import Dependent
 from ipsum.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.util.enviroment_variable import get_test_database_url
@@ -86,6 +87,18 @@ class TestDao:
         assert True == FakeDetailDAO().has_cascade()
         assert False == FakeDetailChildDAO().has_cascade()
         assert False == EmptyChildDAO().has_cascade()
+
+    def test_has_dependent(self):
+
+        dao = DAO(IpsumTestModel)
+
+        dependency = Dependent.Dependency(dao, 'DAO', 'dependency_id')
+
+        dependent = Dependent('dependent', dependents=[dependency])
+
+        assert DAO(IpsumTestModel, dependent=dependent).has_dependent() == True
+        assert DAO(IpsumTestModel).has_dependent() == False
+        assert DAO(IpsumTestModel, dependent=Dependent('dependent', dependents=[])).has_dependent() == False
 
 
     def test_delete_using_object_id(self):

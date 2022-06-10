@@ -9,10 +9,14 @@ class DetailCRUDDAO(CRUDDAO):
 
     PARENT_FIELD = 'parent_field'
 
-    def __init__(self, model: Document, cascade=None) -> None:
+    def __init__(self, model: Document, cascade=None, dependent=None) -> None:
         self._validate_model_has_parent_field(model)
 
-        super().__init__(model, cascade)
+        super().__init__(
+            model, 
+            cascade=cascade,
+            dependent=dependent
+        )
 
     def find(self, parent_id, **query_filter):
         query_filter[self._model.parent_field] = parent_id

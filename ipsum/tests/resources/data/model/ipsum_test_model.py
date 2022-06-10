@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, IntField, BooleanField, ListField, DateTimeField
+from mongoengine import Document, StringField, IntField, BooleanField, ListField, DateTimeField, ObjectIdField
 
 class IpsumTestModel(Document):
 
@@ -11,5 +11,7 @@ class IpsumTestModel(Document):
     tags = ListField(StringField())
 
     day = DateTimeField()
+
+    dependency_id = ObjectIdField()
 
 

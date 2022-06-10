@@ -7,8 +7,12 @@ from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 
 class CRUDDAO(DAO):
 
-    def __init__(self, model:Document, cascade=None) -> None:
-        super().__init__(model, cascade)
+    def __init__(self, model:Document, cascade=None, dependent=None) -> None:
+        super().__init__(
+            model, 
+            cascade=cascade,
+            dependent=dependent
+        )
 
     def insert(self, model_data, **kwargs) -> str:
         model = model_data

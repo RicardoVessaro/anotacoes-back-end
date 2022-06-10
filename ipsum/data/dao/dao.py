@@ -1,4 +1,5 @@
 
+from abc import abstractproperty
 from mongoengine import Document
 from bson import ObjectId
 from ipsum.exception.ipsum_exception import IpsumException
@@ -8,9 +9,14 @@ from ipsum.util.data.query_filter_builder import QueryFilterBuilder
 
 class DAO:
 
-    def __init__(self, model:Document, cascade=None) -> None:
+    def __init__(self, model:Document, cascade=None, dependent=None) -> None:
         self._model = model
         self._cascade = cascade
+        self._dependent = dependent
+
+    @abstractproperty
+    def model_name(self):
+        pass
 
     @property
     def model(self):
@@ -19,6 +25,10 @@ class DAO:
     @property
     def cascade(self):
         return self._cascade
+
+    @property
+    def dependent(self):
+        return self._dependent
 
     def insert(self, model_data, **kwargs) -> str:
         model_data.save(**kwargs)
@@ -58,6 +68,9 @@ class DAO:
 
         deleted_id = model.id
 
+        if self.has_dependent():
+            self.dependent.check_dependents_data(deleted_id)
+
         model.delete()
 
         if self.has_cascade():
@@ -90,6 +103,9 @@ class DAO:
 
     def has_cascade(self):
         return not self.cascade is None and not object_util.is_none_or_empty(self.cascade.childs)
+
+    def has_dependent(self):
+        return not self.dependent is None and not object_util.is_none_or_empty(self.dependent.dependents)
 
     def _build_pagination(self, results, page, limit):
 

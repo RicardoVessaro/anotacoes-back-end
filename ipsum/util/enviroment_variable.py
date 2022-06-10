@@ -1,6 +1,8 @@
 
 import os
 
+LOGGER_LEVEL = 'LOGGER_LEVEL'
+
 MONGODB_USER = 'MONGODB_USER'
 MONGODB_PASSWORD = 'MONGODB_PASSWORD'
 MONGODB_DATABASE = 'MONGODB_DATABASE'
@@ -21,7 +23,10 @@ TEST_MONGODB_URL_OPTIONS = 'TEST_MONGODB_URL_OPTIONS'
 _MONGODB_ATLAS_SERVER_PREFIX = 'mongodb+srv://'
 
 def get_enviroment_variable(enviroment_variable_name):
-    return os.environ[enviroment_variable_name]
+    if enviroment_variable_name in os.environ:
+        return os.environ[enviroment_variable_name]
+    
+    return None
         
 def get_api_url():
 

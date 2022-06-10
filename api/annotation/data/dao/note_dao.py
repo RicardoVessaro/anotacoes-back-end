@@ -8,6 +8,8 @@ from ipsum.data.dao.crud_dao import CRUDDAO
 
 class NoteDAO(CRUDDAO):
 
+    model_name = 'Note'
+
     def __init__(self) -> None:
         super().__init__(
             model=Note,

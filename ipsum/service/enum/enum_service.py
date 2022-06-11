@@ -19,14 +19,14 @@ class EnumService(CRUDService):
 
         self.validator.validate_enums(self.enums)
 
-        logger.info(f'Saving ENUMs')
+        logger.info(f' Saving ENUMs')
 
         for enum in self.enums:
             
             db_enum_result = self.find(code=enum.code)
 
             if is_none_or_empty(db_enum_result):
-                logger.info(f'Inserting {enum.code} - {enum.name}')
+                logger.info(f'  Inserting {enum.code} - {enum.name}')
 
                 self.insert(enum)
 
@@ -34,7 +34,7 @@ class EnumService(CRUDService):
                 db_enum = db_enum_result.first()
                 enum.id = db_enum.id
 
-                logger.info(f'Updating {enum.code} - {enum.name}')
+                logger.info(f'  Updating {enum.code} - {enum.name}')
 
                 self.update(enum.id, enum)
 

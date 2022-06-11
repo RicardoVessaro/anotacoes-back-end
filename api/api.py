@@ -6,7 +6,7 @@ from api.db import db, set_database_config
 from api.annotation.view import note_view, tag_view, mood_view, picture_view, comment_view, link_view
 from ipsum.exception.ipsum_exception import IpsumException
 from ipsum.exception.ipsum_exception import error_handler
-from ipsum.flask_subclass.impsum_flask import IpsumFlask
+from ipsum.ipsum_flask.ipsum_flask import IpsumFlask
 from ipsum.service.enum.ipsum_enum import save_enums
 
 def create_flask_app():
@@ -25,10 +25,6 @@ def create_flask_app():
     return api
 
 def _register_blueprint(flask_app: Flask):
-    _register_annotation_blueprint(flask_app)
-
-
-def _register_annotation_blueprint(flask_app: Flask):
     flask_app.register_blueprint(tag_view.tag_blueprint)
     flask_app.register_blueprint(mood_view.mood_blueprint)
     flask_app.register_blueprint(note_view.note_blueprint)

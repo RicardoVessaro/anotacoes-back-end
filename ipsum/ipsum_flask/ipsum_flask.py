@@ -1,6 +1,6 @@
 
 from flask import Flask
-from ipsum.flask_subclass.ipsum_request import IpsumRequest
+from ipsum.ipsum_flask.ipsum_request import IpsumRequest
 
 
 class IpsumFlask(Flask):

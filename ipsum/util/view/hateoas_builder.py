@@ -12,29 +12,19 @@ class HATEOASBuilder:
 
     _RULE_CACHE_ATTRIBUTE = '_rule_cache'
 
+    _PAGINATE_KEY_ITEMS = 'items'
+
+    _PAGINATE_KEYS = [
+        'has_next', 'has_prev', 'has_result', _PAGINATE_KEY_ITEMS, 'limit', 'page', 
+        'pages', 'total'
+    ]
+
     def __init__(self, view, response_data, host_url, view_args) -> None:
         self.response_data = response_data
         self.view = view
         self.host_url = host_url
         self.view_args = view_args
 
-    # TODO considerar tipo de dado 'response_data' ao fazer hateoas
-    #
-    # Rever
-    # para dicionario fazer o hateoas de acordo com os ids:
-    #   se nao tiver nenhum, trazer metodos que nao utilizam
-    #   se tiver apenas id: trazers metodos que utilizam id 
-    #   se tiver apenas parent_id: trazers metodos que utilizam parent_id 
-    #   se tiver id e parent id: trazer metodos que usam ambos
-    #
-    # para registros que retornam lista:
-    #   trazer links para cada registro
-    # 
-    # para 'paginate' trazer :
-    #   para os items da listagem trazer da mesma forma que a lista
-    #   
-    #   para o objeto paginate:
-    #       'last', 'next', 'previous', 'last', 'self'
     def build(self):
 
         data = self.get_response_data()
@@ -57,10 +47,31 @@ class HATEOASBuilder:
 
     @_build_data.register(dict)
     def _(self, item_data):
-        # TODO HANDLE paginate
+        if self._is_paginate(item_data):
+            item_data_with_link = self._handle_paginate_response(item_data)
+
+            return json.dumps(item_data_with_link).encode(self.UTF8)
+
         data_with_links = self._build_item_data_links(item_data)
 
-        return json.dumps(data_with_links).encode(self.UTF8)   
+        return json.dumps(data_with_links).encode(self.UTF8) 
+
+    def _handle_paginate_response(self, item_data):
+        item_data_with_link = self._build_item_links(item_data)
+
+        # TODO self, next, previous, first, last
+
+        return item_data_with_link 
+
+    def _build_item_links(self, item_data):
+        items_with_links = self._build_data(item_data[self._PAGINATE_KEY_ITEMS])
+
+        items_with_links = json.loads(items_with_links)
+
+        item_data_with_link = copy.deepcopy(item_data)
+
+        item_data_with_link[self._PAGINATE_KEY_ITEMS] = items_with_links
+        return item_data_with_link 
 
 
     def _build_item_data_links(self, item_data):
@@ -89,6 +100,15 @@ class HATEOASBuilder:
 
         return self.response_data
 
+    def _is_paginate(self, item_data):
+        item_keys = list(item_data.keys())
+
+        for key in self._PAGINATE_KEYS:
+            if key not in item_keys:
+                return False
+
+        return True
+
     def _is_text_response(self):
         return type(self.response_data) is bytes or type(self.response_data) is str
 
@@ -104,14 +124,6 @@ class HATEOASBuilder:
             rule = rules[i]
             action = actions[i]
 
-            # TODO comparar os parametros do view_rule com os parametros de params (ou comparar apenas params)
-            #
-            # se tem id trazer: 
-            #   find_by_id, update, delete
-            #   
-            # se nao tem id:
-            #   insert, find, paginate
-            #
             view_rule = self.view.build_rule(rule)
 
             parsed_route = parse_route(view_rule, params)

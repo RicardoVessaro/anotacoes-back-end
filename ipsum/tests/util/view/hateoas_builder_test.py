@@ -38,11 +38,7 @@ class TestHATEOASBuilder:
         hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args)
         self._assert_build(hateoas_builder)
 
-    def _assert_list(self, test_view):
-        pass
-
     def test_build_dict(self):
-        # TODO usar variaveis no id (ainda naoo usadoo por causa dos bytes)
         bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test"\n}\n'
         hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args)
         self._assert_build(hateoas_builder)
@@ -50,6 +46,40 @@ class TestHATEOASBuilder:
         bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "629fdb22fcce704dad685089"\n}\n'
         hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args)
         self._assert_build(hateoas_builder)
+
+    def test_is_paginate(self):
+        item_data = {
+            "has_next": False,
+            "has_prev": False,
+            "has_result": True,
+            "items": [
+                {
+                    "id": "62a6123275b113db96426022",
+                    "code": 1,
+                    "title": "test"
+                },
+                {
+                    "id": "62a6125d75b113db96426023",
+                    "code": 2,
+                    "title": "other test"
+                }
+            ],
+            "limit": 5,
+            "page": 1,
+            "pages": 1,
+            "total": 2
+        }
+
+        hateoas_builder = HATEOASBuilder(FakeCRUDView(), {}, self.host_url, self.view_args)
+
+        assert True == hateoas_builder._is_paginate(item_data)
+
+        item_data = {
+            "id": "62a6125d75b113db96426023",
+            "code": 2,
+            "title": "other test"
+        }
+        assert False == hateoas_builder._is_paginate(item_data)
 
     def test_params_equals_params_in_view_rule(self):
         hateoas_builder = HATEOASBuilder(FakeCRUDView(), {}, self.host_url, self.view_args)

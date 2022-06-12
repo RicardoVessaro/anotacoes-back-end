@@ -7,7 +7,7 @@ LEN = '__len__'
 
 NOT_SUPPORTED_TYPES = [
     complex, range, set, frozenset,
-    bytes, bytearray, memoryview
+    bytearray, memoryview
 ]
 
 def is_iterable(value):
@@ -46,8 +46,9 @@ def _(value, verify_iterable_values=True):
     return value is None
 
 @_is_none_or_empty.register(str)
+@_is_none_or_empty.register(bytes)
 def _(value, verify_iterable_values=True):
-    return is_string_none_or_empty(value)
+    return is_text_none_or_empty(value)
 
 @_is_none_or_empty.register(list)
 def _(value, verify_iterable_values=True):
@@ -61,7 +62,7 @@ def _(value, verify_iterable_values=True):
 def _(value, verify_iterable_values=True):
     return is_dict_none_or_empty(value, verify_iterable_values)
 
-def is_string_none_or_empty(string: str):
+def is_text_none_or_empty(string: str):
     return len(string) == 0 or len(string.split()) == 0
 
 def is_list_none_or_empty(lizt: list,  verify_iterable_values=True):

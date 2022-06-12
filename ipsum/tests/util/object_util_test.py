@@ -7,6 +7,13 @@ from ipsum.util.object_util import is_iterable, is_none_or_empty, NOT_SUPPORTED_
 def test_none_value():
     assert is_none_or_empty(None)
 
+def test_bytes():
+
+    assert is_none_or_empty(b'')
+    assert is_none_or_empty(b'    ')
+    assert not is_none_or_empty(b'None')
+    assert not is_none_or_empty(b'bytes')
+
 def test_default_value():
 
     def test_namedtuple():

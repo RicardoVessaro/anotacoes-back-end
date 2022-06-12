@@ -15,6 +15,7 @@ from mongoengine import connect, disconnect
 
 ID_FIELD = 'id'
 TO_MONGO_ID_FIELD = '_id'
+HATEOAS_LINKS = '_links'
 
 FindFilterResult = namedtuple('FindFilterResult', 'filter expected_indexes')
 
@@ -118,7 +119,8 @@ class IpsumViewTest(ABC):
             dict_model = self.encode(db_model)
 
             for k in item:
-                assert item[k] == dict_model[k]
+                if k != HATEOAS_LINKS:
+                    assert item[k] == dict_model[k]
         _()
 
         def _must_return_204_no_content_when_id_not_exists():

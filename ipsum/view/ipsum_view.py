@@ -1,5 +1,8 @@
+
+import json
 from flask_classful import FlaskView, route
 from flask import make_response, request
+from ipsum.util.view.hateoas_builder import HATEOASBuilder
 from ipsum.util.view.query_string_parser import QueryStringParser
 
 from ipsum.service.service import Service
@@ -22,6 +25,21 @@ class IpsumView(FlaskView):
         super().__init__()
 
         self._service = service
+
+    def after_request(self, name, response, *args, **kwargs):
+
+        hateoas_builder = HATEOASBuilder(
+            response_data=response.get_data(),
+            view=self, 
+            host_url=request.host_url, 
+            view_args=request.view_args
+        )
+
+        hateoas_response = hateoas_builder.build()
+
+        response.set_data(hateoas_response)
+
+        return response
 
     @property
     def service(self):

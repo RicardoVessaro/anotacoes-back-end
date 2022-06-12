@@ -2,7 +2,8 @@
 import copy
 from functools import singledispatchmethod
 import json
-from ipsum.util.view.route_parser import  parse_route
+from ipsum.util.list_util import list_equals
+from ipsum.util.view.route_parser import  get_route_params, parse_route
 from ipsum.util.object_util import is_none_or_empty
 
 class HATEOASBuilder:
@@ -46,9 +47,13 @@ class HATEOASBuilder:
 
     @_build_data.register(list)
     def _(self, data):
-        # TODO handle list
-        # provisory
-        return self.response_data
+        data_with_links = []
+        for item_data in data:
+            item_data_with_links = self._build_item_data_links(item_data)
+
+            data_with_links.append(item_data_with_links)
+
+        return json.dumps(data_with_links).encode(self.UTF8)   
 
     @_build_data.register(dict)
     def _(self, item_data):
@@ -100,22 +105,30 @@ class HATEOASBuilder:
             action = actions[i]
 
             # TODO comparar os parametros do view_rule com os parametros de params (ou comparar apenas params)
+            #
+            # se tem id trazer: 
+            #   find_by_id, update, delete
+            #   
+            # se nao tem id:
+            #   insert, find, paginate
+            #
             view_rule = self.view.build_rule(rule)
 
             parsed_route = parse_route(view_rule, params)
 
-            parsed_route_without_initial_slash = parsed_route[1:]
+            if self._params_equals_params_in_view_rule(params, view_rule):
+                parsed_route_without_initial_slash = parsed_route[1:]
 
-            href = self.host_url + parsed_route_without_initial_slash
+                href = self.host_url + parsed_route_without_initial_slash
 
-            method_link = {
-                'name': view_method,
-                'rel': rel,
-                'href': href,
-                'action': action
-            }
+                method_link = {
+                    'name': view_method,
+                    'rel': rel,
+                    'href': href,
+                    'action': action
+                }
 
-            method_links.append(method_link)
+                method_links.append(method_link)
 
         return method_links
 
@@ -152,6 +165,13 @@ class HATEOASBuilder:
                 view_methods.append(d)
 
         return view_methods
+
+    def _params_equals_params_in_view_rule(self, params, view_rule):
+        view_rule_params = get_route_params(view_rule)
+
+        params_keys = list(params.keys())
+
+        return list_equals(view_rule_params, params_keys, validate_order=False)
 
     def _get_rules(self, view_method_name):
         RULE_CACHE_RULE_TUPLE_COOLUMN = 0

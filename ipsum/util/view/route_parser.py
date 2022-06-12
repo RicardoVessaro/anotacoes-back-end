@@ -13,15 +13,19 @@ def parse_route(route:str, params:dict):
 
 
 def get_route_params(route:str):
+    _route = ''
+    for text in route.split():
+        _route += text
+
     pattern = '[<>]'
 
-    paths = re.split(pattern, route)
+    paths = re.split(pattern, _route)
 
     params = []
 
     for string in paths:
         
-        if not is_none_or_empty(string) and not string.startswith('/') and not string.endswith('/'):
+        if not is_none_or_empty(string) and not string.startswith('/') and not string.endswith('/') and '/' not in string:
             params.append(string)
 
     return params

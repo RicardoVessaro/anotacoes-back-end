@@ -12,6 +12,8 @@ from ipsum.view.ipsum_view import DELETE, GET, PATCH, POST
 
 class TestHATEOASBuilder:
 
+    HATEOAS_LINKS = '_links'
+
     host_url = 'http://localhost:5001/' 
 
     view_methods = [
@@ -26,70 +28,56 @@ class TestHATEOASBuilder:
 
     view_args = {PARENT_ID_PARAM: PARENT_ID, ID_PARAM: ID}
 
-    def test_build(self):
+    def test_build_with_list(self):
 
-        def _assert(test_view, bytes_response):
+        bytes_response = b'[{\n "id": "62a505b437a970f7f060a0b2", \n  "code": "1", \n  "title": "test"\n}, {\n "id": "6248620366564103f229595f", \n  "code": "2", \n  "title": "other test"\n}]\n'
+        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args)
+        self._assert_build(hateoas_builder)
 
-            hateoas_builder = HATEOASBuilder(test_view, bytes_response, self.host_url, self.view_args)
+        bytes_response = b'[{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "629fdb22fcce704dad685089"\n}, {\n "id": "62a505b437a970f7f060a0b2", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "6248620366564103f229595f"\n}]\n'
+        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args)
+        self._assert_build(hateoas_builder)
 
-            byte_data = hateoas_builder.build()
+    def _assert_list(self, test_view):
+        pass
 
-            data = json.loads(byte_data)
-
-            links = data['_links']
-
-            expected_href = self._get_expected_href(test_view)
-            expected_href_with_id = self._get_expected_href(test_view, with_id=True)
-
-            expected_links = {
-                'insert': {
-                    'name': 'insert',
-                    'rel': test_view.service.NAME,
-                    'href': expected_href,
-                    'action': [POST]
-                },
-                'update': {
-                    'name': 'update',
-                    'rel': test_view.service.NAME,
-                    'href': expected_href_with_id,
-                    'action': [PATCH]
-                },
-                'delete': {
-                    'name': 'delete',
-                    'rel': test_view.service.NAME,
-                    'href': expected_href_with_id,
-                    'action': [DELETE]
-                },
-                'find_by_id': {
-                    'name': 'find_by_id',
-                    'rel': test_view.service.NAME,
-                    'href': expected_href_with_id,
-                    'action': [GET]
-                },
-                'find': {
-                    'name': 'find',
-                    'rel': test_view.service.NAME,
-                    'href': expected_href,
-                    'action': [GET]
-                },
-                'paginate': {
-                    'name': 'paginate',
-                    'rel': test_view.service.NAME,
-                    'href': expected_href+'/paginate',
-                    'action': [POST]
-                },
-            }
-
-            for link in links:
-                name = link['name']
-                assert link == expected_links[name]
-
+    def test_build_dict(self):
         # TODO usar variaveis no id (ainda naoo usadoo por causa dos bytes)
         bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test"\n}\n'
-        _assert(FakeCRUDView(), bytes_response)
+        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args)
+        self._assert_build(hateoas_builder)
 
         bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "629fdb22fcce704dad685089"\n}\n'
-        _assert(FakeDetailCRUDView(), bytes_response)
+        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args)
+        self._assert_build(hateoas_builder)
+
+    def test_params_equals_params_in_view_rule(self):
+        hateoas_builder = HATEOASBuilder(FakeCRUDView(), {}, self.host_url, self.view_args)
+        
+        params = {
+            self.ID_PARAM: self.ID,
+            self.PARENT_ID_PARAM: self.PARENT_ID
+        }
+        view_rule = f'some/path<{self.PARENT_ID_PARAM}>/child/<{self.ID_PARAM}>'
+        assert True == hateoas_builder._params_equals_params_in_view_rule(params, view_rule)
+
+        params = {
+            self.ID_PARAM: self.ID,
+            self.PARENT_ID_PARAM: self.PARENT_ID
+        }
+        view_rule = f'some/path/<{self.ID_PARAM}>'
+        assert False == hateoas_builder._params_equals_params_in_view_rule(params, view_rule)
+
+        params = {
+            self.ID_PARAM: self.ID,
+        }
+        view_rule = f'some/path/<{self.ID_PARAM}>'
+        assert True == hateoas_builder._params_equals_params_in_view_rule(params, view_rule)
+
+        params = {}
+        view_rule = f'some/path/child'
+        assert True == hateoas_builder._params_equals_params_in_view_rule(params, view_rule)
+
 
     def test_build_params(self):
         hateoas_builder = HATEOASBuilder(FakeCRUDView(), {}, self.host_url, self.view_args)
@@ -256,19 +244,110 @@ class TestHATEOASBuilder:
         for view_method in self.view_methods:
             assert expected_actions[view_method] == hateoas_builder._get_actions(view_method)
 
-    def _get_expected_href(self, test_view, with_id=False):
+    def _assert_build(self, hateoas_builder):
+
+        byte_data = hateoas_builder.build()
+
+        data = json.loads(byte_data)
+
+        if type(data) is list:
+            for item_data in data:
+                self._assert_build_item(hateoas_builder, item_data)    
+
+        else:
+            self._assert_build_item(hateoas_builder, item_data=data)
+
+    def _assert_build_item(self, hateoas_builder, item_data):
+        test_view = hateoas_builder.view
+
+        links = item_data[self.HATEOAS_LINKS]
+
+        parent_id = None
+        if self.PARENT_ID_PARAM in item_data:
+            parent_id = item_data[self.PARENT_ID_PARAM]
+
+        id = item_data[self.ID_PARAM]
+
+        expected_href = self._get_expected_href(test_view, parent_id=parent_id, id=id)
+        expected_href_with_id = self._get_expected_href(test_view, with_id=True, parent_id=parent_id, id=id)
+
+        response_data = hateoas_builder.get_response_data()
+
+        if type(response_data) is list:
+            response_by_id = None
+            for r in response_data:
+                if r[self.ID_PARAM] == item_data[self.ID_PARAM]:
+                    response_by_id = r
+
+            response_data = response_by_id
+
+        for key in item_data:
+            if key != self.HATEOAS_LINKS:
+                assert item_data[key] == response_data[key]
+
+        expected_links = {
+            'insert': {
+                'name': 'insert',
+                'rel': test_view.service.NAME,
+                'href': expected_href,
+                'action': [POST]
+            },
+            'update': {
+                'name': 'update',
+                'rel': test_view.service.NAME,
+                'href': expected_href_with_id,
+                'action': [PATCH]
+            },
+            'delete': {
+                'name': 'delete',
+                'rel': test_view.service.NAME,
+                'href': expected_href_with_id,
+                'action': [DELETE]
+            },
+            'find_by_id': {
+                'name': 'find_by_id',
+                'rel': test_view.service.NAME,
+                'href': expected_href_with_id,
+                'action': [GET]
+            },
+            'find': {
+                'name': 'find',
+                'rel': test_view.service.NAME,
+                'href': expected_href,
+                'action': [GET]
+            },
+            'paginate': {
+                'name': 'paginate',
+                'rel': test_view.service.NAME,
+                'href': expected_href+'/paginate',
+                'action': [POST]
+            },
+        }
+
+        for link in links:
+            name = link['name']
+
+            assert name not in ['insert', 'find', 'paginate']
+
+            assert link == expected_links[name]
+
+    def _get_expected_href(self, test_view, with_id=False, parent_id=None, id=None):
+        _parent_id = parent_id if not parent_id is None else self.view_args[self.PARENT_ID_PARAM]
+
+        _id = id if not id is None else self.view_args[self.ID_PARAM]
+
         formatted_route_prefix = f'{self.host_url}{test_view.route_prefix}'
 
         if self.PARENT_ID_PARAM in formatted_route_prefix:
             params = {
-                self.PARENT_ID_PARAM: self.view_args[self.PARENT_ID_PARAM]
+                self.PARENT_ID_PARAM: _parent_id
             }
             formatted_route_prefix = parse_route(formatted_route_prefix, params)
 
         formatted_route_prefix += test_view.route_base
 
         if with_id:
-            formatted_route_prefix += f'/{self.view_args[self.ID_PARAM]}'
+            formatted_route_prefix += f'/{_id}'
 
         return formatted_route_prefix
         

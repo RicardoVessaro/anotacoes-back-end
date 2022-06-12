@@ -33,3 +33,23 @@ def test_get_route_params():
     expect = ['parent_id', 'id', 'extra_id']
     assert get_route_params(route) == expect
 
+    route = '/some/path/without/id'
+    expect = []
+    assert get_route_params(route) == expect
+
+    route = ' /some/path/ with/spaces '
+    expect = []
+    assert get_route_params(route) == expect
+
+    route = ' /some/path /<id>/ with/spaces '
+    expect = ['id']
+    assert get_route_params(route) == expect
+
+    route = ' /some/path /<parent_id>/ with/spaces <id> '
+    expect = ['parent_id', 'id']
+    assert get_route_params(route) == expect
+
+    route = 'some/path<parent_id>/child/<id>'
+    expect = ['parent_id', 'id']
+    assert get_route_params(route) == expect
+

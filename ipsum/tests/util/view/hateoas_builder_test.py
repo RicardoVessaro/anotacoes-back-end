@@ -279,7 +279,7 @@ class TestHATEOASBuilder:
             'delete': [[DELETE]], 
             'find_by_id': [[GET]], 
             'find': [[GET]], 
-            'paginate': [[POST]]
+            'paginate': [[GET]]
         }
 
         for view_method in self.view_methods:
@@ -370,7 +370,7 @@ class TestHATEOASBuilder:
                 'name': 'paginate',
                 'rel': test_view.service.NAME,
                 'href': expected_href+'/paginate',
-                'action': [POST]
+                'action': [GET]
             },
         }
 

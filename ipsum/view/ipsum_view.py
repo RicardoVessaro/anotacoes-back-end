@@ -52,27 +52,35 @@ class IpsumView(FlaskView):
     @route('', methods=[GET])
     def find(self, **kwargs):
 
-        request_query_string = request.query_string
-
-        parsed_query_string = QueryStringParser().parse_string(request_query_string)
+        parsed_query_string = self._get_parsed_query_string()
 
         return self._to_response(self._service.find(**parsed_query_string))
 
-    @route('paginate', methods=[POST])
+    @route('paginate', methods=[GET])
     def paginate(self, **kwargs):
-        query_body = request.json
-        parsed_query_body = QueryStringParser().parse_dict(query_body)
+        
+        parsed_query_string, limit, page = self._build_paginate_params()
 
+        return self._to_response(self._service.paginate(limit=limit, page=page, **parsed_query_string))
+
+    def _build_paginate_params(self):
+        parsed_query_string = self._get_parsed_query_string()
+
+        limit, page = self._get_paginate_params(parsed_query_string)
+        return parsed_query_string,limit,page
+
+    def _get_paginate_params(self, parsed_query_string):
         limit = 5
-        if QUERY_LIMIT in parsed_query_body:
-            limit = parsed_query_body.pop(QUERY_LIMIT)
+        if QUERY_LIMIT in parsed_query_string:
+            limit = parsed_query_string.pop(QUERY_LIMIT)
 
         page = 1
-        if QUERY_PAGE in parsed_query_body:
-            page = parsed_query_body.pop(QUERY_PAGE)
+        if QUERY_PAGE in parsed_query_string:
+            page = parsed_query_string.pop(QUERY_PAGE)
+        return limit,page
 
-        
-        return self._to_response(self._service.paginate(limit=limit, page=page, **parsed_query_body))
+    def _get_parsed_query_string(self):
+        return QueryStringParser().parse_string(request.query_string)
 
     def _to_response(self, object=None):
         answer = ViewEncoder().default(object)

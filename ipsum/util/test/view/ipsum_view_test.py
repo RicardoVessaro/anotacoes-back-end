@@ -179,7 +179,7 @@ class IpsumViewTest(ABC):
         def _():
             
             for paginate_filter_result in self.paginate_filter_results:
-                response = requests.post(url, json=paginate_filter_result.filter)
+                response = requests.get(url, params=paginate_filter_result.filter)
 
                 items = response.json()
 
@@ -205,7 +205,7 @@ class IpsumViewTest(ABC):
 
                 page = str(model_list_length + 1)
 
-                response = requests.post(url, json={"limit":1, "page": page })
+                response = requests.get(url, params={"limit":1, "page": page })
 
                 assert response.status_code == 400
 
@@ -217,7 +217,7 @@ class IpsumViewTest(ABC):
             _test_must_return_400_bad_reqeuest_when_page_is_higher_than_max_pages()
 
             def _test_must_return_empty_when_not_found_in_filter():
-                response = requests.post(url, json=self.filter_to_not_found)
+                response = requests.get(url, params=self.filter_to_not_found)
 
                 items = response.json()
 

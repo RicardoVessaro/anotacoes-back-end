@@ -30,7 +30,7 @@ class TestMoodView(CRUDViewTest):
             name="test UPDATED"
         )
 
-    def paginate_model_list(self):
+    def model_list(self):
         model_list = []
 
         for i in range(15):

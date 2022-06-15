@@ -31,7 +31,7 @@ class TestTagView(CRUDViewTest):
             priority=1
         )
 
-    def paginate_model_list(self):
+    def model_list(self):
         model_list = []
 
         for i in range(15):

@@ -65,7 +65,7 @@ class TestNoteView(CRUDViewTest):
         
         return db_model 
 
-    def paginate_model_list(self):
+    def model_list(self):
         model_list = []
 
         pinned = True

@@ -34,7 +34,7 @@ class TestCommentView(DetailCRUDViewTest):
             picture_id = self.fake_parent_id
         )
 
-    def paginate_model_list(self):
+    def model_list(self):
         model_list = []
 
         other_parent_id = '624786f6590c79c2fb3af557'

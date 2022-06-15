@@ -70,9 +70,8 @@ class IpsumViewTest(ABC):
     def filter_to_not_found(self):
         pass
 
-    # TODO renomear para 'model_list'
     @abstractmethod
-    def paginate_model_list(self):
+    def model_list(self):
         pass
     
     @abstractmethod
@@ -129,7 +128,7 @@ class IpsumViewTest(ABC):
 
     def test_find(self):
 
-        model_list = self.paginate_model_list()
+        model_list = self.model_list()
 
         url = self.get_view_url()
 

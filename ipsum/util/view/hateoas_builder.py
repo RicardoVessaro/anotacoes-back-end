@@ -12,18 +12,27 @@ class HATEOASBuilder:
 
     _RULE_CACHE_ATTRIBUTE = '_rule_cache'
 
+    # TODO Criar 'pagination_util'
+    # TODO referenciar pagination_util
     _PAGINATE_KEY_ITEMS = 'items'
 
+    _HATEOAS_LINKS = '_links'
+
+    # TODO referenciar IpsumView e DetailCRUDView
+    _PAGINATE_REQUEST_NAME = 'paginate'
+
+    # TODO referenciar pagination_util
     _PAGINATE_KEYS = [
         'has_next', 'has_prev', 'has_result', _PAGINATE_KEY_ITEMS, 'limit', 'page', 
         'pages', 'total'
     ]
 
-    def __init__(self, view, response_data, host_url, view_args) -> None:
+    def __init__(self, view, response_data, host_url, view_args, request_name) -> None:
         self.response_data = response_data
         self.view = view
         self.host_url = host_url
         self.view_args = view_args
+        self.request_name = request_name
 
     def build(self):
 
@@ -59,7 +68,7 @@ class HATEOASBuilder:
     def _handle_paginate_response(self, item_data):
         item_data_with_link = self._build_item_links(item_data)
 
-        # TODO self, next, previous, first, last
+        item_data_with_link[self._HATEOAS_LINKS] = self._build_paginate_links()
 
         return item_data_with_link 
 
@@ -87,9 +96,71 @@ class HATEOASBuilder:
 
             links.extend(method_links)
 
-        item_data_with_links['_links'] = links
+        item_data_with_links[self._HATEOAS_LINKS] = links
 
         return item_data_with_links
+
+    def _build_paginate_links(self):
+
+        rel = self.view.get_route_base()
+        
+        actions = self._get_actions(self.request_name)
+
+        rules = self._get_rules(self.request_name)
+
+        request_links = []
+        for i in range(len(rules)):
+            
+            href = self._build_href(rules[i], validate_params=False)
+
+            action = actions[i]
+            request_link = {
+                'href': href,
+                'action': action, 
+            }
+
+            request_links.append(request_link)
+            
+        # TODO self, next, previous, first, last (ver pagination_util)
+        # TODO so falta fazer a busca pelo paginate_query_params no 'pagination_util'
+        paginate_query_params = ['self', 'next', 'previous', 'first', 'last']
+        paginate_links = []
+        for query_param in paginate_query_params:
+
+            for request_link in request_links:
+                name = 'query_param[0]' + query_param
+
+                paginate_link = {
+                    'name': name,
+                    'rel': rel,
+                    'href': request_link['href'],
+                    'action': request_link['action']
+                }
+
+                paginate_links.append(paginate_link)
+
+        return paginate_links
+
+    def _build_href(self, rule, params=None, validate_params=True):
+        view_rule = self.view.build_rule(rule)
+            
+        _params = params
+        if _params is None:
+            _params = self._build_params()
+
+        parsed_route = parse_route(view_rule, _params)
+        parsed_route_without_initial_slash = parsed_route[1:]
+
+        href = self.host_url + parsed_route_without_initial_slash
+
+        if validate_params:
+            if self._params_equals_params_in_view_rule(params, view_rule):
+                return href
+            
+            return None
+
+        return href
+
 
     def get_response_data(self):
         if is_none_or_empty(self.response_data):
@@ -99,6 +170,9 @@ class HATEOASBuilder:
             return json.loads(self.response_data)
 
         return self.response_data
+
+    def _is_paginate_request_name(self):
+        return self._PAGINATE_REQUEST_NAME == self.request_name
 
     def _is_paginate(self, item_data):
         item_keys = list(item_data.keys())
@@ -124,15 +198,9 @@ class HATEOASBuilder:
             rule = rules[i]
             action = actions[i]
 
-            view_rule = self.view.build_rule(rule)
+            href = self._build_href(rule, params=params)
 
-            parsed_route = parse_route(view_rule, params)
-
-            if self._params_equals_params_in_view_rule(params, view_rule):
-                parsed_route_without_initial_slash = parsed_route[1:]
-
-                href = self.host_url + parsed_route_without_initial_slash
-
+            if not href is None:
                 method_link = {
                     'name': view_method,
                     'rel': rel,
@@ -144,12 +212,12 @@ class HATEOASBuilder:
 
         return method_links
 
-    def _build_params(self, item_data):
+    def _build_params(self, item_data=None):
         ID_KEY = 'id'
 
         args = self.view_args
 
-        if is_none_or_empty(self.view_args):
+        if is_none_or_empty(self.view_args) and not self._is_paginate_request_name():
             args = {'id': None}
 
         elif ID_KEY not in args:

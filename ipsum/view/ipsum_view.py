@@ -32,7 +32,8 @@ class IpsumView(FlaskView):
             response_data=response.get_data(),
             view=self, 
             host_url=request.host_url, 
-            view_args=request.view_args
+            view_args=request.view_args,
+            request_name=name
         )
 
         hateoas_response = hateoas_builder.build()

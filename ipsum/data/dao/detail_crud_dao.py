@@ -23,12 +23,12 @@ class DetailCRUDDAO(CRUDDAO):
 
         return super().find(**query_filter)
 
-    def paginate(self, parent_id, page=1, limit=5, **query_filter) -> dict:
+    def paginate(self, parent_id, offset=0, limit=5, **query_filter) -> dict:
         query_filter[self._model.parent_field] = parent_id
 
         results = self.find(parent_id, **query_filter)
 
-        return self._build_pagination(results, page, limit)
+        return self._build_pagination(results, offset, limit)
 
     def _validate_model_has_parent_field(self, model):
         if not hasattr(model, self.PARENT_FIELD) or is_none_or_empty(model.parent_field):

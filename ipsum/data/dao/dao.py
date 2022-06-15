@@ -3,8 +3,9 @@ from abc import abstractproperty
 from mongoengine import Document
 from bson import ObjectId
 from ipsum.exception.ipsum_exception import IpsumException
-from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE, PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.util import object_util
+from ipsum.util.data.pagination import Pagination
 from ipsum.util.data.query_filter_builder import QueryFilterBuilder
 
 class DAO:
@@ -96,10 +97,10 @@ class DAO:
         
             return self._model.objects(**built_query_filter)
 
-    def paginate(self, page=1, limit=5, **query_filter) -> dict:
+    def paginate(self, offset=0, limit=5, **query_filter) -> dict:
         results = self.find(**query_filter)
 
-        return self._build_pagination(results, page, limit)
+        return self._build_pagination(results, offset, limit)
 
     def has_cascade(self):
         return not self.cascade is None and not object_util.is_none_or_empty(self.cascade.childs)
@@ -107,52 +108,9 @@ class DAO:
     def has_dependent(self):
         return not self.dependent is None and not object_util.is_none_or_empty(self.dependent.dependents)
 
-    def _build_pagination(self, results, page, limit):
-
-        total = len(results)
-
-        if total == 0:
-            return {
-                'items': [],
-                'page': 0,
-                'limit': 0,
-                'total': total,
-                'pages': 0,
-                'has_prev': False,
-                'has_next': False,
-                'has_result': False
-            }
-
-        mod = total % limit
-        int_div = total // limit
-
-        pages = int_div
-        if mod > 0:
-            pages += 1
-
-        if page > pages:
-            raise IpsumException(PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(page, pages))
-        
-        start = page * limit - limit
-        end = start + limit
-
-        results_slice = results[start:end]
-
-        items = []
-        for result in results_slice:
-            items.append(result)
-
-        
-        has_prev = page != 1
-        has_next = page != pages
-
-        return {
-            'items': items,
-            'page': page,
-            'limit': limit,
-            'total': total,
-            'pages': pages,
-            'has_prev': has_prev,
-            'has_next': has_next,
-            'has_result': True
-        }
+    def _build_pagination(self, results, offset, limit):
+        return Pagination(
+            results=results,
+            offset=offset,
+            limit=limit
+        ).build()

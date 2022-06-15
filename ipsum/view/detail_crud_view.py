@@ -1,7 +1,7 @@
 
 from flask import request
 from ipsum.util.view.query_string_parser import QueryStringParser
-from ipsum.view.ipsum_view import GET, PATCH, POST, QUERY_LIMIT, QUERY_PAGE
+from ipsum.view.ipsum_view import GET, PATCH, POST, QUERY_LIMIT, QUERY_OFFSET
 from ipsum.view.crud_view import CRUDView
 from flask_classful import route
 
@@ -41,8 +41,8 @@ class DetailCRUDView(CRUDView):
     def find(self, **kwargs):
         parent_id = request.collection_tree.parent.id
 
-        parsed_query_string, limit, page = self._build_paginate_params()
+        parsed_query_string, limit, offset = self._build_paginate_params()
 
         return self._to_response(
-            self._service.paginate(parent_id, page=page, limit=limit, **parsed_query_string)
+            self._service.paginate(parent_id, offset=offset, limit=limit, **parsed_query_string)
         )

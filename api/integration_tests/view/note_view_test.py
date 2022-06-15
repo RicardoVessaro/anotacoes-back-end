@@ -5,6 +5,7 @@ from datetime import datetime
 from api.annotation.service.mood.mood_service import BORING, COOL, GREAT, SAD
 from api.annotation.service.note.note_service import CREATED_IN, TAG
 from api.annotation.service.tag.tag_service import IMPORTANT, OK
+from ipsum.util.data.pagination import Pagination
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.util.test.view.ipsum_view_test import  PaginateFilterResult
 from api.annotation.view.note_view import NoteView
@@ -21,12 +22,12 @@ class TestNoteView(CRUDViewTest):
     filter_to_not_found = {"title": "to not found"}
 
     paginate_filter_results = [
-        PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"pinned":False}, expected_indexes=range(8, 13), pages=2, page=1, limit=5, total=7, has_prev=False, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"limit":7}, expected_indexes=range(7),  pages=3, page=1, limit=7, total=15, has_prev=False, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"page":2, "limit":5},  pages=3, expected_indexes=range(5,10), page=2, limit=5, total=15, has_prev=True, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"pinned":False, "page":2, "limit":6},  pages=2, expected_indexes=[14], page=2, limit=6, total=7, has_prev=True, has_next=False, has_result=True),
-        PaginateFilterResult(filter={"page":3, "limit":7},  pages=3, expected_indexes=[14], page=3, limit=7, total=15, has_prev=True, has_next=False, has_result=True)
+        PaginateFilterResult(filter={}, expected_indexes=range(5), offset=0, limit=5, total=15, empty=False),
+        PaginateFilterResult(filter={"pinned":False}, expected_indexes=range(8, 13), offset=0, limit=5, total=7, empty=False),
+        PaginateFilterResult(filter={"_limit":7}, expected_indexes=range(7),  offset=0, limit=7, total=15, empty=False),
+        PaginateFilterResult(filter={"_offset":5, "_limit":5},  expected_indexes=range(5,10), offset=5, limit=5, total=15, empty=False),
+        PaginateFilterResult(filter={"pinned":False, "_offset":6, "_limit":6}, expected_indexes=[14], offset=6, limit=6, total=7, empty=False),
+        PaginateFilterResult(filter={"_offset":14, "_limit":7},  expected_indexes=[14], offset=14, limit=7, total=15, empty=False)
     ]
 
     def get_model(self):
@@ -136,8 +137,7 @@ class TestNoteView(CRUDViewTest):
     def _find_enum_by_code(self, enum_view_name, code):
         enum_find_by_code_url = self._get_enum_find_by_code_url(enum_view_name, code)
 
-        # TODO 'items' referenciar 'pagination_util'
-        response_j = requests.get(enum_find_by_code_url).json()['items']
+        response_j = requests.get(enum_find_by_code_url).json()[Pagination.ITEMS_KEY]
 
         return response_j[0]
 

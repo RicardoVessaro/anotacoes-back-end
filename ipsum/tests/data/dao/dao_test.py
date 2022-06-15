@@ -6,8 +6,9 @@ from ipsum.data.cascade import Cascade
 from ipsum.data.dao.dao import DAO
 from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.data.dependent import Dependent
-from ipsum.exception.exception_message import PAGE_NOT_FOUND_EXCEPTION_MESSAGE
+from ipsum.exception.exception_message import PAGINATION_OFFSET_GREATER_THAN_TOTAL
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
+from ipsum.util.data.pagination import Pagination
 from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
@@ -266,14 +267,14 @@ class TestDao:
             def test_default_pagination():
                 pagination = self.dao.paginate()
 
-                assert pagination['page'] == 1
-                assert pagination['limit'] == 5
-                assert pagination['total'] == 15
-                assert pagination['has_prev'] == False
-                assert pagination['has_next'] == True
-                assert pagination['has_result'] == True
+                pagination_info = pagination[Pagination.INFO_KEY]
 
-                for item in pagination['items']:
+                assert pagination_info['offset'] == 0
+                assert pagination_info['limit'] == 5
+                assert pagination_info['total'] == 15
+                assert pagination_info['empty'] == False
+
+                for item in pagination[Pagination.ITEMS_KEY]:
                     assert item.id in model_ids[0:5]
 
             test_default_pagination()
@@ -282,14 +283,14 @@ class TestDao:
             def test_paginate_with_filter():
                 pagination = self.dao.paginate(boolean=False)
 
-                assert pagination['page'] == 1
-                assert pagination['limit'] == 5
-                assert pagination['total'] == 15 - len(boolean_model_ids)
-                assert pagination['has_prev'] == False
-                assert pagination['has_next'] == True
-                assert pagination['has_result'] == True
+                pagination_info = pagination[Pagination.INFO_KEY]
 
-                for item in pagination['items']:
+                assert pagination_info['offset'] == 0
+                assert pagination_info['limit'] == 5
+                assert pagination_info['total'] == 15 - len(boolean_model_ids)
+                assert pagination_info['empty'] == False
+
+                for item in pagination[Pagination.ITEMS_KEY]:
                     assert item.id not in boolean_model_ids
             
             test_paginate_with_filter()
@@ -298,83 +299,83 @@ class TestDao:
             def test_paginate_limit_7_in_results():
                 pagination = self.dao.paginate(limit=7)
 
-                assert pagination['page'] == 1
-                assert pagination['limit'] == 7
-                assert pagination['total'] == 15
-                assert pagination['has_prev'] == False
-                assert pagination['has_next'] == True
-                assert pagination['has_result'] == True
+                pagination_info = pagination[Pagination.INFO_KEY]
 
-                for item in pagination['items']:
+                assert pagination_info['offset'] == 0
+                assert pagination_info['limit'] == 7
+                assert pagination_info['total'] == 15
+                assert pagination_info['empty'] == False
+
+                for item in pagination[Pagination.ITEMS_KEY]:
                     assert item.id in model_ids[0:7]
 
             test_paginate_limit_7_in_results()
 
             def test_paginate_with_filter_and_limit_3_in_results():
-                pagination = self.dao.paginate(boolean=True, limit=3, page=2)
+                pagination = self.dao.paginate(boolean=True, limit=3, offset=3)
 
-                assert pagination['page'] == 2
-                assert pagination['limit'] == 3
-                assert pagination['total'] == len(boolean_model_ids)
-                assert pagination['has_prev'] == True
-                assert pagination['has_next'] == True
-                assert pagination['has_result'] == True
+                pagination_info = pagination[Pagination.INFO_KEY]
 
-                for item in pagination['items']:
+                assert pagination_info['offset'] == 3
+                assert pagination_info['limit'] == 3
+                assert pagination_info['total'] == len(boolean_model_ids)
+                assert pagination_info['empty'] == False
+
+                for item in pagination[Pagination.ITEMS_KEY]:
                     assert item.id in boolean_model_ids
                     assert item.id in boolean_model_ids[3:6]
             
             test_paginate_with_filter_and_limit_3_in_results()
 
 
-            def test_paginate_limit_7_page_2_in_results():
-                pagination = self.dao.paginate(limit=7, page=2)
+            def test_paginate_limit_7_offset_7_in_results():
+                pagination = self.dao.paginate(limit=7, offset=7)
 
-                assert pagination['page'] == 2
-                assert pagination['limit'] == 7
-                assert pagination['total'] == 15
-                assert pagination['has_prev'] == True
-                assert pagination['has_next'] == True
-                assert pagination['has_result'] == True
+                pagination_info = pagination[Pagination.INFO_KEY]
 
-                for item in pagination['items']:
+                assert pagination_info['offset'] == 7
+                assert pagination_info['limit'] == 7
+                assert pagination_info['total'] == 15
+                assert pagination_info['empty'] == False
+
+                for item in pagination[Pagination.ITEMS_KEY]:
                     assert item.id in model_ids[7:14]
 
-            test_paginate_limit_7_page_2_in_results()
+            test_paginate_limit_7_offset_7_in_results()
 
-            def test_paginate_limit_7_page_3_in_results():
-                pagination = self.dao.paginate(limit=7, page=3)
+            def test_paginate_limit_7_offset_14_in_results():
+                pagination = self.dao.paginate(limit=7, offset=14)
 
-                assert pagination['page'] == 3
-                assert pagination['limit'] == 7
-                assert pagination['total'] == 15
-                assert pagination['has_prev'] == True
-                assert pagination['has_next'] == False
-                assert pagination['has_result'] == True
+                pagination_info = pagination[Pagination.INFO_KEY]
 
-                for item in pagination['items']:
+                assert pagination_info['offset'] == 14
+                assert pagination_info['limit'] == 7
+                assert pagination_info['total'] == 15
+                assert pagination_info['empty'] == False
+
+                for item in pagination[Pagination.ITEMS_KEY]:
                     assert item.id in model_ids[14:15]
 
-            test_paginate_limit_7_page_3_in_results()
+            test_paginate_limit_7_offset_14_in_results()
 
 
-            def test_paginate_must_raise_exception_when_page_is_greater_than_pages():
+            def test_paginate_must_raise_exception_when_offset_is_greater_than_total():
 
-                with raises(IpsumException, match=PAGE_NOT_FOUND_EXCEPTION_MESSAGE.format(4, 3)):
-                    pagination = self.dao.paginate(page=4, limit=5)
+                with raises(IpsumException, match=PAGINATION_OFFSET_GREATER_THAN_TOTAL.format('offset', 15,'total', 14)):
+                    self.dao.paginate(offset=15, limit=5)
 
-            test_paginate_must_raise_exception_when_page_is_greater_than_pages()
+            test_paginate_must_raise_exception_when_offset_is_greater_than_total()
 
             def test_must_return_empty_when_not_found_in_filter():
                 pagination = self.dao.paginate(title='Nothing')
 
-                assert pagination['page'] == 0
-                assert pagination['limit'] == 0
-                assert pagination['total'] == 0
-                assert pagination['has_prev'] == False
-                assert pagination['has_next'] == False
-                assert pagination['has_result'] == False
-                assert is_none_or_empty(pagination['items'])
+                pagination_info = pagination[Pagination.INFO_KEY]
+
+                assert pagination_info['offset'] == 0
+                assert pagination_info['limit'] == 5
+                assert pagination_info['total'] == 0
+                assert pagination_info['empty'] == True
+                assert is_none_or_empty(pagination[Pagination.ITEMS_KEY])
 
             test_must_return_empty_when_not_found_in_filter()
 

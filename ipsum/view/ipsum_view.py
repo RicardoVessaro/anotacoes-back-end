@@ -14,8 +14,8 @@ PUT = 'PUT'
 PATCH = 'PATCH'
 DELETE = 'DELETE'
 
-QUERY_LIMIT = 'limit'
-QUERY_PAGE = 'page'
+QUERY_LIMIT = '_limit'
+QUERY_OFFSET = '_offset'
 
 STATUS_NO_CONTENT = 204
 
@@ -55,23 +55,24 @@ class IpsumView(FlaskView):
         
         parsed_query_string, limit, page = self._build_paginate_params()
 
-        return self._to_response(self._service.paginate(limit=limit, page=page, **parsed_query_string))
+        return self._to_response(self._service.paginate(offset=page, limit=limit, **parsed_query_string))
 
     def _build_paginate_params(self):
         parsed_query_string = self._get_parsed_query_string()
 
-        limit, page = self._get_paginate_params(parsed_query_string)
-        return parsed_query_string,limit,page
+        limit, offset = self._get_paginate_params(parsed_query_string)
+        return parsed_query_string, limit, offset
 
     def _get_paginate_params(self, parsed_query_string):
         limit = 5
         if QUERY_LIMIT in parsed_query_string:
             limit = parsed_query_string.pop(QUERY_LIMIT)
 
-        page = 1
-        if QUERY_PAGE in parsed_query_string:
-            page = parsed_query_string.pop(QUERY_PAGE)
-        return limit,page
+        offset = 0
+        if QUERY_OFFSET in parsed_query_string:
+            offset = parsed_query_string.pop(QUERY_OFFSET)
+
+        return limit, offset
 
     def _get_parsed_query_string(self):
         return QueryStringParser().parse_string(request.query_string)

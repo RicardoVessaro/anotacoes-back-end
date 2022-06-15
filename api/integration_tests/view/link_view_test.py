@@ -10,12 +10,12 @@ class TestLinkView(DetailCRUDViewTest):
     filter_to_not_found = {"title": "to not found"}
 
     paginate_filter_results = [
-        PaginateFilterResult(filter={}, expected_indexes=range(8,13), pages=2, page=1, limit=5, total=7, has_prev=False, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"page":2}, expected_indexes=range(13,15), pages=2, page=2, limit=5, total=7, has_prev=True, has_next=False, has_result=True),
-        PaginateFilterResult(filter={"title":"Link 9"}, expected_indexes=[9], pages=1, page=1, limit=5, total=1, has_prev=False, has_next=False, has_result=True),
-        PaginateFilterResult(filter={"title":["Link 10", "Link 11"]}, expected_indexes=[10, 11], pages=1, page=1, limit=5, total=2, has_prev=False, has_next=False, has_result=True),
-        PaginateFilterResult(filter={"href":"www.link9.com"}, expected_indexes=[9], pages=1, page=1, limit=5, total=1, has_prev=False, has_next=False, has_result=True),
-        PaginateFilterResult(filter={"href":["www.link10.com", "www.link11.com"]}, expected_indexes=[10, 11], pages=1, page=1, limit=5, total=2, has_prev=False, has_next=False, has_result=True)
+        PaginateFilterResult(filter={}, expected_indexes=range(8,13), offset=0, limit=5, total=7, empty=False),
+        PaginateFilterResult(filter={"_offset":5}, expected_indexes=range(13,15), offset=5, limit=5, total=7, empty=False),
+        PaginateFilterResult(filter={"title":"Link 9"}, expected_indexes=[9], offset=0, limit=5, total=1, empty=False),
+        PaginateFilterResult(filter={"title":["Link 10", "Link 11"]}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False),
+        PaginateFilterResult(filter={"href":"www.link9.com"}, expected_indexes=[9], offset=0, limit=5, total=1, empty=False),
+        PaginateFilterResult(filter={"href":["www.link10.com", "www.link11.com"]}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False)
     ]
 
 

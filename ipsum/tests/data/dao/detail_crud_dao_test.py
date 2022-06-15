@@ -5,6 +5,7 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.exception.exception_message import DETAIL_CRUD_DAO_MODEL_WITHOUT_PARENT_FIELD
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
+from ipsum.util.data.pagination import Pagination
 from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
@@ -170,16 +171,17 @@ class TestDetailCRUDDAO:
 
             pagination = self.detail_crud_dao.paginate(parent_doc.id)
 
-            for child in pagination['items']:
+            for child in pagination[Pagination.ITEMS_KEY]:
                 child_id = child.id
 
                 assert model_doc_1.id == child_id or model_doc_2.id == child_id
 
-            assert pagination['page'] == 1
-            assert pagination['limit'] == 5
-            assert pagination['total'] == 2
-            assert pagination['has_prev'] == False
-            assert pagination['has_next'] == False
+            pagination_info = pagination[Pagination.INFO_KEY]
+
+            assert pagination_info['offset'] == 0
+            assert pagination_info['limit'] == 5
+            assert pagination_info['total'] == 2
+            assert pagination_info['empty'] == False
 
         _()
 

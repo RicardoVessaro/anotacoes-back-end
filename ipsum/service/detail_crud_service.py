@@ -34,5 +34,5 @@ class DetailCRUDService(CRUDService):
     def find(self, parent_id, **query_filter):
         return self._dao.find(parent_id, **query_filter)
 
-    def paginate(self, parent_id, page=1, limit=5, **query_filter):
-        return self._dao.paginate(parent_id, page=page, limit=limit, **query_filter)
+    def paginate(self, parent_id, offset=0, limit=5, **query_filter):
+        return self._dao.paginate(parent_id, offset=offset, limit=limit, **query_filter)

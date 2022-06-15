@@ -10,11 +10,11 @@ class TestTagView(CRUDViewTest):
     filter_to_not_found = {"name": "to not found"}
 
     paginate_filter_results = [
-        PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"limit":7}, expected_indexes=range(7),  pages=3, page=1, limit=7, total=15, has_prev=False, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"page":2, "limit":5},  pages=3, expected_indexes=range(5,10), page=2, limit=5, total=15, has_prev=True, has_next=True, has_result=True),
-        PaginateFilterResult(filter={"page":3, "limit":7},  pages=3, expected_indexes=[14], page=3, limit=7, total=15, has_prev=True, has_next=False, has_result=True),
-        PaginateFilterResult(filter={"page":2, "limit":7, "code": list(range(10))},  pages=2, expected_indexes=[7,8,9], page=2, limit=7, total=10, has_prev=True, has_next=False, has_result=True)
+        PaginateFilterResult(filter={}, expected_indexes=range(5), offset=0, limit=5, total=15, empty=False),
+        PaginateFilterResult(filter={"_limit":7}, expected_indexes=range(7),  offset=0, limit=7, total=15, empty=False),
+        PaginateFilterResult(filter={"_offset":5, "_limit":5}, expected_indexes=range(5,10), offset=5, limit=5, total=15, empty=False),
+        PaginateFilterResult(filter={"_offset":14, "_limit":7}, expected_indexes=[14], offset=14, limit=7, total=15, empty=False),
+        PaginateFilterResult(filter={"_offset":7, "_limit":7, "code": list(range(10))}, expected_indexes=[7,8,9], offset=7, limit=7, total=10, empty=False)
     ]
 
     def get_model(self):

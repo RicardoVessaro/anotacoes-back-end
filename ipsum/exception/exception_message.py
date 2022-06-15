@@ -1,5 +1,4 @@
 OBJECT_NOT_FOUND_EXCEPTION_MESSAGE = "Object with ID {0} not found."
-PAGE_NOT_FOUND_EXCEPTION_MESSAGE = "Page {0} not found. The max number os pages is {1}."
 REQUIRED_FIELD_EXCEPTION_MESSAGE = "The field '{0}' is required."
 NOT_SUPPORTED_TYPES_EXCEPTION_MESSAGE = "The type '{0}' is not supported."
 DUPLICATED_ENUM_CODE = "The code {0} is duplicated."
@@ -15,3 +14,4 @@ CASCADE_CHILDS_MUST_BE_INSTANCE_OF_DAO = 'The "{0}" items in "{1}" attribute mus
 DEPENDENT_DEPENDENCY_IS_NOT_DEPENDENCY_TYPE = 'The attribute "{0}" in {1} must be an {2}. {3} is not.'
 DEPENDENCY_DAO_IS_NOT_DAO_TYPE = 'The attribute "{0}" in {1} must be an {2}. {3} is not.'
 DEPENDENT_DEPENDENCY_HAS_DATA = 'Cannot delete "{0}" with ID {1} because {2} with ID {3} uses it.'
+PAGINATION_OFFSET_GREATER_THAN_TOTAL = 'The "{0}": {1} is greater than the "{2}" index: {3}.'

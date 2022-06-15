@@ -11,16 +11,14 @@ from ipsum.util.data.pagination import Pagination
 from ipsum.util.enviroment_variable import get_api_url, get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest, clean_enums, insert_enums
+from ipsum.util.view.hateoas_builder import HATEOASBuilder
 from ipsum.util.view.view_encoder import ViewEncoder
 from mongoengine import connect, disconnect
 
 ID_FIELD = 'id'
 TO_MONGO_ID_FIELD = '_id'
-# TODO referenciar 'hateoas_builder.py'
-HATEOAS_LINKS = '_links'
 
-# TODO referenciar 'pagination.py'
-PaginateFilterResult = namedtuple('PaginateFilterResult', 'filter expected_indexes offset limit total empty')
+PaginateFilterResult = namedtuple('PaginateFilterResult', f'filter expected_indexes {Pagination.OFFSET} {Pagination.LIMIT} {Pagination.TOTAL} {Pagination.EMPTY}')
 
 class IpsumViewTest(ABC):
 
@@ -112,7 +110,7 @@ class IpsumViewTest(ABC):
             dict_model = self.encode(db_model)
 
             for k in item:
-                if k != HATEOAS_LINKS:
+                if k != HATEOASBuilder.HATEOAS_LINKS:
                     assert item[k] == dict_model[k]
         _()
 
@@ -146,21 +144,21 @@ class IpsumViewTest(ABC):
 
                 items = response.json()
 
-                pagination_info = items[Pagination.INFO_KEY]
+                pagination_info = items[Pagination.INFO]
 
-                assert pagination_info['offset'] == paginate_filter_result.offset
-                assert pagination_info['limit'] == paginate_filter_result.limit
-                assert pagination_info['total'] == paginate_filter_result.total
-                assert pagination_info['empty'] == paginate_filter_result.empty
+                assert pagination_info[Pagination.OFFSET] == paginate_filter_result.offset
+                assert pagination_info[Pagination.LIMIT] == paginate_filter_result.limit
+                assert pagination_info[Pagination.TOTAL] == paginate_filter_result.total
+                assert pagination_info[Pagination.EMPTY] == paginate_filter_result.empty
 
                 expected_ids = self.get_expected_ids(paginate_filter_result.expected_indexes, model_list)
 
-                pagination_item = items[Pagination.ITEMS_KEY]
+                pagination_item = items[Pagination.ITEMS]
 
                 assert len(pagination_item) == len(expected_ids)
 
                 for item in pagination_item:
-                    assert item['id'] in expected_ids  
+                    assert item[ID_FIELD] in expected_ids  
 
             def _test_must_return_400_bad_reqeuest_when_when_offset_is_greater_than_total():
                 offset = self._get_model_list_length(model_list) 
@@ -173,7 +171,7 @@ class IpsumViewTest(ABC):
 
                 total_index = offset - 1
 
-                assert items['message'] == PAGINATION_OFFSET_GREATER_THAN_TOTAL.format('offset', offset, 'total', total_index)
+                assert items['message'] == PAGINATION_OFFSET_GREATER_THAN_TOTAL.format(Pagination.OFFSET, offset, Pagination.TOTAL, total_index)
                 assert items['status_code'] == 400
 
             _test_must_return_400_bad_reqeuest_when_when_offset_is_greater_than_total()
@@ -183,21 +181,21 @@ class IpsumViewTest(ABC):
 
                 items = response.json()
 
-                pagination_info = items[Pagination.INFO_KEY]
+                pagination_info = items[Pagination.INFO]
 
                 offset = 0
-                if 'offset' in self.filter_to_not_found:
-                    offset = self.filter_to_not_found['offset']
+                if Pagination.OFFSET in self.filter_to_not_found:
+                    offset = self.filter_to_not_found[Pagination.OFFSET]
 
                 limit = 5
-                if 'limit' in self.filter_to_not_found:
-                    limit = self.filter_to_not_found['limit']
+                if Pagination.LIMIT in self.filter_to_not_found:
+                    limit = self.filter_to_not_found[Pagination.LIMIT]
 
-                assert pagination_info['offset'] == offset
-                assert pagination_info['limit'] == limit
-                assert pagination_info['total'] == 0
-                assert pagination_info['empty'] == True
-                assert is_none_or_empty(items[Pagination.ITEMS_KEY]) 
+                assert pagination_info[Pagination.OFFSET] == offset
+                assert pagination_info[Pagination.LIMIT] == limit
+                assert pagination_info[Pagination.TOTAL] == 0
+                assert pagination_info[Pagination.EMPTY] == True
+                assert is_none_or_empty(items[Pagination.ITEMS]) 
 
             _test_must_return_empty_when_not_found_in_filter()
             

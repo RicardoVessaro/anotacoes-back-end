@@ -12,6 +12,7 @@ from api.annotation.view.note_view import NoteView
 from ipsum.util.test.view.crud_view_test import CRUDViewTest
 from api.annotation.view.tag_view import tag_view_name
 from api.annotation.view.mood_view import mood_view_name
+from ipsum.view.ipsum_view import QUERY_LIMIT, QUERY_OFFSET
 
 
 
@@ -24,10 +25,10 @@ class TestNoteView(CRUDViewTest):
     paginate_filter_results = [
         PaginateFilterResult(filter={}, expected_indexes=range(5), offset=0, limit=5, total=15, empty=False),
         PaginateFilterResult(filter={"pinned":False}, expected_indexes=range(8, 13), offset=0, limit=5, total=7, empty=False),
-        PaginateFilterResult(filter={"_limit":7}, expected_indexes=range(7),  offset=0, limit=7, total=15, empty=False),
-        PaginateFilterResult(filter={"_offset":5, "_limit":5},  expected_indexes=range(5,10), offset=5, limit=5, total=15, empty=False),
-        PaginateFilterResult(filter={"pinned":False, "_offset":6, "_limit":6}, expected_indexes=[14], offset=6, limit=6, total=7, empty=False),
-        PaginateFilterResult(filter={"_offset":14, "_limit":7},  expected_indexes=[14], offset=14, limit=7, total=15, empty=False)
+        PaginateFilterResult(filter={QUERY_LIMIT:7}, expected_indexes=range(7),  offset=0, limit=7, total=15, empty=False),
+        PaginateFilterResult(filter={QUERY_OFFSET:5, QUERY_LIMIT:5},  expected_indexes=range(5,10), offset=5, limit=5, total=15, empty=False),
+        PaginateFilterResult(filter={"pinned":False, QUERY_OFFSET:6, QUERY_LIMIT:6}, expected_indexes=[14], offset=6, limit=6, total=7, empty=False),
+        PaginateFilterResult(filter={QUERY_OFFSET:14, QUERY_LIMIT:7},  expected_indexes=[14], offset=14, limit=7, total=15, empty=False)
     ]
 
     def get_model(self):
@@ -137,7 +138,7 @@ class TestNoteView(CRUDViewTest):
     def _find_enum_by_code(self, enum_view_name, code):
         enum_find_by_code_url = self._get_enum_find_by_code_url(enum_view_name, code)
 
-        response_j = requests.get(enum_find_by_code_url).json()[Pagination.ITEMS_KEY]
+        response_j = requests.get(enum_find_by_code_url).json()[Pagination.ITEMS]
 
         return response_j[0]
 

@@ -5,8 +5,12 @@ from ipsum.util.object_util import is_none_or_empty
 
 class Pagination:
 
-    ITEMS_KEY = "_items"
-    INFO_KEY = "_info"
+    ITEMS = "_items"
+    INFO = "_info"
+    OFFSET = "offset"
+    LIMIT = "limit"
+    TOTAL = "total"
+    EMPTY = "empty"
 
     def __init__(self, results, offset=0, limit=5) -> None:
         self.results = results
@@ -24,18 +28,18 @@ class Pagination:
 
             total_index = total - 1
             if self.offset > total_index:
-                raise IpsumException(PAGINATION_OFFSET_GREATER_THAN_TOTAL.format("offset", self.offset, "total", total_index))
+                raise IpsumException(PAGINATION_OFFSET_GREATER_THAN_TOTAL.format(self.OFFSET, self.offset, self.TOTAL, total_index))
 
             _range = self.offset + self.limit
             items = self.results[self.offset:_range]
 
         pagination = {
-            self.ITEMS_KEY: items,
-            self.INFO_KEY: {
-                "offset": self.offset,
-                "limit": self.limit,
-                "total": total,
-                "empty": empty
+            self.ITEMS: items,
+            self.INFO: {
+                self.OFFSET: self.offset,
+                self.LIMIT: self.limit,
+                self.TOTAL: total,
+                self.EMPTY: empty
             }
         }
 

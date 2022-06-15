@@ -16,7 +16,7 @@ class HATEOASBuilder:
     # TODO referenciar pagination_util
     _PAGINATE_KEY_ITEMS = 'items'
 
-    _HATEOAS_LINKS = '_links'
+    HATEOAS_LINKS = '_links'
 
     # TODO referenciar IpsumView e DetailCRUDView
     _PAGINATE_REQUEST_NAME = 'find'
@@ -68,7 +68,7 @@ class HATEOASBuilder:
     def _handle_paginate_response(self, item_data):
         item_data_with_link = self._build_item_links(item_data)
 
-        item_data_with_link[self._HATEOAS_LINKS] = self._build_paginate_links()
+        item_data_with_link[self.HATEOAS_LINKS] = self._build_paginate_links()
 
         return item_data_with_link 
 
@@ -96,7 +96,7 @@ class HATEOASBuilder:
 
             links.extend(method_links)
 
-        item_data_with_links[self._HATEOAS_LINKS] = links
+        item_data_with_links[self.HATEOAS_LINKS] = links
 
         return item_data_with_links
 

@@ -1,5 +1,5 @@
 
-from abc import abstractproperty, abstractmethod
+from abc import abstractmethod
 
 import requests
 from ipsum.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT, PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE

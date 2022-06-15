@@ -14,12 +14,12 @@ class TestPagination:
 
             expected_items = self._get_results(0, 5)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 0,
-                    "limit": 5,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 0,
+                    Pagination.LIMIT: 5,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -36,12 +36,12 @@ class TestPagination:
 
             expected_items = self._get_results(5, 10)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 5,
-                    "limit": 5,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 5,
+                    Pagination.LIMIT: 5,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -59,12 +59,12 @@ class TestPagination:
 
             expected_items = self._get_results(10, 15)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 10,
-                    "limit": 5,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 10,
+                    Pagination.LIMIT: 5,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -81,12 +81,12 @@ class TestPagination:
 
             expected_items = self._get_results(15, 20)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 15,
-                    "limit": 5,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 15,
+                    Pagination.LIMIT: 5,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -104,12 +104,12 @@ class TestPagination:
 
             expected_items = self._get_results(0, 7)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 0,
-                    "limit": 7,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 0,
+                    Pagination.LIMIT: 7,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -128,12 +128,12 @@ class TestPagination:
 
             expected_items = self._get_results(7, 14)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 7,
-                    "limit": 7,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 7,
+                    Pagination.LIMIT: 7,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -152,12 +152,12 @@ class TestPagination:
 
             expected_items = self._get_results(14, 21)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 14,
-                    "limit": 7,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 14,
+                    Pagination.LIMIT: 7,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -176,12 +176,12 @@ class TestPagination:
 
             expected_items = self._get_results(21, 28)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 21,
-                    "limit": 7,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 21,
+                    Pagination.LIMIT: 7,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -202,12 +202,12 @@ class TestPagination:
 
             expected_items = self._get_results(0, 3)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 0,
-                    "limit": 5,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 0,
+                    Pagination.LIMIT: 5,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -226,12 +226,12 @@ class TestPagination:
 
             expected_items = self._get_results(4, 7)
             expected = {
-                Pagination.ITEMS_KEY: expected_items,
-                Pagination.INFO_KEY: {
-                    "offset": 4,
-                    "limit": 5,
-                    "total": results_size,
-                    "empty": False
+                Pagination.ITEMS: expected_items,
+                Pagination.INFO: {
+                    Pagination.OFFSET: 4,
+                    Pagination.LIMIT: 5,
+                    Pagination.TOTAL: results_size,
+                    Pagination.EMPTY: False
                 }
             }
 
@@ -250,12 +250,12 @@ class TestPagination:
 
         expected_items = []
         expected = {
-            Pagination.ITEMS_KEY: expected_items,
-            Pagination.INFO_KEY: {
-                "offset": 4,
-                "limit": 5,
-                "total": results_size,
-                "empty": True
+            Pagination.ITEMS: expected_items,
+            Pagination.INFO: {
+                Pagination.OFFSET: 4,
+                Pagination.LIMIT: 5,
+                Pagination.TOTAL: results_size,
+                Pagination.EMPTY: True
             }
         }
 
@@ -274,7 +274,7 @@ class TestPagination:
             limit=5
         )
 
-        with raises(IpsumException, match=PAGINATION_OFFSET_GREATER_THAN_TOTAL.format("offset", 15, "total", 14)):
+        with raises(IpsumException, match=PAGINATION_OFFSET_GREATER_THAN_TOTAL.format(Pagination.OFFSET, 15, Pagination.TOTAL, 14)):
             pagination.build()
 
 

@@ -28,6 +28,7 @@ class TestHATEOASBuilder:
 
     view_args = {PARENT_ID_PARAM: PARENT_ID, ID_PARAM: ID}
 
+    # BUG Testar com nova forma de resposta (ver 'pagination')
     def test_build_with_paginate(self):
         bytes_response = b'{"has_next": false, "has_prev": false, "has_result": true, "items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test"}], "limit": 5, "page": 1, "pages": 1, "total": 2}'
 

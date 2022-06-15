@@ -164,14 +164,14 @@ class TestService:
             def test_default_pagination():
                 pagination = self.service.paginate()
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 0
-                assert pagination_info['limit'] == 5
-                assert pagination_info['total'] == 15
-                assert pagination_info['empty'] == False
+                assert pagination_info[Pagination.OFFSET] == 0
+                assert pagination_info[Pagination.LIMIT] == 5
+                assert pagination_info[Pagination.TOTAL] == 15
+                assert pagination_info[Pagination.EMPTY] == False
 
-                for item in pagination[Pagination.ITEMS_KEY]:
+                for item in pagination[Pagination.ITEMS]:
                     assert item.id in model_ids[0:5]
 
             test_default_pagination()
@@ -180,14 +180,14 @@ class TestService:
             def test_paginate_with_filter():
                 pagination = self.service.paginate(boolean=False)
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 0
-                assert pagination_info['limit'] == 5
-                assert pagination_info['total'] == 15 - len(boolean_model_ids)
-                assert pagination_info['empty'] == False
+                assert pagination_info[Pagination.OFFSET] == 0
+                assert pagination_info[Pagination.LIMIT] == 5
+                assert pagination_info[Pagination.TOTAL] == 15 - len(boolean_model_ids)
+                assert pagination_info[Pagination.EMPTY] == False
 
-                for item in pagination[Pagination.ITEMS_KEY]:
+                for item in pagination[Pagination.ITEMS]:
                     assert item.id not in boolean_model_ids
             
             test_paginate_with_filter()
@@ -196,14 +196,14 @@ class TestService:
             def test_paginate_limit_7_in_results():
                 pagination = self.service.paginate(limit=7)
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 0
-                assert pagination_info['limit'] == 7
-                assert pagination_info['total'] == 15
-                assert pagination_info['empty'] == False
+                assert pagination_info[Pagination.OFFSET] == 0
+                assert pagination_info[Pagination.LIMIT] == 7
+                assert pagination_info[Pagination.TOTAL] == 15
+                assert pagination_info[Pagination.EMPTY] == False
 
-                for item in pagination[Pagination.ITEMS_KEY]:
+                for item in pagination[Pagination.ITEMS]:
                     assert item.id in model_ids[0:7]
 
             test_paginate_limit_7_in_results()
@@ -212,14 +212,14 @@ class TestService:
             def test_paginate_with_filter_and_limit_3_in_results():
                 pagination = self.service.paginate(boolean=True, limit=3, offset=3)
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 3
-                assert pagination_info['limit'] == 3
-                assert pagination_info['total'] == len(boolean_model_ids)
-                assert pagination_info['empty'] == False
+                assert pagination_info[Pagination.OFFSET] == 3
+                assert pagination_info[Pagination.LIMIT] == 3
+                assert pagination_info[Pagination.TOTAL] == len(boolean_model_ids)
+                assert pagination_info[Pagination.EMPTY] == False
 
-                for item in pagination[Pagination.ITEMS_KEY]:
+                for item in pagination[Pagination.ITEMS]:
                     assert item.id in boolean_model_ids
                     assert item.id in boolean_model_ids[3:6]
             
@@ -229,14 +229,14 @@ class TestService:
             def test_paginate_limit_7_offset_7_in_results():
                 pagination = self.dao.paginate(limit=7, offset=7)
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 7
-                assert pagination_info['limit'] == 7
-                assert pagination_info['total'] == 15
-                assert pagination_info['empty'] == False
+                assert pagination_info[Pagination.OFFSET] == 7
+                assert pagination_info[Pagination.LIMIT] == 7
+                assert pagination_info[Pagination.TOTAL] == 15
+                assert pagination_info[Pagination.EMPTY] == False
 
-                for item in pagination[Pagination.ITEMS_KEY]:
+                for item in pagination[Pagination.ITEMS]:
                     assert item.id in model_ids[7:14]
 
             test_paginate_limit_7_offset_7_in_results()
@@ -244,14 +244,14 @@ class TestService:
             def test_paginate_limit_7_offset_14_in_results():
                 pagination = self.dao.paginate(limit=7, offset=14)
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 14
-                assert pagination_info['limit'] == 7
-                assert pagination_info['total'] == 15
-                assert pagination_info['empty'] == False
+                assert pagination_info[Pagination.OFFSET] == 14
+                assert pagination_info[Pagination.LIMIT] == 7
+                assert pagination_info[Pagination.TOTAL] == 15
+                assert pagination_info[Pagination.EMPTY] == False
 
-                for item in pagination[Pagination.ITEMS_KEY]:
+                for item in pagination[Pagination.ITEMS]:
                     assert item.id in model_ids[14:15]
 
             test_paginate_limit_7_offset_14_in_results()
@@ -259,7 +259,7 @@ class TestService:
 
             def test_paginate_must_raise_exception_when_offset_is_greater_than_total():
 
-                with raises(IpsumException, match=PAGINATION_OFFSET_GREATER_THAN_TOTAL.format('offset', 15,'total', 14)):
+                with raises(IpsumException, match=PAGINATION_OFFSET_GREATER_THAN_TOTAL.format(Pagination.OFFSET, 15,Pagination.TOTAL, 14)):
                     self.dao.paginate(offset=15, limit=5)
 
             test_paginate_must_raise_exception_when_offset_is_greater_than_total()
@@ -267,13 +267,13 @@ class TestService:
             def test_must_return_empty_when_not_found_in_filter():
                 pagination = self.service.paginate(title='Nothing')
 
-                pagination_info = pagination[Pagination.INFO_KEY]
+                pagination_info = pagination[Pagination.INFO]
 
-                assert pagination_info['offset'] == 0
-                assert pagination_info['limit'] == 5
-                assert pagination_info['total'] == 0
-                assert pagination_info['empty'] == True
-                assert is_none_or_empty(pagination[Pagination.ITEMS_KEY])
+                assert pagination_info[Pagination.OFFSET] == 0
+                assert pagination_info[Pagination.LIMIT] == 5
+                assert pagination_info[Pagination.TOTAL] == 0
+                assert pagination_info[Pagination.EMPTY] == True
+                assert is_none_or_empty(pagination[Pagination.ITEMS])
 
             test_must_return_empty_when_not_found_in_filter()
 

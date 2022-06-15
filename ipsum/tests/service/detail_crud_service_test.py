@@ -144,17 +144,17 @@ class TestDetailCRUDService:
 
             pagination = self.detail_crud_service.paginate(parent_doc.id)
 
-            for child in pagination[Pagination.ITEMS_KEY]:
+            for child in pagination[Pagination.ITEMS]:
                 child_id = child.id
 
                 assert model_doc_1.id == child_id or model_doc_2.id == child_id
 
-            pagination_info = pagination[Pagination.INFO_KEY]
+            pagination_info = pagination[Pagination.INFO]
 
-            assert pagination_info['offset'] == 0
-            assert pagination_info['limit'] == 5
-            assert pagination_info['total'] == 2
-            assert pagination_info['empty'] == False
+            assert pagination_info[Pagination.OFFSET] == 0
+            assert pagination_info[Pagination.LIMIT] == 5
+            assert pagination_info[Pagination.TOTAL] == 2
+            assert pagination_info[Pagination.EMPTY] == False
 
         _()
 

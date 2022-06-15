@@ -52,13 +52,6 @@ class IpsumView(FlaskView):
 
     @route('', methods=[GET])
     def find(self, **kwargs):
-
-        parsed_query_string = self._get_parsed_query_string()
-
-        return self._to_response(self._service.find(**parsed_query_string))
-
-    @route('paginate', methods=[GET])
-    def paginate(self, **kwargs):
         
         parsed_query_string, limit, page = self._build_paginate_params()
 

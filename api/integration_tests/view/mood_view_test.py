@@ -1,26 +1,14 @@
 
 from api.annotation.service.mood.mood_service import MoodService
-from api.annotation.view.note_view import NoteView
 from ipsum.util.test.view.crud_view_test import CRUDViewTest
-from ipsum.util.enviroment_variable import get_test_database_url
-from ipsum.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
-from api.annotation.view.mood_view import MoodView, mood_view_name
-from api.annotation.data.model.mood import Mood
-from api.annotation.data.dao.mood_dao import MoodDao
+from ipsum.util.test.view.ipsum_view_test import PaginateFilterResult
+from api.annotation.view.mood_view import MoodView
 
 class TestMoodView(CRUDViewTest):
 
     view = MoodView()
 
     filter_to_not_found = {"name": "to not found"}
-
-    find_filter_results = [
-        FindFilterResult(filter={}, expected_indexes=range(3)),
-        FindFilterResult(filter={"name":"test 2"}, expected_indexes=[2]),
-        FindFilterResult(filter={"name":["test 0", "test 1"]}, expected_indexes=[0,1]),
-        FindFilterResult(filter={"code": 2}, expected_indexes=[2]),
-        FindFilterResult(filter={"code":[0, 1]}, expected_indexes=[0,1])
-    ]
 
     paginate_filter_results = [
         PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
@@ -41,20 +29,6 @@ class TestMoodView(CRUDViewTest):
             code=-1,
             name="test UPDATED"
         )
-
-    def find_model_list(self):
-        model_list = []
-
-        for i in range(3):
-
-            db_model = self.model(
-                code=i,
-                name=f"test {i}"
-            )
-
-            model_list.append(db_model)
-
-        return model_list
 
     def paginate_model_list(self):
         model_list = []

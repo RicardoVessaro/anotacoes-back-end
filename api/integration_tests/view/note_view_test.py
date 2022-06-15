@@ -1,17 +1,13 @@
 
-import pytest
 import requests
 
 from datetime import datetime
-from api.annotation.data.dao.note_dao import NoteDAO
-from api.annotation.service.mood.mood_service import BORING, COOL, GREAT, SAD, MoodService
-from api.annotation.service.note.note_service import CREATED_IN, TAG, NoteService
-from api.annotation.service.tag.tag_service import IMPORTANT, OK, TagService
-from ipsum.util.enviroment_variable import get_api_url, get_test_database_url
+from api.annotation.service.mood.mood_service import BORING, COOL, GREAT, SAD
+from api.annotation.service.note.note_service import CREATED_IN, TAG
+from api.annotation.service.tag.tag_service import IMPORTANT, OK
 from ipsum.util.test.database_test import DatabaseTest
-from ipsum.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
-from api.annotation.data.model.note import Note
-from api.annotation.view.note_view import NoteView, note_view_name
+from ipsum.util.test.view.ipsum_view_test import  PaginateFilterResult
+from api.annotation.view.note_view import NoteView
 from ipsum.util.test.view.crud_view_test import CRUDViewTest
 from api.annotation.view.tag_view import tag_view_name
 from api.annotation.view.mood_view import mood_view_name
@@ -23,14 +19,6 @@ class TestNoteView(CRUDViewTest):
     view = NoteView()
 
     filter_to_not_found = {"title": "to not found"}
-
-    find_filter_results = [
-        FindFilterResult(filter={}, expected_indexes=range(3)),
-        FindFilterResult(filter={"pinned":True}, expected_indexes=[0,2]),
-        FindFilterResult(filter={"pinned":False}, expected_indexes=[1]),
-        FindFilterResult(filter={"title":"test 2"}, expected_indexes=[2]),
-        FindFilterResult(filter={"title":["test 0", "test 1"]}, expected_indexes=[0,1])
-    ]
 
     paginate_filter_results = [
         PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
@@ -75,24 +63,6 @@ class TestNoteView(CRUDViewTest):
         )
         
         return db_model 
-
-    def find_model_list(self):
-        model_list = []
-
-        pinned = True
-        for i in range(3):
-
-            db_model = self.model(
-                title=f"test {i}",
-                pinned=pinned,
-                text=f"lorem ipsum dolor sit amet {i}",
-            )
-
-            pinned = not pinned
-
-            model_list.append(db_model)
-
-        return model_list
 
     def paginate_model_list(self):
         model_list = []
@@ -166,10 +136,10 @@ class TestNoteView(CRUDViewTest):
     def _find_enum_by_code(self, enum_view_name, code):
         enum_find_by_code_url = self._get_enum_find_by_code_url(enum_view_name, code)
 
-        response_j = requests.get(enum_find_by_code_url).json()
+        # TODO 'items' referenciar 'pagination_util'
+        response_j = requests.get(enum_find_by_code_url).json()['items']
 
         return response_j[0]
 
     def _get_enum_find_by_code_url(self, enum_view_name, code):
         return f'{self.get_view_url(with_view_name=False)}{enum_view_name}?code={code}'   
-

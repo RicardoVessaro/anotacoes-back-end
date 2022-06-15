@@ -1,27 +1,13 @@
 
-from api.annotation.service.tag.tag_service import TagService
-from ipsum.util.enviroment_variable import get_test_database_url
-from ipsum.util.test.view.ipsum_view_test import FindFilterResult, PaginateFilterResult
+from ipsum.util.test.view.ipsum_view_test import PaginateFilterResult
 from ipsum.util.test.view.crud_view_test import CRUDViewTest
-from api.annotation.view.tag_view import TagView, tag_view_name
-from api.annotation.data.model.tag import Tag
-from api.annotation.data.dao.tag_dao import TagDAO
+from api.annotation.view.tag_view import TagView
 
 class TestTagView(CRUDViewTest):
 
     view = TagView()
 
     filter_to_not_found = {"name": "to not found"}
-
-    find_filter_results = [
-        FindFilterResult(filter={}, expected_indexes=range(3)),
-        FindFilterResult(filter={"name":"test 2"}, expected_indexes=[2]),
-        FindFilterResult(filter={"name":["test 0", "test 1"]}, expected_indexes=[0,1]),
-        FindFilterResult(filter={"code": 2}, expected_indexes=[2]),
-        FindFilterResult(filter={"code":[0, 1]}, expected_indexes=[0,1]),
-        FindFilterResult(filter={"priority": 0}, expected_indexes=[0]),
-        FindFilterResult(filter={"priority":[1, 2]}, expected_indexes=[1,2])
-    ]
 
     paginate_filter_results = [
         PaginateFilterResult(filter={}, expected_indexes=range(5), pages=3, page=1, limit=5, total=15, has_prev=False, has_next=True, has_result=True),
@@ -44,22 +30,6 @@ class TestTagView(CRUDViewTest):
             name="test UPDATED",
             priority=1
         )
-
-
-    def find_model_list(self):
-        model_list = []
-
-        for i in range(3):
-
-            db_model = self.model(
-                code=i,
-                name=f"test {i}",
-                priority=i
-            )
-
-            model_list.append(db_model)
-
-        return model_list
 
     def paginate_model_list(self):
         model_list = []

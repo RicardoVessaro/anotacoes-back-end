@@ -41,16 +41,6 @@ class DetailCRUDView(CRUDView):
     def find(self, **kwargs):
         parent_id = request.collection_tree.parent.id
 
-        parsed_query_string = self._get_parsed_query_string()
-
-        return self._to_response(
-            self._service.find(parent_id, **parsed_query_string)
-        )
-        
-    @route('paginate', methods=[GET])
-    def paginate(self, **kwargs):
-        parent_id = request.collection_tree.parent.id
-
         parsed_query_string, limit, page = self._build_paginate_params()
 
         return self._to_response(

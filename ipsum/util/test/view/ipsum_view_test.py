@@ -17,8 +17,6 @@ ID_FIELD = 'id'
 TO_MONGO_ID_FIELD = '_id'
 HATEOAS_LINKS = '_links'
 
-FindFilterResult = namedtuple('FindFilterResult', 'filter expected_indexes')
-
 PaginateFilterResult = namedtuple('PaginateFilterResult', 'filter expected_indexes pages page limit total has_prev has_next has_result')
 
 class IpsumViewTest(ABC):
@@ -27,10 +25,6 @@ class IpsumViewTest(ABC):
 
     @abstractproperty
     def view(self):
-        pass
-
-    @abstractproperty
-    def find_filter_results(self):
         pass
 
     @abstractproperty
@@ -71,10 +65,6 @@ class IpsumViewTest(ABC):
 
     @abstractproperty
     def filter_to_not_found(self):
-        pass
-
-    @abstractmethod
-    def find_model_list(self):
         pass
 
     @abstractmethod
@@ -135,39 +125,9 @@ class IpsumViewTest(ABC):
 
     def test_find(self):
 
-        model_list = self.find_model_list()
-
-        url = self.get_view_url()
-
-        database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
-        self._add_data(database_test, self.dao, model_list)
-
-        if self._is_detail_crud_dao(self.dao):
-            self._add_parent_data(database_test)
-
-        @database_test.persistence_test()
-        def _():
-                
-            for find_filter_result in self.find_filter_results:
-                
-                response = requests.get(url, params=find_filter_result.filter)
-
-                expected_ids = self.get_expected_ids(find_filter_result.expected_indexes, model_list)
-
-                items = response.json()
-
-                assert len(items) == len(expected_ids)
-
-                for item in items:
-                    assert item['id'] in expected_ids         
-            
-        _()
-
-    def test_paginate(self):
-
         model_list = self.paginate_model_list()
 
-        url = self.get_view_url() + '/paginate'
+        url = self.get_view_url()
 
         database_test = DatabaseTest(host=self.INTEGRATION_TEST_DB_URI)
         self._add_data(database_test, self.dao, model_list)

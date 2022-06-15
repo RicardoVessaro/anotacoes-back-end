@@ -17,7 +17,7 @@ class TestHATEOASBuilder:
     host_url = 'http://localhost:5001/' 
 
     view_methods = [
-        'insert', 'update', 'delete', 'find_by_id', 'find', 'paginate'
+        'insert', 'update', 'delete', 'find_by_id', 'find'
     ]
 
     PARENT_ID_PARAM = 'ipsum_model_id'
@@ -31,22 +31,22 @@ class TestHATEOASBuilder:
     def test_build_with_paginate(self):
         bytes_response = b'{"has_next": false, "has_prev": false, "has_result": true, "items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test"}], "limit": 5, "page": 1, "pages": 1, "total": 2}'
 
-        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args, 'paginate')
+        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args, 'find')
         self._assert_build(hateoas_builder, is_paginate=True)
 
         bytes_response = b'{"has_next": false, "has_prev": false, "has_result": true, "items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test", "ipsum_model_id": "6248620366564103f229595f"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test", "ipsum_model_id": "629fdb22fcce704dad685089"}], "limit": 5, "page": 1, "pages": 1, "total": 2}'
 
-        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args, 'paginate')
+        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args, 'find')
         self._assert_build(hateoas_builder, is_paginate=True)
 
     def test_build_with_list(self):
 
         bytes_response = b'[{\n "id": "62a505b437a970f7f060a0b2", \n  "code": "1", \n  "title": "test"\n}, {\n "id": "6248620366564103f229595f", \n  "code": "2", \n  "title": "other test"\n}]\n'
-        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args, 'find')
+        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args, 'list')
         self._assert_build(hateoas_builder)
 
         bytes_response = b'[{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "629fdb22fcce704dad685089"\n}, {\n "id": "62a505b437a970f7f060a0b2", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "6248620366564103f229595f"\n}]\n'
-        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args, 'find')
+        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args, 'list')
         self._assert_build(hateoas_builder)
 
     def test_build_dict(self):

@@ -19,7 +19,7 @@ class HATEOASBuilder:
     _HATEOAS_LINKS = '_links'
 
     # TODO referenciar IpsumView e DetailCRUDView
-    _PAGINATE_REQUEST_NAME = 'paginate'
+    _PAGINATE_REQUEST_NAME = 'find'
 
     # TODO referenciar pagination_util
     _PAGINATE_KEYS = [

@@ -8,6 +8,8 @@ class QueryFilter:
 
     SORT = '_sort'
 
+    FIELDS = '_fields'
+
     def __init__(self) -> None:
         pass
 
@@ -15,26 +17,35 @@ class QueryFilter:
 
         query_dict = dict(kwargs.items())
 
-        query_fields = self._set_fields(_fields)
+        query_fields = self._get_query_fields(_fields)
 
-        query_sort = self._set_sort(_sort)
+        query_sort = self._get_sort_fields(_sort)
 
         query_filter = self._set_list_filters(query_dict)
             
         return query_filter, query_fields, query_sort
 
-    def _set_fields(self, query_fields):
-        # TODO ver _set_sort
+    def _get_query_fields(self, _fields):
+        if is_none_or_empty(_fields):
+            return None
+            
+        if type(_fields) is str:
+            return {'$project': {_fields: 1}}
 
-        return None
+        fields = {}
+        for field in _fields:
+            fields[field] = 1
 
-    def _set_sort(self, query_sort):
-        if not is_none_or_empty(query_sort):
+        return {'$project': fields}
 
-            if type(query_sort) is str:
-                return (query_sort,)
 
-            return tuple(query_sort)
+    def _get_sort_fields(self, query_values):
+        if not is_none_or_empty(query_values):
+
+            if type(query_values) is str:
+                return (query_values,)
+
+            return tuple(query_values)
 
         return None
 

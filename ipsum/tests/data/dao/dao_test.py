@@ -19,6 +19,8 @@ from ipsum.tests.resources.data.model.detail_child_test_model import DetailChild
 
 class TestDao:
 
+    KEY_ID = "_id"
+
     TEST_DB_URI = get_test_database_url()
 
     dao = DAO(model=IpsumTestModel)
@@ -319,6 +321,46 @@ class TestDao:
                 assert result.first().code == ipsum_test_model_list[-2].code
 
             _with_boolean_desc_and_code_desc()
+
+        _()
+
+    def test_fields(self):
+
+        ipsum_test_model, ipsum_database_test = self._build_default_model_and_ipsum_test(code=1, title='Test 1')
+        @ipsum_database_test.persistence_test()
+        def _():
+
+            def _with_list_fields():
+                fields = ['code', 'title']
+
+                query_filter = {
+                    QueryFilter.FIELDS: fields
+                }
+
+                result = self.dao.find(**query_filter)
+                model = result[0]
+
+                for field in model:
+                    if field != self.KEY_ID:
+                        assert field in fields
+
+            _with_list_fields()
+
+            def _with_string():
+                fields = 'code'
+
+                query_filter = {
+                    QueryFilter.FIELDS: fields
+                }
+
+                result = self.dao.find(**query_filter)
+                model = result[0]
+
+                for field in model:
+                    if field != self.KEY_ID:
+                        assert field == fields
+
+            _with_string()
 
         _()
 

@@ -99,6 +99,9 @@ class DAO:
 
             if not object_util.is_none_or_empty(sort):
                 result = result.order_by(*sort)
+
+            if not object_util.is_none_or_empty(fields):
+                result = list(result.aggregate([fields]))
                 
             return result
 

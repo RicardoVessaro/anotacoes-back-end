@@ -120,4 +120,66 @@ class TestQueryFilter:
             assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
 
         _using_string()
+
+    def test_query_filter_field(self):
+        
+        def _using_list():
+            query_dict = {
+                'name': "John",
+                'number': "1",
+                QueryFilter.FIELDS: ['code', 'priority']
+            }
+
+            expected_query_filter = {
+                'name': "John",
+                'number': "1"
+            }
+
+            expected_fields = {"$project": {'code':1, 'priority': 1}}
+
+            expected_sort = None
+
+            assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
+
+        _using_list()
+
+        def _using_one_item_list():
+            query_dict = {
+                'name': "John",
+                'number': "1",
+                QueryFilter.FIELDS: ['priority']
+            }
+
+            expected_query_filter = {
+                'name': "John",
+                'number': "1"
+            }
+
+            expected_fields = {"$project": {'priority': 1}}
+
+            expected_sort = None
+
+            assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
+
+        _using_one_item_list()
+
+        def _using_string():
+            query_dict = {
+                'name': "John",
+                'number': "1",
+                QueryFilter.FIELDS: 'priority'
+            }
+
+            expected_query_filter = {
+                'name': "John",
+                'number': "1"
+            }
+
+            expected_fields = {"$project": {'priority': 1}}
+
+            expected_sort = None
+
+            assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
+
+        _using_string()
     

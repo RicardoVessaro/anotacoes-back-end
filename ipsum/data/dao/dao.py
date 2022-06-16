@@ -6,7 +6,7 @@ from ipsum.exception.ipsum_exception import IpsumException
 from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.util import object_util
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.data.query_filter_builder import QueryFilterBuilder
+from ipsum.util.data.query_filter import QueryFilter
 
 class DAO:
 
@@ -93,7 +93,7 @@ class DAO:
             return self._model.objects()
 
         else:    
-            built_query_filter = QueryFilterBuilder().build(query_filter)
+            built_query_filter = QueryFilter().build(**query_filter)
         
             return self._model.objects(**built_query_filter)
 

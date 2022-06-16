@@ -1,8 +1,8 @@
 
-from ipsum.util.data.query_filter_builder import QueryFilterBuilder
+from ipsum.util.data.query_filter import QueryFilter
 
 
-class TestQueryFilterBuilder:
+class TestQueryFilter:
 
     def test_query_filter_builder_when_not_using_list_or_tuple(self):
         query_dict = {
@@ -10,7 +10,7 @@ class TestQueryFilterBuilder:
             'number': "1"
         }
 
-        assert query_dict == QueryFilterBuilder().build(query_dict)
+        assert query_dict == QueryFilter().build(**query_dict)
 
     def test_query_filter_builder_when_using_list(self):
         query_dict = {
@@ -25,7 +25,7 @@ class TestQueryFilterBuilder:
             'color__in': ["Blue", "Red"]
         }
 
-        assert expected_query_filter == QueryFilterBuilder().build(query_dict)
+        assert expected_query_filter == QueryFilter().build(**query_dict)
 
     def test_query_filter_builder_when_using_tuple(self):
         query_dict = {
@@ -40,5 +40,5 @@ class TestQueryFilterBuilder:
             'color__in': ("Blue", "Red")
         }
 
-        assert expected_query_filter == QueryFilterBuilder().build(query_dict)
+        assert expected_query_filter == QueryFilter().build(**query_dict)
         

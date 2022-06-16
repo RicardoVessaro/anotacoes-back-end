@@ -1,15 +1,15 @@
 
-class QueryFilterBuilder:
+class QueryFilter:
 
     _IN_LIST_SUFIX = '__in'
 
     def __init__(self) -> None:
         pass
 
-    def build(self, query_filter:dict) -> dict:
+    def build(self, **kwargs) -> dict:
         query_filter_param = {}
 
-        for field, value in query_filter.items():
+        for field, value in kwargs.items():
             query_filter_field = field
 
             if type(value) is list or type(value) is tuple:

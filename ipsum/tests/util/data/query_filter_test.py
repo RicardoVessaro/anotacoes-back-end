@@ -10,7 +10,16 @@ class TestQueryFilter:
             'number': "1"
         }
 
-        assert query_dict == QueryFilter().build(**query_dict)
+        expected_query_filter = {
+            'name': "John",
+            'number': "1"
+        }
+
+        expected_fields = None
+
+        expected_query_sort = None
+
+        assert (expected_query_filter, expected_fields, expected_query_sort) == QueryFilter().build(**query_dict)
 
     def test_query_filter_builder_when_using_list(self):
         query_dict = {
@@ -25,7 +34,11 @@ class TestQueryFilter:
             'color__in': ["Blue", "Red"]
         }
 
-        assert expected_query_filter == QueryFilter().build(**query_dict)
+        expected_fields = None
+
+        expected_query_sort = None
+
+        assert (expected_query_filter, expected_fields, expected_query_sort) == QueryFilter().build(**query_dict)
 
     def test_query_filter_builder_when_using_tuple(self):
         query_dict = {
@@ -40,5 +53,71 @@ class TestQueryFilter:
             'color__in': ("Blue", "Red")
         }
 
-        assert expected_query_filter == QueryFilter().build(**query_dict)
+        expected_fields = None
+
+        expected_query_sort = None
+
+        assert (expected_query_filter, expected_fields, expected_query_sort) == QueryFilter().build(**query_dict)
         
+    def test_query_filter_sort(self):
+        
+        def _using_list():
+            query_dict = {
+                'name': "John",
+                'number': "1",
+                QueryFilter.SORT: ['code', '-priority']
+            }
+
+            expected_query_filter = {
+                'name': "John",
+                'number': "1"
+            }
+
+            expected_fields = None
+
+            expected_sort = ('code', '-priority')
+
+            assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
+
+        _using_list()
+
+        def _using_one_item_list():
+            query_dict = {
+                'name': "John",
+                'number': "1",
+                QueryFilter.SORT: ['-priority']
+            }
+
+            expected_query_filter = {
+                'name': "John",
+                'number': "1"
+            }
+
+            expected_fields = None
+
+            expected_sort = ('-priority',)
+
+            assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
+
+        _using_one_item_list()
+
+        def _using_string():
+            query_dict = {
+                'name': "John",
+                'number': "1",
+                QueryFilter.SORT: '-priority'
+            }
+
+            expected_query_filter = {
+                'name': "John",
+                'number': "1"
+            }
+
+            expected_fields = None
+
+            expected_sort = ('-priority',)
+
+            assert (expected_query_filter, expected_fields, expected_sort) == QueryFilter().build(**query_dict)
+
+        _using_string()
+    

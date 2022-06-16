@@ -7,6 +7,7 @@ from ipsum.exception.exception_message import PAGINATION_OFFSET_GREATER_THAN_TOT
 from ipsum.service.service import Service
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.util.data.pagination import Pagination
+from ipsum.util.data.query_filter import QueryFilter
 from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
@@ -149,6 +150,72 @@ class TestService:
             results = self.service.find(day=today)
             for result in results:
                 assert result.id in expected_ids
+
+        _()
+
+    def test_sort(self):
+        ipsum_test_model_list = self._build_ipsum_test_model_list()
+
+        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
+        @ipsum_database_test.persistence_test()
+        def _():
+
+            def _with_code_desc():
+                query_filter = {
+                    QueryFilter.SORT: ['-code']
+                }
+
+                result = self.service.find(**query_filter)
+
+                assert result.first().code == ipsum_test_model_list[-1].code
+
+            _with_code_desc()
+
+            def _with_string_code():
+                query_filter = {
+                    QueryFilter.SORT: '-code'
+                }
+
+                result = self.service.find(**query_filter)
+
+                assert result.first().code == ipsum_test_model_list[-1].code
+
+            _with_string_code()
+
+            def _with_boolean_desc():
+                query_filter = {
+                    QueryFilter.SORT: ['boolean']
+                }
+
+                result = self.service.find(**query_filter)
+
+                assert result.first().boolean == False
+                
+            _with_boolean_desc()
+
+            def _with_boolean_desc_using_plus():
+                query_filter = {
+                    QueryFilter.SORT: ['+boolean']
+                }
+
+                result = self.dao.find(**query_filter)
+
+                assert result.first().boolean == False
+                
+            _with_boolean_desc_using_plus()
+
+            def _with_boolean_desc_and_code_desc():
+                query_filter = {
+                    QueryFilter.SORT: ['boolean', '-code']
+                }
+
+                result = self.service.find(**query_filter)
+
+                assert result.first().boolean == False
+                assert result.first().code == ipsum_test_model_list[-2].code
+
+            _with_boolean_desc_and_code_desc()
 
         _()
 

@@ -2,6 +2,7 @@
 import json
 from flask_classful import FlaskView, route
 from flask import make_response, request
+from ipsum.util.data.query_filter import QueryFilter
 from ipsum.util.view.hateoas_builder import HATEOASBuilder
 from ipsum.util.view.query_string_parser import QueryStringParser
 
@@ -16,6 +17,7 @@ DELETE = 'DELETE'
 
 QUERY_LIMIT = '_limit'
 QUERY_OFFSET = '_offset'
+QUERY_SORT = QueryFilter.SORT
 
 STATUS_NO_CONTENT = 204
 
@@ -53,14 +55,15 @@ class IpsumView(FlaskView):
     @route('', methods=[GET])
     def find(self, **kwargs):
         
-        parsed_query_string, limit, page = self._build_paginate_params()
+        parsed_query_string, limit, offset = self._get_query_params()
 
-        return self._to_response(self._service.paginate(offset=page, limit=limit, **parsed_query_string))
+        return self._to_response(self._service.paginate(offset=offset, limit=limit, **parsed_query_string))
 
-    def _build_paginate_params(self):
+    def _get_query_params(self):
         parsed_query_string = self._get_parsed_query_string()
 
         limit, offset = self._get_paginate_params(parsed_query_string)
+
         return parsed_query_string, limit, offset
 
     def _get_paginate_params(self, parsed_query_string):

@@ -93,9 +93,14 @@ class DAO:
             return self._model.objects()
 
         else:    
-            built_query_filter = QueryFilter().build(**query_filter)
-        
-            return self._model.objects(**built_query_filter)
+            filter, fields, sort = QueryFilter().build(**query_filter)
+
+            result = self._model.objects(**filter)
+
+            if not object_util.is_none_or_empty(sort):
+                result = result.order_by(*sort)
+                
+            return result
 
     def paginate(self, offset=0, limit=5, **query_filter) -> dict:
         results = self.find(**query_filter)

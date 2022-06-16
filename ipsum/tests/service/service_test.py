@@ -261,6 +261,33 @@ class TestService:
 
         _()
 
+    def test_fields_with_sort(self):
+
+        ipsum_test_model_list = self._build_ipsum_test_model_list()
+
+        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
+        @ipsum_database_test.persistence_test()
+        def _():
+
+            fields = ['code', 'title']
+
+            query_filter = {
+                QueryFilter.SORT: ['-code'],
+                QueryFilter.FIELDS: fields
+            }
+
+            result = self.dao.find(**query_filter)
+
+            assert result[0]['code'] == ipsum_test_model_list[-1].code
+
+            model = result[0]
+
+            for field in model:
+                if field != self.KEY_ID:
+                    assert field in fields
+        _()
+    
     def test_paginate(self):
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 

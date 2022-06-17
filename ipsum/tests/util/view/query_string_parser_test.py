@@ -1,5 +1,102 @@
 from  ipsum.util.view.query_string_parser import QueryStringParser
 
+def test_query_string_parser_parsing_filter_queries():
+
+    def _complex_query_string(): 
+        query_string = '_op=and&code[or:eq]=1&code[or:eq]=2&priority[lte]=1&tags[in]=A&boolean=true&_sort=-code&_sort=date&_fields=code&_fields=title'
+
+        expected_query_string = {
+            '_op': 'and',
+            'code[or:eq]': [1, 2],
+            'priority[lte]': 1,
+            'tags[in]': ['A'],
+            'boolean': True,
+            '_sort': ['-code', 'date'],
+            '_fields': ['code', 'title']
+        }
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _complex_query_string()
+
+    def _complex_query_string_using_separator(): 
+        query_string = '_op=and&code[or:eq]=1|2&priority[lte]=1&tags[in]=A&boolean=true&_sort=-code|date&_fields=code|title'
+
+        expected_query_string = {
+            '_op': 'and',
+            'code[or:eq]': [1, 2],
+            'priority[lte]': 1,
+            'tags[in]': ['A'],
+            'boolean': True,
+            '_sort': ['-code', 'date'],
+            '_fields': ['code', 'title']
+        }
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _complex_query_string_using_separator()
+
+    def _complex_query_string_using_ipsum_params(): 
+        query_string = '_op=and&code[or:eq]=1|2&priority[lte]=1&tags[in]=A|B&boolean=true&_sort=-code|date&_fields=code|title&_offset=5&_limit=10'
+
+        expected_query_string = {
+            '_op': 'and',
+            'code[or:eq]': [1, 2],
+            'priority[lte]': 1,
+            'tags[in]': ['A', 'B'],
+            'boolean': True,
+            '_sort': ['-code', 'date'],
+            '_fields': ['code', 'title'],
+            '_offset': 5,
+            '_limit': 10
+        }
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _complex_query_string_using_ipsum_params()
+
+def test_list_operators_with_single_list_values():
+
+    def _in_operator(): 
+        query_string = 'tags[in]=A'
+
+        expected_query_string = {'tags[in]': ['A']}
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _in_operator()
+
+    def _nin_operator(): 
+        query_string = 'tags[nin]=A'
+
+        expected_query_string = {'tags[nin]': ['A']}
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _nin_operator()
+
+    def _aeq_operator(): 
+        query_string = 'tags[aeq]=A'
+
+        expected_query_string = {'tags[aeq]': ['A']}
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _aeq_operator()
+
+    
 def test_query_string_parser_parsing_decode():
     to_decode_query_string = {
         b'name': [b'encode'],
@@ -268,16 +365,6 @@ def test_query_string_parser_transform_dict_to_query_dict():
     }
 
     assert expected_query_dict == transformed_query_string
-
-"""
-#   ==============================================================================================
-#
-#
-#   ==============================================================================================
-#
-#
-#   ==============================================================================================
-"""
 
 def test_query_dict_parser_parsing_list_values():
     query_string_parser = QueryStringParser()

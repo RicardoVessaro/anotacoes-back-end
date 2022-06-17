@@ -2,8 +2,19 @@ from urllib import parse
 
 from ipsum.util.int_util import is_string_int
 from ipsum.util.float_util import is_string_float
+from ipsum.util.object_util import is_iterable
 
 class QueryStringParser:
+
+    IN = '[in]'
+    NIN = '[nin]'
+    AEQ = '[aeq]'
+
+    LIST_OPERATORS = [
+        IN, NIN, AEQ
+    ]
+
+    LIST_VALUES_SEPARATOR = '|'
 
     def __init__(self, convert_string_to_boolean=True, fields_to_boolean_to_ignore=[], convert_string_to_number=True, 
         fields_to_number_to_ignore=[], convert_number_only_to_float=False) -> None:
@@ -45,6 +56,8 @@ class QueryStringParser:
         query = self._decode_parsed_query_string(query)
 
         for key in query.keys():
+            self._convert_string_list_values_to_list(query, key)
+
             self._convert_string_to_boolean(query, key)
 
             self._convert_string_to_number(query, key)
@@ -119,5 +132,33 @@ class QueryStringParser:
                     parsed_query_string[key] = boolean_list
 
     def _convert_one_item_list_to_object(self, parsed_query_string, key):
-        if len(parsed_query_string[key]) == 1:
+        if len(parsed_query_string[key]) == 1 and not self._is_list_operation(key):
             parsed_query_string[key] = parsed_query_string[key][0]
+
+    def _is_list_operation(self, key):
+        for operator in self.LIST_OPERATORS:
+            if operator in key:
+                return True
+                
+        return False
+
+    def _convert_string_list_values_to_list(self, parsed_query_string, key):
+
+        if key not in self.fields_to_boolean_to_ignore:
+            
+            for value in parsed_query_string[key]:
+
+                if is_iterable(value) and self.LIST_VALUES_SEPARATOR in value:
+                    string_values = []
+
+                    for string in value.split(self.LIST_VALUES_SEPARATOR):
+                        string_without_spaces = string.split()
+
+                        string_value = ''
+
+                        for s in string_without_spaces:
+                            string_value += s
+
+                        string_values.append(string_value)
+                
+                    parsed_query_string[key] = string_values

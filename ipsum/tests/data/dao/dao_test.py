@@ -1,6 +1,7 @@
 
 
 import datetime
+from mongoengine.queryset.visitor import Q, QCombination
 from pytest import raises
 from ipsum.data.cascade import Cascade
 from ipsum.data.dao.dao import DAO
@@ -8,8 +9,9 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.data.dependent import Dependent
 from ipsum.exception.exception_message import PAGINATION_OFFSET_GREATER_THAN_TOTAL
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
+from ipsum.util.data.mongo_query import MongoQuery
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.data.query_filter import QueryFilter
+from ipsum.util.data.dao_query import DAOQuery
 from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
@@ -268,7 +270,7 @@ class TestDao:
 
             def _with_code_desc():
                 query_filter = {
-                    QueryFilter.SORT: ['-code']
+                    DAOQuery.SORT: ['-code']
                 }
 
                 result = self.dao.find(**query_filter)
@@ -279,7 +281,7 @@ class TestDao:
 
             def _with_string_code():
                 query_filter = {
-                    QueryFilter.SORT: '-code'
+                    DAOQuery.SORT: '-code'
                 }
 
                 result = self.dao.find(**query_filter)
@@ -290,7 +292,7 @@ class TestDao:
 
             def _with_boolean_desc():
                 query_filter = {
-                    QueryFilter.SORT: ['boolean']
+                    DAOQuery.SORT: ['boolean']
                 }
 
                 result = self.dao.find(**query_filter)
@@ -301,7 +303,7 @@ class TestDao:
 
             def _with_boolean_desc_using_plus():
                 query_filter = {
-                    QueryFilter.SORT: ['+boolean']
+                    DAOQuery.SORT: ['+boolean']
                 }
 
                 result = self.dao.find(**query_filter)
@@ -312,7 +314,7 @@ class TestDao:
 
             def _with_boolean_desc_and_code_desc():
                 query_filter = {
-                    QueryFilter.SORT: ['boolean', '-code']
+                    DAOQuery.SORT: ['boolean', '-code']
                 }
 
                 result = self.dao.find(**query_filter)
@@ -334,7 +336,7 @@ class TestDao:
                 fields = ['code', 'title']
 
                 query_filter = {
-                    QueryFilter.FIELDS: fields
+                    DAOQuery.FIELDS: fields
                 }
 
                 result = self.dao.find(**query_filter)
@@ -350,7 +352,7 @@ class TestDao:
                 fields = 'code'
 
                 query_filter = {
-                    QueryFilter.FIELDS: fields
+                    DAOQuery.FIELDS: fields
                 }
 
                 result = self.dao.find(**query_filter)
@@ -377,8 +379,8 @@ class TestDao:
             fields = ['code', 'title']
 
             query_filter = {
-                QueryFilter.SORT: ['-code'],
-                QueryFilter.FIELDS: fields
+                DAOQuery.SORT: ['-code'],
+                DAOQuery.FIELDS: fields
             }
 
             result = self.dao.find(**query_filter)
@@ -518,15 +520,120 @@ class TestDao:
 
         _()
 
+    # TODO
+    def test_filter(self):
+        ipsum_test_model_list = self._build_ipsum_test_model_list()
+
+        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
+        @ipsum_database_test.persistence_test()
+        def _():
+
+            dao_query = {
+            'and': {
+                    #'code': {'or': {'eq': [1, 2, 3]}}, 
+                    #'boolean': {'and': {'eq': True}},
+                    'tags': {'or': {'eq': ['A','B']}}
+                }
+            }
+
+            mongo_query = MongoQuery().build(dao_query)
+
+            print(mongo_query)
+
+            results = self.dao.model.objects(mongo_query).as_pymongo()#.aggregate([{'$project': {'code': 1}}])
+
+            row = 0
+            for result in results:
+                id_key = 'id' if 'id' in result else '_id'
+
+                string = f'[{row}]'
+                for key, value in result.items():
+                    string += f' {key}: {value}'
+
+                print(string)
+                #print(f'[{row}] id: {result[id_key]} code: {result["code"]} boolean: {result["boolean"]} tags: {result["tags"]}')
+                row += 1
+
+            """
+            # Logical operations using QCombination
+            
+            # We use QCombination because the above exception when whe use pymongo's aggregate 
+            # Exception: '$or is not allowed in this atlas tier'
+            # results = list(self.dao.model.objects().aggregate([query]))
+
+            # This example it works based on:
+            # combinations.append(Q(**{expression: value}))
+
+            q_combination = Q(code=1) | Q(code=2) # in a dinamic way
+
+            # To add other combinations in present q_combination use:
+
+            q_combination = QCombination(QCombination.AND, [q_combination, Q(boolean=True)])
+
+            # Now we have:
+
+            ( Q(code=1) | Q(code=2) ) & Q(boolean=True) # (code == 1 or code == 2) and boolean == True
+
+            """
+
+            """
+            ### CODE ###
+            
+            combinations = [
+                Q(code=2),
+                Q(code=4)
+            ]
+            
+                
+
+            q_combination = QCombination(QCombination.OR, combinations)      
+
+            results = self.dao.model.objects(q_combination).aggregate([{'$project': {'code': 1}}])
+
+
+            #q = QCombination(QCombination.AND, [q_combination, Q(boolean=False)])
+            #print('q', q)
+            #results = self.dao.model.objects(q)
+
+            query = {
+                
+            }
+            #results = self.dao.model.objects(**query)
+
+            row = 0
+            print('\n')
+            for result in results:
+                id_key = 'id' if 'id' in result else '_id'
+
+                string = f'[{row}]'
+                for key, value in result.items():
+                    string += f' {key}: {value}'
+
+                print(string)
+                #print(f'[{row}] id: {result[id_key]} code: {result["code"]} boolean: {result["boolean"]} tags: {result["tags"]}')
+                row += 1
+            """
+
+        _()
+
     def _build_ipsum_test_model_list(self):
         ipsum_test_model_list = []
         
         boolean = True
+
+        
+
         for i in range(15):
+            tags = ['A']
+            if boolean:
+                tags = ['B', 'C']
+
             ipsum_test_model = IpsumTestModel(
                 code=i, 
                 title='test_find_TestDao_'+str(i), 
-                boolean=boolean
+                boolean=boolean,
+                tags=tags
             )
 
             boolean = not boolean

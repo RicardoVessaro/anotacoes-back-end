@@ -5,8 +5,9 @@ from bson import ObjectId
 from ipsum.exception.ipsum_exception import IpsumException
 from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.util import object_util
+from ipsum.util.data.mongo_query import MongoQuery
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.data.query_filter import QueryFilter
+from ipsum.util.data.dao_query import DAOQuery
 
 class DAO:
 
@@ -93,9 +94,15 @@ class DAO:
             return self._model.objects()
 
         else:    
-            filter, fields, sort = QueryFilter().build(**query_filter)
+            filter, fields, sort = DAOQuery().build(**query_filter)
+            
+            result = None
+            if not object_util.is_none_or_empty(filter):
+                mongo_query = MongoQuery().build(filter)
+                result = self._model.objects(mongo_query)
 
-            result = self._model.objects(**filter)
+            else:
+                result = self._model.objects()
 
             if not object_util.is_none_or_empty(sort):
                 result = result.order_by(*sort)

@@ -2,7 +2,7 @@
 import json
 from flask_classful import FlaskView, route
 from flask import make_response, request
-from ipsum.util.data.query_filter import QueryFilter
+from ipsum.util.data.dao_query import DAOQuery
 from ipsum.util.view.hateoas_builder import HATEOASBuilder
 from ipsum.util.view.query_string_parser import QueryStringParser
 
@@ -17,7 +17,7 @@ DELETE = 'DELETE'
 
 QUERY_LIMIT = '_limit'
 QUERY_OFFSET = '_offset'
-QUERY_SORT = QueryFilter.SORT
+QUERY_SORT = DAOQuery.SORT
 
 STATUS_NO_CONTENT = 204
 

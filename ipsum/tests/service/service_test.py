@@ -7,7 +7,7 @@ from ipsum.exception.exception_message import PAGINATION_OFFSET_GREATER_THAN_TOT
 from ipsum.service.service import Service
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.data.query_filter import QueryFilter
+from ipsum.util.data.dao_query import DAOQuery
 from ipsum.util.enviroment_variable import get_test_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
@@ -165,7 +165,7 @@ class TestService:
 
             def _with_code_desc():
                 query_filter = {
-                    QueryFilter.SORT: ['-code']
+                    DAOQuery.SORT: ['-code']
                 }
 
                 result = self.service.find(**query_filter)
@@ -176,7 +176,7 @@ class TestService:
 
             def _with_string_code():
                 query_filter = {
-                    QueryFilter.SORT: '-code'
+                    DAOQuery.SORT: '-code'
                 }
 
                 result = self.service.find(**query_filter)
@@ -187,7 +187,7 @@ class TestService:
 
             def _with_boolean_desc():
                 query_filter = {
-                    QueryFilter.SORT: ['boolean']
+                    DAOQuery.SORT: ['boolean']
                 }
 
                 result = self.service.find(**query_filter)
@@ -198,7 +198,7 @@ class TestService:
 
             def _with_boolean_desc_using_plus():
                 query_filter = {
-                    QueryFilter.SORT: ['+boolean']
+                    DAOQuery.SORT: ['+boolean']
                 }
 
                 result = self.dao.find(**query_filter)
@@ -209,7 +209,7 @@ class TestService:
 
             def _with_boolean_desc_and_code_desc():
                 query_filter = {
-                    QueryFilter.SORT: ['boolean', '-code']
+                    DAOQuery.SORT: ['boolean', '-code']
                 }
 
                 result = self.service.find(**query_filter)
@@ -231,7 +231,7 @@ class TestService:
                 fields = ['code', 'title']
 
                 query_filter = {
-                    QueryFilter.FIELDS: fields
+                    DAOQuery.FIELDS: fields
                 }
 
                 result = self.service.find(**query_filter)
@@ -247,7 +247,7 @@ class TestService:
                 fields = 'code'
 
                 query_filter = {
-                    QueryFilter.FIELDS: fields
+                    DAOQuery.FIELDS: fields
                 }
 
                 result = self.service.find(**query_filter)
@@ -273,8 +273,8 @@ class TestService:
             fields = ['code', 'title']
 
             query_filter = {
-                QueryFilter.SORT: ['-code'],
-                QueryFilter.FIELDS: fields
+                DAOQuery.SORT: ['-code'],
+                DAOQuery.FIELDS: fields
             }
 
             result = self.dao.find(**query_filter)

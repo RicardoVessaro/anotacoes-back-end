@@ -1,8 +1,6 @@
 
 from ipsum.util.view.route_parser import get_route_params, parse_route
 
-# python3 -m pytest -p no:cacheprovider --capture=no ipsum/tests/util/view/route_parser_test.py
-
 def test_route_parser():
 
     test_route = "parent/<parent_id>/child/<id>"

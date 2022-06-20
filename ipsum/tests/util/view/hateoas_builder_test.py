@@ -9,8 +9,6 @@ from ipsum.tests.resources.view.fake_detail_crud_view import FakeDetailCRUDView
 from ipsum.util.view.route_parser import parse_route
 from ipsum.view.ipsum_view import DELETE, GET, PATCH, POST, QUERY_OFFSET
 
-# python3 -m pytest -p no:cacheprovider --capture=no ipsum/tests/util/view/hateoas_builder_test.py
-
 class TestHATEOASBuilder:
 
     HATEOAS_LINKS = '_links'

@@ -277,6 +277,253 @@ class TestPagination:
         with raises(IpsumException, match=PAGINATION_OFFSET_GREATER_THAN_TOTAL.format(Pagination.OFFSET, 15, Pagination.TOTAL, 14)):
             pagination.build()
 
+    def test_related_info(self):
+
+        def _with_first():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 5,
+                Pagination.OFFSET: 0,
+                Pagination.TOTAL: 20
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.NEXT: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 5
+                },
+                Pagination.PREVIOUS: None,
+                Pagination.FIRST: None,
+                Pagination.LAST: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 15
+                }
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+
+        _with_first()
+
+        def _with_last():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 5,
+                Pagination.OFFSET: 15,
+                Pagination.TOTAL: 20
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 15
+                },
+                Pagination.NEXT: None,
+                Pagination.PREVIOUS: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 10
+                },
+                Pagination.FIRST: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.LAST: None
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+            
+        _with_last()
+
+        def _limit_5_offset_5_total_20():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 5,
+                Pagination.OFFSET: 5,
+                Pagination.TOTAL: 20
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 5
+                },
+                Pagination.NEXT: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 10
+                },
+                Pagination.PREVIOUS: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.FIRST: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.LAST: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 15
+                }
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+            
+        _limit_5_offset_5_total_20()
+
+        def _limit_5_offset_10_total_20():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 5,
+                Pagination.OFFSET: 10,
+                Pagination.TOTAL: 20
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 10
+                },
+                Pagination.NEXT: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 15
+                },
+                Pagination.PREVIOUS: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 5
+                },
+                Pagination.FIRST: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.LAST: {
+                    Pagination.LIMIT: 5, 
+                    Pagination.OFFSET: 15
+                }
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+            
+        _limit_5_offset_10_total_20()
+
+    def test_related_info_with_limit_7(self):
+
+        def _with_first():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 7,
+                Pagination.OFFSET: 0,
+                Pagination.TOTAL: 18
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.NEXT: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 7
+                },
+                Pagination.PREVIOUS: None,
+                Pagination.FIRST: None,
+                Pagination.LAST: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 14
+                }
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+
+        _with_first()
+
+        def _with_last():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 7,
+                Pagination.OFFSET: 14,
+                Pagination.TOTAL: 18
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 14
+                },
+                Pagination.NEXT: None,
+                Pagination.PREVIOUS: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 7
+                },
+                Pagination.FIRST: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.LAST: None
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+            
+        _with_last()
+
+        def _limit_7_offset_7_total_18():
+            info = {
+                Pagination.EMPTY: False,
+                Pagination.LIMIT: 7,
+                Pagination.OFFSET: 7,
+                Pagination.TOTAL: 18
+            }
+
+            expected_related_info = {
+                Pagination.SELF: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 7
+                },
+                Pagination.NEXT: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 14
+                },
+                Pagination.PREVIOUS: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.FIRST: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 0
+                },
+                Pagination.LAST: {
+                    Pagination.LIMIT: 7, 
+                    Pagination.OFFSET: 14
+                }
+            }
+
+            assert expected_related_info == Pagination([]).related_info(info)
+            
+        _limit_7_offset_7_total_18()
+
+    def test_related_info_with_empty(self):
+
+        info = {
+            Pagination.EMPTY: True,
+            Pagination.LIMIT: 5,
+            Pagination.OFFSET: 0,
+            Pagination.TOTAL: 0
+        }
+
+        expected_related_info = {
+            Pagination.SELF: {
+                Pagination.LIMIT: 5, 
+                Pagination.OFFSET: 0
+            },
+            Pagination.NEXT: None,
+            Pagination.PREVIOUS: None,
+            Pagination.FIRST: None,
+            Pagination.LAST: None
+        }
+
+        assert expected_related_info == Pagination([]).related_info(info)
+
 
     def _get_results(self, start, end):
         return list(range(start, end))

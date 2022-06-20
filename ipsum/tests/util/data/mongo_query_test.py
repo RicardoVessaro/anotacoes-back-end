@@ -1,9 +1,50 @@
 
 from mongoengine.queryset.visitor import Q, QCombination
+from pytest import raises
+from ipsum.exception.exception_message import MONGOQUERY_CANT_HANDLE_AND_OR_OPERATORS_FOR_THE_SAME_FIELD
+from ipsum.exception.ipsum_exception import IpsumException
 
 from ipsum.util.data.mongo_query import MongoQuery
 
 class TestMongoQuery:
+
+    def test_raise_excecption_when_two_operators_to_same_field(self):
+        dao_query = {
+            'or': {
+                    'code': {
+                        'or': {'gte': 3, 'lte': 7},
+                        'and': {'eq': 5}
+                    },
+                }
+            }
+
+        with raises(IpsumException, match=MONGOQUERY_CANT_HANDLE_AND_OR_OPERATORS_FOR_THE_SAME_FIELD.format(MongoQuery, MongoQuery.AND, MongoQuery.OR)):
+            mongo_query = MongoQuery().build(dao_query)
+
+    def test_with_two_operations_to_same_field(self):
+        dao_query = {'and': {
+                'code': {'and': {'gte': 3, 'lte': 7}},
+            }
+        }
+
+        mongo_query = MongoQuery().build(dao_query)
+
+        expected_query = Q(code__gte=3) & Q(code__lte=7)
+
+        assert expected_query == mongo_query
+
+    def test_with_two_operations_to_same_field_using_or(self):
+        dao_query = {'and': {
+                'code': {'or': {'gte': 3, 'lte': 7}},
+            }
+        }
+
+        mongo_query = MongoQuery().build(dao_query)
+
+        expected_query = Q(code__gte=3) | Q(code__lte=7)
+
+        assert expected_query == mongo_query
+
 
     def test_with_empty_values(self):
 

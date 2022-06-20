@@ -1,6 +1,22 @@
 from  ipsum.util.view.query_string_parser import QueryStringParser
 
-def test_query_string_parser_parsing_filter_queries():
+def test_query_string_parser_with_separator_and_space_filters():
+
+
+    def _test_query_string_parser_parsing_filter_queries():
+        query_string = 'title[or:eq]=Link 10|Link 11'
+
+        expected_query_string = {
+            'title[or:eq]': ['Link 10', 'Link 11']
+        }
+
+        parsed_query_string = QueryStringParser().parse_string(query_string)
+
+        assert expected_query_string == parsed_query_string
+
+    _test_query_string_parser_parsing_filter_queries()
+
+
 
     def _complex_query_string(): 
         query_string = '_op=and&code[or:eq]=1&code[or:eq]=2&priority[lte]=1&tags[in]=A&boolean=true&_sort=-code&_sort=date&_fields=code&_fields=title'

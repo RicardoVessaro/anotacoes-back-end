@@ -15,3 +15,4 @@ DEPENDENT_DEPENDENCY_IS_NOT_DEPENDENCY_TYPE = 'The attribute "{0}" in {1} must b
 DEPENDENCY_DAO_IS_NOT_DAO_TYPE = 'The attribute "{0}" in {1} must be an {2}. {3} is not.'
 DEPENDENT_DEPENDENCY_HAS_DATA = 'Cannot delete "{0}" with ID {1} because {2} with ID {3} uses it.'
 PAGINATION_OFFSET_GREATER_THAN_TOTAL = 'The "{0}": {1} is greater than the "{2}" index: {3}.'
+MONGOQUERY_CANT_HANDLE_AND_OR_OPERATORS_FOR_THE_SAME_FIELD = "{0} cannot handle '{1}' and '{2}' operators in the same field."

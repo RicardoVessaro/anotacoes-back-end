@@ -6,6 +6,41 @@ class TestDAOQuery:
 
     def test_query_filter(self):
 
+        def test_with_two_operations_to_same_field_and_two_operators():
+            query_dict = {'code[or:gte]': 3, 'code[or:lte]': 7, 'code':5}
+
+            expected_query_filter = {'and': {
+                    'code': {
+                        'or': {'gte': 3, 'lte': 7},
+                        'and': {'eq': 5}
+                    },
+                }
+            }
+
+            expected_fields = None
+
+            expected_sort = None
+
+            assert (expected_query_filter, expected_fields, expected_sort) == DAOQuery().build(**query_dict)
+
+        test_with_two_operations_to_same_field_and_two_operators()
+
+        def test_with_two_operations_to_same_field():
+            query_dict = {'code[gte]': 3, 'code[lte]': 7}
+
+            expected_query_filter = {'and': {
+                    'code': {'and': {'gte': 3, 'lte': 7}},
+                }
+            }
+
+            expected_fields = None
+
+            expected_sort = None
+
+            assert (expected_query_filter, expected_fields, expected_sort) == DAOQuery().build(**query_dict)
+
+        test_with_two_operations_to_same_field()
+
         def _test():
             tests = [
                 ({'code': 1, 'tags[ nin]': ['A', 'B']}, 

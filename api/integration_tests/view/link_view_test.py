@@ -14,9 +14,9 @@ class TestLinkView(DetailCRUDViewTest):
         PaginateFilterResult(filter={}, expected_indexes=range(8,13), offset=0, limit=5, total=7, empty=False),
         PaginateFilterResult(filter={QUERY_OFFSET:5}, expected_indexes=range(13,15), offset=5, limit=5, total=7, empty=False),
         PaginateFilterResult(filter={"title":"Link 9"}, expected_indexes=[9], offset=0, limit=5, total=1, empty=False),
-        PaginateFilterResult(filter={"title":["Link 10", "Link 11"]}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False),
-        PaginateFilterResult(filter={"href":"www.link9.com"}, expected_indexes=[9], offset=0, limit=5, total=1, empty=False),
-        PaginateFilterResult(filter={"href":["www.link10.com", "www.link11.com"]}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False)
+        PaginateFilterResult(filter={"href[or:eq]":"www.link10.com|www.link11.com"}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False),
+        PaginateFilterResult(filter={"title[or:eq]":"Link 10|Link 11"}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False),
+        PaginateFilterResult(filter={"href":"www.link9.com"}, expected_indexes=[9], offset=0, limit=5, total=1, empty=False)
     ]
 
 

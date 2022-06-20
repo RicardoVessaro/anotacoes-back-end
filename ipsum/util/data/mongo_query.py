@@ -1,7 +1,9 @@
 
 from mongoengine.queryset.visitor import Q, QCombination
+from ipsum.exception.exception_message import MONGOQUERY_CANT_HANDLE_AND_OR_OPERATORS_FOR_THE_SAME_FIELD
 
 from ipsum.util.object_util import is_iterable, is_none_or_empty
+from ipsum.exception.ipsum_exception import IpsumException
 
 class MongoQuery:
 
@@ -72,12 +74,6 @@ class MongoQuery:
 
         return q_combination
 
-    def _get_q_operator(self, operator):
-        q_operator = QCombination.AND
-        if operator == self.OR:
-            q_operator = QCombination.OR
-        return q_operator
-
     def _separate_expressions(self, filter):
         nested_expressions = []
         single_expressions = []
@@ -93,11 +89,12 @@ class MongoQuery:
             if is_none_or_empty(operation, verify_iterable_values=False) or operation == {}:
                 continue
 
+            q_operator = self._get_q_operator(expression_operator)
+            q_expression = None
+
             for comparison_operator, value in operation.items():
                 field_expression = self._get_field_expression(field, comparison_operator)
                     
-                q_expression = Q(**{field_expression: value})
-
                 if is_iterable(value) and not type(value) is str:
                     is_list_operator = comparison_operator in self.LIST_OPERATORS
 
@@ -109,16 +106,39 @@ class MongoQuery:
                         for v in value:
                             q_exp.append(Q(**{field_expression: v}))
 
+                        if q_expression is None:
+                            q_expression = QCombination(q_operator, q_exp)
 
-                        q_expression = QCombination(QCombination.OR, q_exp)
+                        else:
+                            q_expression = QCombination(q_operator, [q_expression] + [q_exp])
 
-                if expression_operator == self.OR:
-                    nested_expressions.append(q_expression)
+                    else:
+                        _q = Q(**{field_expression: value})
+                        if q_expression is None:
+                            q_expression = _q
+                        else:
+                            q_expression = QCombination(q_operator, [q_expression, _q])
                 
-                else:
-                    single_expressions.append(q_expression)
+                else: 
+                    _q = Q(**{field_expression: value})
+                    if q_expression is None:
+                        q_expression = _q
+                    else:
+                        q_expression = QCombination(q_operator, [q_expression, _q])
+
+            if expression_operator == self.OR:
+                nested_expressions.append(q_expression)
+            
+            else:
+                single_expressions.append(q_expression)
 
         return nested_expressions,single_expressions
+
+    def _get_q_operator(self, operator):
+        q_operator = QCombination.AND
+        if operator == self.OR:
+            q_operator = QCombination.OR
+        return q_operator
 
     def _get_field_expression(self, field, comparison_operator):
         field_expression = field
@@ -134,4 +154,7 @@ class MongoQuery:
 
         if self.OR in expression:
             expression_operator = self.OR
+
+            if self.AND in expression:
+                raise IpsumException(MONGOQUERY_CANT_HANDLE_AND_OR_OPERATORS_FOR_THE_SAME_FIELD.format(self.__class__, self.AND, self.OR))
         return expression_operator

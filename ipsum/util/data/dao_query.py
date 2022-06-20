@@ -71,27 +71,38 @@ class DAOQuery:
         dao_query = {query_operator: {}}
 
         for field_operation, value in query_dict.items():
+            field, expression, field_operator = self._set_field_expression(field_operation, value)
 
-            field_operator = self.AND
-            expression = self.EQ
-            field = field_operation
+            if not field in dao_query[query_operator]:
+                dao_query[query_operator][field] = {}
 
-            if self.LEFT_SQUARE_BRACKET in field_operation and self.RIGHT_SQUARE_BRACKET in field_operation:
-                re_split = re.split(self.BRACKET_REGEX, field_operation)
-                
-                field = re_split[0]
+            if not field_operator in dao_query[query_operator][field]:
+                dao_query[query_operator][field][field_operator] = {expression: value}
 
-                expression_str = re_split[1].split()
-                expression = ''
-                for s in expression_str:
-                    expression += s
-
-                if self.LOGICAL_SEPARATOR in expression:
-                    logical_split = expression.split(self.LOGICAL_SEPARATOR)
-
-                    field_operator = logical_split[0]
-                    expression = logical_split[1]
-
-            dao_query[query_operator][field] = {field_operator : { expression: value } }
+            else:
+                dao_query[query_operator][field][field_operator][expression] = value
 
         return dao_query
+
+    def _set_field_expression(self, field_operation, value):
+        field_operator = self.AND
+        expression = self.EQ
+        field = field_operation
+
+        if self.LEFT_SQUARE_BRACKET in field_operation and self.RIGHT_SQUARE_BRACKET in field_operation:
+            re_split = re.split(self.BRACKET_REGEX, field_operation)
+                
+            field = re_split[0]
+
+            expression_str = re_split[1].split()
+            expression = ''
+            for s in expression_str:
+                expression += s
+
+            if self.LOGICAL_SEPARATOR in expression:
+                logical_split = expression.split(self.LOGICAL_SEPARATOR)
+
+                field_operator = logical_split[0]
+                expression = logical_split[1]
+
+        return field, expression, field_operator

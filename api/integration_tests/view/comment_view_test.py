@@ -14,7 +14,7 @@ class TestCommentView(DetailCRUDViewTest):
         PaginateFilterResult(filter={}, expected_indexes=range(8,13), offset=0, limit=5, total=7, empty=False),
         PaginateFilterResult(filter={QUERY_OFFSET:5}, expected_indexes=range(13,15), offset=5, limit=5, total=7, empty=False),
         PaginateFilterResult(filter={"comment":"Comment 9"}, expected_indexes=[9], offset=0, limit=5, total=1, empty=False),
-        PaginateFilterResult(filter={"comment":["Comment 10", "Comment 11"]}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False)
+        PaginateFilterResult(filter={"comment[or:eq]":["Comment 10", "Comment 11"]}, expected_indexes=[10, 11], offset=0, limit=5, total=2, empty=False)
     ]
 
     def get_model(self):

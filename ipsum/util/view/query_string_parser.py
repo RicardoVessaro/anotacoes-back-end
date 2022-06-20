@@ -152,13 +152,6 @@ class QueryStringParser:
                     string_values = []
 
                     for string in value.split(self.LIST_VALUES_SEPARATOR):
-                        string_without_spaces = string.split()
-
-                        string_value = ''
-
-                        for s in string_without_spaces:
-                            string_value += s
-
-                        string_values.append(string_value)
+                        string_values.append(string)
                 
                     parsed_query_string[key] = string_values

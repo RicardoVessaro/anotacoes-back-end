@@ -99,6 +99,7 @@ class DAO:
             result = None
             if not object_util.is_none_or_empty(filter):
                 mongo_query = MongoQuery().build(filter)
+
                 result = self._model.objects(mongo_query)
 
             else:

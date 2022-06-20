@@ -1,9 +1,8 @@
 
-import json
 from flask_classful import FlaskView, route
 from flask import make_response, request
 from ipsum.util.data.dao_query import DAOQuery
-from ipsum.util.view.hateoas_builder import HATEOASBuilder
+from ipsum.util.view import hateoas_builder
 from ipsum.util.view.query_string_parser import QueryStringParser
 
 from ipsum.service.service import Service
@@ -23,6 +22,8 @@ STATUS_NO_CONTENT = 204
 
 class IpsumView(FlaskView):
 
+    PAGINATE_REQUEST_NAME = 'find'
+
     def __init__(self, service: Service) -> None:
         super().__init__()
 
@@ -30,15 +31,16 @@ class IpsumView(FlaskView):
 
     def after_request(self, name, response, *args, **kwargs):
 
-        hateoas_builder = HATEOASBuilder(
+        hateoas = hateoas_builder.HATEOASBuilder(
             response_data=response.get_data(),
             view=self, 
             host_url=request.host_url, 
             view_args=request.view_args,
-            request_name=name
+            request_name=name,
+            query_string=request.query_string
         )
 
-        hateoas_response = hateoas_builder.build()
+        hateoas_response = hateoas.build()
 
         response.set_data(hateoas_response)
 

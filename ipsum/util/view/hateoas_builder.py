@@ -2,9 +2,11 @@
 import copy
 from functools import singledispatchmethod
 import json
+from ipsum.util.data.pagination import Pagination
 from ipsum.util.list_util import list_equals
 from ipsum.util.view.route_parser import  get_route_params, parse_route
 from ipsum.util.object_util import is_none_or_empty
+from ipsum.view import ipsum_view
 
 class HATEOASBuilder:
 
@@ -12,27 +14,19 @@ class HATEOASBuilder:
 
     _RULE_CACHE_ATTRIBUTE = '_rule_cache'
 
-    # TODO Criar 'pagination_util'
-    # TODO referenciar pagination_util
-    _PAGINATE_KEY_ITEMS = 'items'
-
     HATEOAS_LINKS = '_links'
 
-    # TODO referenciar IpsumView e DetailCRUDView
-    _PAGINATE_REQUEST_NAME = 'find'
-
-    # TODO referenciar pagination_util
-    _PAGINATE_KEYS = [
-        'has_next', 'has_prev', 'has_result', _PAGINATE_KEY_ITEMS, 'limit', 'page', 
-        'pages', 'total'
-    ]
-
-    def __init__(self, view, response_data, host_url, view_args, request_name) -> None:
+    def __init__(self, view, response_data, host_url, view_args, request_name, query_string) -> None:
         self.response_data = response_data
         self.view = view
         self.host_url = host_url
         self.view_args = view_args
         self.request_name = request_name
+        self.query_string = query_string
+
+        if type(query_string) is bytes:
+            self.query_string = query_string.decode(self.UTF8)
+
 
     def build(self):
 
@@ -68,18 +62,18 @@ class HATEOASBuilder:
     def _handle_paginate_response(self, item_data):
         item_data_with_link = self._build_item_links(item_data)
 
-        item_data_with_link[self.HATEOAS_LINKS] = self._build_paginate_links()
+        item_data_with_link[self.HATEOAS_LINKS] = self._build_paginate_links(item_data)
 
         return item_data_with_link 
 
     def _build_item_links(self, item_data):
-        items_with_links = self._build_data(item_data[self._PAGINATE_KEY_ITEMS])
+        items_with_links = self._build_data(item_data[Pagination.ITEMS])
 
         items_with_links = json.loads(items_with_links)
 
         item_data_with_link = copy.deepcopy(item_data)
 
-        item_data_with_link[self._PAGINATE_KEY_ITEMS] = items_with_links
+        item_data_with_link[Pagination.ITEMS] = items_with_links
         return item_data_with_link 
 
 
@@ -100,7 +94,7 @@ class HATEOASBuilder:
 
         return item_data_with_links
 
-    def _build_paginate_links(self):
+    def _build_paginate_links(self, item_data):
 
         rel = self.view.get_route_base()
         
@@ -108,9 +102,55 @@ class HATEOASBuilder:
 
         rules = self._get_rules(self.request_name)
 
+        request_links = self._build_request_links(actions, rules)
+            
+        paginate_query_params = self._get_paginate_query_params(item_data)
+
+        paginate_links = []
+        for name, params in paginate_query_params.items():
+
+            if not params is None:
+
+                for request_link in request_links:
+                    rel_query_string = self._build_related_query_string(paginate_query_params, params)
+
+                    href = f'{request_link["href"]}?{rel_query_string}'
+
+                    paginate_link = {
+                        'name': name,
+                        'rel': rel,
+                        'href': href,
+                        'action': request_link['action']
+                    }
+
+                    paginate_links.append(paginate_link)
+
+        return paginate_links
+
+    def _build_related_query_string(self, paginate_query_params, params):
+        query_string = self.query_string
+                    
+        self_rel = paginate_query_params[Pagination.SELF]
+
+        self_rel_offset = self_rel[Pagination.OFFSET]
+        self_rel_offset_query = f'{ipsum_view.QUERY_OFFSET}={self_rel_offset}'
+
+        rel_offset_query = f'{ipsum_view.QUERY_OFFSET}={params[Pagination.OFFSET]}'
+        rel_query_string = query_string
+
+        if ipsum_view.QUERY_OFFSET in query_string:
+            rel_query_string = rel_query_string.replace(self_rel_offset_query, rel_offset_query)
+
+        else:
+            if not is_none_or_empty(rel_query_string):
+                rel_query_string += '&'
+
+            rel_query_string += rel_offset_query
+        return rel_query_string
+
+    def _build_request_links(self, actions, rules):
         request_links = []
         for i in range(len(rules)):
-            
             href = self._build_href(rules[i], validate_params=False)
 
             action = actions[i]
@@ -120,26 +160,11 @@ class HATEOASBuilder:
             }
 
             request_links.append(request_link)
-            
-        # TODO self, next, previous, first, last (ver pagination_util)
-        # TODO so falta fazer a busca pelo paginate_query_params no 'pagination_util'
-        paginate_query_params = ['self', 'next', 'previous', 'first', 'last']
-        paginate_links = []
-        for query_param in paginate_query_params:
+        return request_links
 
-            for request_link in request_links:
-                name = 'query_param[0]' + query_param
+    def _get_paginate_query_params(self, item_data):
+        return Pagination([]).related_info(item_data[Pagination.INFO])
 
-                paginate_link = {
-                    'name': name,
-                    'rel': rel,
-                    'href': request_link['href'],
-                    'action': request_link['action']
-                }
-
-                paginate_links.append(paginate_link)
-
-        return paginate_links
 
     def _build_href(self, rule, params=None, validate_params=True):
         view_rule = self.view.build_rule(rule)
@@ -172,12 +197,12 @@ class HATEOASBuilder:
         return self.response_data
 
     def _is_paginate_request_name(self):
-        return self._PAGINATE_REQUEST_NAME == self.request_name
+        return ipsum_view.IpsumView.PAGINATE_REQUEST_NAME == self.request_name
 
     def _is_paginate(self, item_data):
         item_keys = list(item_data.keys())
 
-        for key in self._PAGINATE_KEYS:
+        for key in Pagination.KEYS:
             if key not in item_keys:
                 return False
 

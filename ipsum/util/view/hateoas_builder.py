@@ -221,11 +221,8 @@ class HATEOASBuilder:
     def _is_text_response(self):
         return type(self.response_data) is bytes or type(self.response_data) is str
 
-    def _build_method_links(self, view_method, params, rel=None):
-        _rel = rel
-        
-        if _rel is None:
-            _rel = self.view.get_route_base()
+    def _build_method_links(self, view_method, params):
+        rel = self.view.get_route_base()
             
         actions = self._get_actions(view_method)
 
@@ -241,7 +238,7 @@ class HATEOASBuilder:
             if not href is None:
                 method_link = {
                     'name': view_method,
-                    'rel': _rel,
+                    'rel': rel,
                     'href': href,
                     'action': action
                 }

@@ -20,6 +20,8 @@ QUERY_SORT = DAOQuery.SORT
 
 STATUS_NO_CONTENT = 204
 
+FIND_BY_ID = 'find_by_id'
+
 # TODO rename id enum 'ID'
 class IpsumView(FlaskView):
 

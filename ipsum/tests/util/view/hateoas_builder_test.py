@@ -30,26 +30,22 @@ class TestHATEOASBuilder:
 
     def test_build_with_parents(self):
         parent_id = '629fdb22fcce704dad685089'
-        id = '629fdb19fcce704dad685088'
         bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "629fdb22fcce704dad685089"\n}\n'
         
         parent_view = FakeCRUDView()
-        
-        parent_collection = CollectionView(parent_view, self.PARENT_ID_PARAM)
 
         fake_detail_crud_view = FakeDetailCRUDView()
-        fake_detail_crud_view.parent_collection = parent_collection
         hateoas_builder = HATEOASBuilder(fake_detail_crud_view, bytes_response, self.host_url, self.view_args, 'find_by_id', query_string='')
         
 
         parent_href = self._get_expected_href(parent_view, with_id=True, id=parent_id)
 
-        expected_link = [{
+        expected_link = {
             'name': 'find_by_id',
             'rel': 'parent',
             'href': parent_href,
             'action': [GET]
-        }]
+        }
 
         item_data = hateoas_builder.get_response_data()
         parent_link = hateoas_builder._build_parent_link(item_data)
@@ -59,7 +55,49 @@ class TestHATEOASBuilder:
 
         hateoas_links = json.loads(hateoas_builder.build())[HATEOASBuilder.HATEOAS_LINKS]
 
-        assert expected_link[0] in hateoas_links
+        assert expected_link in hateoas_links
+
+    def test_build_with_childs(self):
+        id = '629fdb19fcce704dad685088'
+        child_id = '629fdb22fcce704dad685089'
+        bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test"\n}\n'
+        
+        child_view = FakeDetailCRUDView()
+        child_collections = [CollectionView(child_view, self.PARENT_ID_PARAM)]
+
+        fake_crud_view = FakeCRUDView()
+        fake_crud_view.child_collections = child_collections
+        hateoas_builder = HATEOASBuilder(fake_crud_view, bytes_response, self.host_url, self.view_args, 'find_by_id', query_string='')
+        
+
+        parent_href = self._get_expected_href(child_view, parent_id=id)
+        child_name = child_view.service.NAME
+
+        expected_links = [
+            {
+                'name': 'insert',
+                'rel': child_name,
+                'href': parent_href,
+                'action': [POST]
+            },
+            {
+                'name': 'find',
+                'rel': child_name,
+                'href': parent_href,
+                'action': [GET]
+            }
+        ]
+
+        item_data = hateoas_builder.get_response_data()
+        child_links = hateoas_builder._build_child_links(item_data)
+
+        self._assert_build(hateoas_builder)
+        assert expected_links == child_links
+
+        hateoas_links = json.loads(hateoas_builder.build())[HATEOASBuilder.HATEOAS_LINKS]
+
+        assert expected_links[0] in hateoas_links
+        assert expected_links[1] in hateoas_links
 
 
     def test_build_with_paginate(self):
@@ -411,9 +449,9 @@ class TestHATEOASBuilder:
             name = link['name']
             rel = link['rel']
 
-            assert name not in ['insert', 'find', 'paginate']
+            if rel == test_view.service.NAME:
+                assert name not in ['insert', 'find', 'paginate']
 
-            if rel != 'parent':
                 assert link == expected_links[name]
 
         if is_paginate:

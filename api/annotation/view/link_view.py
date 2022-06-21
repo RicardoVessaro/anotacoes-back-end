@@ -2,8 +2,6 @@
 from flask import Blueprint
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
 from api.annotation.service.note.note_service import NoteService
-from api.annotation.view.note_view import NoteView
-from ipsum.view.crud_view import CollectionView
 from ipsum.view.detail_crud_view import DetailCRUDView
 from api.annotation.service.note.link.link_service import LinkService
 from api.annotation.data.model.link import Link
@@ -18,11 +16,9 @@ class LinkView(DetailCRUDView):
     route_base = link_view_name
 
     def __init__(self) -> None:
-        parent_collection = CollectionView(NoteView, Link.parent_field)
         
         super().__init__(
-            service=LinkService(),
-            parent_collection=parent_collection
+            service=LinkService()
         )
 
 LinkView.register(link_blueprint)

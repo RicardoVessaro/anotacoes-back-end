@@ -9,6 +9,7 @@ from ipsum.util.object_util import is_none_or_empty
 from ipsum.view import ipsum_view
 
 # TODO build 'self' to item_data
+# TODO add 'insert' in pagination methods
 class HATEOASBuilder:
 
     UTF8 = 'utf-8'
@@ -91,11 +92,13 @@ class HATEOASBuilder:
 
             links.extend(method_links)
 
-        parent_links = self._build_parent_link(item_data)
-        if not is_none_or_empty(parent_links):
-            links.extend(parent_links)
+        parent_link = self._build_parent_link(item_data)
+        if not is_none_or_empty(parent_link):
+            links.append(parent_link)
 
-        # TODO build child method
+        child_links = self._build_child_links(item_data)
+        if not is_none_or_empty(child_links):
+            links.extend(child_links)
 
         item_data_with_links[self.HATEOAS_LINKS] = links
 
@@ -249,25 +252,54 @@ class HATEOASBuilder:
 
     def _build_parent_link(self, item_data):
         
-        if not is_none_or_empty(self.view.parent_collection):
-            parent_id_field = self.view.parent_collection.id_field
-            parent_view = self.view.parent_collection.view
+        parent_params = copy.deepcopy(self.view_args)
+        if 'id' in parent_params:
+            parent_params.pop('id')
 
-            if parent_id_field in item_data:
+        if not is_none_or_empty(parent_params):
 
-                parent_view_args = {'id': item_data[parent_id_field]}
-                parent_hateoas_builder = HATEOASBuilder(
-                    view=parent_view, response_data=[], host_url=self.host_url, 
-                    view_args=parent_view_args, request_name='', query_string=''
-                )
+            parent_route = self.host_url + self.view.route_prefix
+            href = parse_route(parent_route, parent_params)
+            href = href[:-1]
 
-                parent_params = parent_hateoas_builder._build_params()
+            parent_link = {
+                'name': ipsum_view.FIND_BY_ID,
+                'rel': 'parent',
+                'href': href,
+                'action': [ipsum_view.GET]
+            }
 
-                return parent_hateoas_builder._build_method_links(parent_view.FIND_BY_ID_REQUEST, parent_params, rel='parent')
+            return parent_link
 
         return None
 
-    def _build_params(self, item_data=None):
+    def _build_child_links(self, item_data):
+        if not is_none_or_empty(self.view.child_collections):
+            child_links = []
+
+            for child in self.view.child_collections:
+                child_view = child.view
+                child_parent_field = child.id_field
+
+                child_view_args = {child_parent_field: item_data['id']}
+                child_hateoas_builder = HATEOASBuilder(
+                    view=child_view, response_data=[], host_url=self.host_url,
+                    view_args=child_view_args, request_name='', query_string=''
+                )
+
+                child_params = child_hateoas_builder._build_params(use_id=False)
+
+                insert_links = child_hateoas_builder._build_method_links(child_view.INSERT_REQUEST, child_params)                
+                child_links.extend(insert_links)
+
+                paginate_links = child_hateoas_builder._build_method_links(child_view.PAGINATE_REQUEST, child_params)
+                child_links.extend(paginate_links)
+
+            return child_links
+
+        return None
+
+    def _build_params(self, item_data=None, use_id=True):
         ID_KEY = 'id'
 
         args = self.view_args
@@ -275,7 +307,7 @@ class HATEOASBuilder:
         if is_none_or_empty(self.view_args) and not self._is_paginate_request_name():
             args = {'id': None}
 
-        elif ID_KEY not in args:
+        elif ID_KEY not in args and use_id:
             args[ID_KEY] = None
 
         if is_none_or_empty(item_data):

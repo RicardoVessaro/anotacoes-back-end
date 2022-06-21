@@ -1,8 +1,12 @@
 
 from flask import Blueprint
+from api.annotation.data.model.link import Link
+from api.annotation.data.model.picture import Picture
 from api.annotation.service.note.note_service import NoteService
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
-from ipsum.view.crud_view import CRUDView
+from api.annotation.view.link_view import LinkView
+from api.annotation.view.picture_view import PictureView
+from ipsum.view.crud_view import CRUDView, CollectionView
 
 note_view_name = NoteService.NAME
 note_blueprint = Blueprint(note_view_name, __name__)
@@ -14,8 +18,14 @@ class NoteView(CRUDView):
     route_base = note_view_name
 
     def __init__(self) -> None:
+        child_collections = [
+            CollectionView(PictureView, Picture.parent_field),
+            CollectionView(LinkView, Link.parent_field)
+        ]
+
         super().__init__(
-            service=NoteService()
+            service=NoteService(),
+            child_collections=child_collections
         )
 
 NoteView.register(note_blueprint)

@@ -1,7 +1,6 @@
 
 from flask import request
-from ipsum.util.view.query_string_parser import QueryStringParser
-from ipsum.view.ipsum_view import GET, PATCH, POST, QUERY_LIMIT, QUERY_OFFSET
+from ipsum.view.ipsum_view import GET, PATCH, POST
 from ipsum.view.crud_view import CRUDView
 from flask_classful import route
 
@@ -9,8 +8,8 @@ from ipsum.service.detail_crud_service import DetailCRUDService
 
 class DetailCRUDView(CRUDView):
 
-    def __init__(self, service: DetailCRUDService, parent_collection=None, child_collections=[]) -> None:
-        super().__init__(service=service, parent_collection=parent_collection, child_collections=child_collections)
+    def __init__(self, service: DetailCRUDService, child_collections=[]) -> None:
+        super().__init__(service=service, child_collections=child_collections)
 
     def before_request(self, name, *args, **kwargs):
         collection_tree = self._service.build_collection_tree_ids(kwargs)

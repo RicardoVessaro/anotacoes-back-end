@@ -12,9 +12,8 @@ class CRUDView(IpsumView):
 
     INSERT_REQUEST = 'insert'
 
-    def __init__(self, service: CRUDService, parent_collection=None, child_collections=[]) -> None:
+    def __init__(self, service: CRUDService, child_collections=[]) -> None:
         
-        self.parent_collection = parent_collection
         self.child_collections = child_collections
             
         super().__init__(

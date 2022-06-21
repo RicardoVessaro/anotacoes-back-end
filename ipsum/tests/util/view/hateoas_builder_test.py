@@ -1,4 +1,5 @@
 
+from cgi import test
 import json
 from this import d
 from ipsum.tests.resources.service.fake_detail_crud_service import FakeDetailCRUDService
@@ -9,7 +10,7 @@ from ipsum.tests.resources.view.fake_crud_view import FakeCRUDView
 from ipsum.tests.resources.view.fake_detail_crud_view import FakeDetailCRUDView
 from ipsum.util.view.route_parser import parse_route
 from ipsum.view.crud_view import CollectionView
-from ipsum.view.ipsum_view import DELETE, GET, PATCH, POST, QUERY_OFFSET
+from ipsum.view.ipsum_view import DELETE, GET, PATCH, POST, QUERY_OFFSET, IpsumView
 
 class TestHATEOASBuilder:
 
@@ -104,13 +105,39 @@ class TestHATEOASBuilder:
     def test_build_with_paginate(self):
         bytes_response = b'{"_items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test"}, {"id": "62b0624f99edbc96b722a302", "code": 3, "title": "last test"}], "_info":{"limit": 2, "offset": 2, "total": 3, "empty": false} }'
 
-        hateoas_builder = HATEOASBuilder(FakeCRUDView(), bytes_response, self.host_url, self.view_args, 'find', query_string='')
+        test_view = FakeCRUDView()
+        hateoas_builder = HATEOASBuilder(test_view, bytes_response, self.host_url, {}, 'find', query_string='')
         self._assert_build(hateoas_builder, is_paginate=True)
 
-        bytes_response = b'{"_items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test", "ipsum_model_id": "6248620366564103f229595f"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test", "ipsum_model_id": "629fdb22fcce704dad685089"}, {"id": "62b0624f99edbc96b722a302", "code": 3, "title": "last test", "ipsum_model_id": "62b0624f99edbc96b722a303"}], "_info":{"limit": 2, "offset": 2, "total": 3, "empty": false} }'
+        hateoas_links = json.loads(hateoas_builder.build())[HATEOASBuilder.HATEOAS_LINKS]
+        
 
-        hateoas_builder = HATEOASBuilder(FakeDetailCRUDView(), bytes_response, self.host_url, self.view_args, 'find', query_string='')
+        expected_href = self._get_expected_href(hateoas_builder.view)
+        insert_link = {
+            'name': 'insert',
+            'rel': test_view.service.NAME,
+            'href': expected_href,
+            'action': [POST]
+        }
+
+        assert insert_link in hateoas_links
+
+        bytes_response = b'{"_items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test", "ipsum_model_id": "6248620366564103f229595f"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test", "ipsum_model_id": "6248620366564103f229595f"}, {"id": "62b0624f99edbc96b722a302", "code": 3, "title": "last test", "ipsum_model_id": "6248620366564103f229595f"}], "_info":{"limit": 2, "offset": 2, "total": 3, "empty": false} }'
+
+        test_view = FakeDetailCRUDView()
+        hateoas_builder = HATEOASBuilder(test_view, bytes_response, self.host_url, {self.PARENT_ID_PARAM: '6248620366564103f229595f'}, 'find', query_string='')
         self._assert_build(hateoas_builder, is_paginate=True)
+
+        hateoas_links = json.loads(hateoas_builder.build())[HATEOASBuilder.HATEOAS_LINKS]
+        expected_href = self._get_expected_href(hateoas_builder.view, parent_id='6248620366564103f229595f')
+        insert_link = { 
+            'name': 'insert',
+            'rel': test_view.service.NAME,
+            'href': expected_href,
+            'action': [POST]
+        }
+
+        assert insert_link in hateoas_links
 
     def test_build_with_list(self):
 

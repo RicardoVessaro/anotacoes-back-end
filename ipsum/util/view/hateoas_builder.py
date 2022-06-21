@@ -9,7 +9,7 @@ from ipsum.util.view.route_parser import  get_route_params, parse_route
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.view import ipsum_view
 
-# TODO add 'insert' in pagination methods
+
 class HATEOASBuilder:
 
     UTF8 = 'utf-8'
@@ -137,6 +137,11 @@ class HATEOASBuilder:
 
                     paginate_links.append(paginate_link)
 
+        insert_args = self._get_view_args_without_id()
+        insert_links = self._build_method_links(self.view.INSERT_REQUEST, insert_args)
+
+        paginate_links.extend(insert_links)
+
         return paginate_links
 
     def _build_related_query_string(self, paginate_query_params, params):
@@ -234,6 +239,7 @@ class HATEOASBuilder:
         rules = self._get_rules(view_method)
 
         method_links = []
+
         for i in range(len(rules)):
             rule = rules[i]
             action = actions[i]
@@ -254,9 +260,7 @@ class HATEOASBuilder:
 
     def _build_parent_link(self):
         
-        parent_params = copy.deepcopy(self.view_args)
-        if 'id' in parent_params:
-            parent_params.pop('id')
+        parent_params = self._get_view_args_without_id()
 
         if not is_none_or_empty(parent_params):
 
@@ -274,6 +278,14 @@ class HATEOASBuilder:
             return parent_link
 
         return None
+
+    def _get_view_args_without_id(self):
+        view_args_without_id = copy.deepcopy(self.view_args)
+        
+        if 'id' in view_args_without_id:
+            view_args_without_id.pop('id')
+
+        return view_args_without_id
 
     def _build_child_links(self, item_data):
         if not is_none_or_empty(self.view.child_collections):

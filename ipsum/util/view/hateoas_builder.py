@@ -92,7 +92,7 @@ class HATEOASBuilder:
 
             links.extend(method_links)
 
-        parent_link = self._build_parent_link(item_data)
+        parent_link = self._build_parent_link()
         if not is_none_or_empty(parent_link):
             links.append(parent_link)
 
@@ -250,7 +250,7 @@ class HATEOASBuilder:
 
         return method_links
 
-    def _build_parent_link(self, item_data):
+    def _build_parent_link(self):
         
         parent_params = copy.deepcopy(self.view_args)
         if 'id' in parent_params:

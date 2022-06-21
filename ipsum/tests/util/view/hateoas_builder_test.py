@@ -48,7 +48,7 @@ class TestHATEOASBuilder:
         }
 
         item_data = hateoas_builder.get_response_data()
-        parent_link = hateoas_builder._build_parent_link(item_data)
+        parent_link = hateoas_builder._build_parent_link()
         
         self._assert_build(hateoas_builder)
         assert expected_link == parent_link

@@ -20,9 +20,12 @@ QUERY_SORT = DAOQuery.SORT
 
 STATUS_NO_CONTENT = 204
 
+# TODO rename id enum 'ID'
 class IpsumView(FlaskView):
 
-    PAGINATE_REQUEST_NAME = 'find'
+    PAGINATE_REQUEST = 'find'
+
+    FIND_BY_ID_REQUEST = 'find_by_id'
 
     def __init__(self, service: Service) -> None:
         super().__init__()

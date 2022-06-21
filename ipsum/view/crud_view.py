@@ -1,13 +1,22 @@
 
+from collections import namedtuple
 from flask import request
 from flask_classful import route
 from ipsum.service.crud_service import CRUDService
 from ipsum.view.ipsum_view import DELETE, PATCH, POST, IpsumView
 
+CollectionView = namedtuple('CollectionView', 'view id_field')
+
 
 class CRUDView(IpsumView):
 
-    def __init__(self, service: CRUDService) -> None:
+    INSERT_REQUEST = 'insert'
+
+    def __init__(self, service: CRUDService, parent_collection=None, child_collections=[]) -> None:
+        
+        self.parent_collection = parent_collection
+        self.child_collections = child_collections
+            
         super().__init__(
             service=service
         )

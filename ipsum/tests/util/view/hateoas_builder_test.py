@@ -7,6 +7,7 @@ from ipsum.util.view.hateoas_builder import HATEOASBuilder
 from ipsum.tests.resources.view.fake_crud_view import FakeCRUDView
 from ipsum.tests.resources.view.fake_detail_crud_view import FakeDetailCRUDView
 from ipsum.util.view.route_parser import parse_route
+from ipsum.view.crud_view import CollectionView
 from ipsum.view.ipsum_view import DELETE, GET, PATCH, POST, QUERY_OFFSET
 
 class TestHATEOASBuilder:
@@ -26,6 +27,40 @@ class TestHATEOASBuilder:
     ID = '629fdb19fcce704dad685088'
 
     view_args = {PARENT_ID_PARAM: PARENT_ID, ID_PARAM: ID}
+
+    def test_build_with_parents(self):
+        parent_id = '629fdb22fcce704dad685089'
+        id = '629fdb19fcce704dad685088'
+        bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test", \n  "ipsum_model_id": "629fdb22fcce704dad685089"\n}\n'
+        
+        parent_view = FakeCRUDView()
+        
+        parent_collection = CollectionView(parent_view, self.PARENT_ID_PARAM)
+
+        fake_detail_crud_view = FakeDetailCRUDView()
+        fake_detail_crud_view.parent_collection = parent_collection
+        hateoas_builder = HATEOASBuilder(fake_detail_crud_view, bytes_response, self.host_url, self.view_args, 'find_by_id', query_string='')
+        
+
+        parent_href = self._get_expected_href(parent_view, with_id=True, id=parent_id)
+
+        expected_link = [{
+            'name': 'find_by_id',
+            'rel': 'parent',
+            'href': parent_href,
+            'action': [GET]
+        }]
+
+        item_data = hateoas_builder.get_response_data()
+        parent_link = hateoas_builder._build_parent_link(item_data)
+        
+        self._assert_build(hateoas_builder)
+        assert expected_link == parent_link
+
+        hateoas_links = json.loads(hateoas_builder.build())[HATEOASBuilder.HATEOAS_LINKS]
+
+        assert expected_link[0] in hateoas_links
+
 
     def test_build_with_paginate(self):
         bytes_response = b'{"_items": [{"id": "62a6123275b113db96426022", "code": 1, "title": "test"}, {"id": "62a6125d75b113db96426023", "code": 2, "title": "other test"}, {"id": "62b0624f99edbc96b722a302", "code": 3, "title": "last test"}], "_info":{"limit": 2, "offset": 2, "total": 3, "empty": false} }'
@@ -374,10 +409,12 @@ class TestHATEOASBuilder:
 
         for link in links:
             name = link['name']
+            rel = link['rel']
 
             assert name not in ['insert', 'find', 'paginate']
 
-            assert link == expected_links[name]
+            if rel != 'parent':
+                assert link == expected_links[name]
 
         if is_paginate:
 

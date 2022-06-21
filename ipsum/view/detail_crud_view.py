@@ -9,8 +9,8 @@ from ipsum.service.detail_crud_service import DetailCRUDService
 
 class DetailCRUDView(CRUDView):
 
-    def __init__(self, service: DetailCRUDService) -> None:
-        super().__init__(service=service)
+    def __init__(self, service: DetailCRUDService, parent_collection=None, child_collections=[]) -> None:
+        super().__init__(service=service, parent_collection=parent_collection, child_collections=child_collections)
 
     def before_request(self, name, *args, **kwargs):
         collection_tree = self._service.build_collection_tree_ids(kwargs)

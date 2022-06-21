@@ -8,6 +8,7 @@ from ipsum.util.view.route_parser import  get_route_params, parse_route
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.view import ipsum_view
 
+# TODO build 'self' to item_data
 class HATEOASBuilder:
 
     UTF8 = 'utf-8'
@@ -89,6 +90,12 @@ class HATEOASBuilder:
             method_links = self._build_method_links(view_method, params)
 
             links.extend(method_links)
+
+        parent_links = self._build_parent_link(item_data)
+        if not is_none_or_empty(parent_links):
+            links.extend(parent_links)
+
+        # TODO build child method
 
         item_data_with_links[self.HATEOAS_LINKS] = links
 
@@ -197,7 +204,7 @@ class HATEOASBuilder:
         return self.response_data
 
     def _is_paginate_request_name(self):
-        return ipsum_view.IpsumView.PAGINATE_REQUEST_NAME == self.request_name
+        return ipsum_view.IpsumView.PAGINATE_REQUEST == self.request_name
 
     def _is_paginate(self, item_data):
         item_keys = list(item_data.keys())
@@ -211,8 +218,11 @@ class HATEOASBuilder:
     def _is_text_response(self):
         return type(self.response_data) is bytes or type(self.response_data) is str
 
-    def _build_method_links(self, view_method, params):
-        rel = self.view.get_route_base()
+    def _build_method_links(self, view_method, params, rel=None):
+        _rel = rel
+        
+        if _rel is None:
+            _rel = self.view.get_route_base()
             
         actions = self._get_actions(view_method)
 
@@ -228,7 +238,7 @@ class HATEOASBuilder:
             if not href is None:
                 method_link = {
                     'name': view_method,
-                    'rel': rel,
+                    'rel': _rel,
                     'href': href,
                     'action': action
                 }
@@ -236,6 +246,26 @@ class HATEOASBuilder:
                 method_links.append(method_link)
 
         return method_links
+
+    def _build_parent_link(self, item_data):
+        
+        if not is_none_or_empty(self.view.parent_collection):
+            parent_id_field = self.view.parent_collection.id_field
+            parent_view = self.view.parent_collection.view
+
+            if parent_id_field in item_data:
+
+                parent_view_args = {'id': item_data[parent_id_field]}
+                parent_hateoas_builder = HATEOASBuilder(
+                    view=parent_view, response_data=[], host_url=self.host_url, 
+                    view_args=parent_view_args, request_name='', query_string=''
+                )
+
+                parent_params = parent_hateoas_builder._build_params()
+
+                return parent_hateoas_builder._build_method_links(parent_view.FIND_BY_ID_REQUEST, parent_params, rel='parent')
+
+        return None
 
     def _build_params(self, item_data=None):
         ID_KEY = 'id'

@@ -1,4 +1,5 @@
 
+from ast import Is
 import copy
 from functools import singledispatchmethod
 import json
@@ -8,7 +9,6 @@ from ipsum.util.view.route_parser import  get_route_params, parse_route
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.view import ipsum_view
 
-# TODO build 'self' to item_data
 # TODO add 'insert' in pagination methods
 class HATEOASBuilder:
 
@@ -17,6 +17,8 @@ class HATEOASBuilder:
     _RULE_CACHE_ATTRIBUTE = '_rule_cache'
 
     HATEOAS_LINKS = '_links'
+
+    SELF = 'self'
 
     def __init__(self, view, response_data, host_url, view_args, request_name, query_string) -> None:
         self.response_data = response_data
@@ -88,7 +90,7 @@ class HATEOASBuilder:
         for view_method in view_methods:
             params = self._build_params(item_data_with_links)
 
-            method_links = self._build_method_links(view_method, params)
+            method_links = self._build_method_links(view_method, params, rel=self.SELF)
 
             links.extend(method_links)
 
@@ -221,8 +223,11 @@ class HATEOASBuilder:
     def _is_text_response(self):
         return type(self.response_data) is bytes or type(self.response_data) is str
 
-    def _build_method_links(self, view_method, params):
-        rel = self.view.get_route_base()
+    def _build_method_links(self, view_method, params, rel=None):
+        
+        _rel = rel
+        if _rel is None:
+            _rel = self.view.service.NAME
             
         actions = self._get_actions(view_method)
 
@@ -238,7 +243,7 @@ class HATEOASBuilder:
             if not href is None:
                 method_link = {
                     'name': view_method,
-                    'rel': rel,
+                    'rel': _rel,
                     'href': href,
                     'action': action
                 }
@@ -277,6 +282,7 @@ class HATEOASBuilder:
             for child in self.view.child_collections:
                 child_view = child.view
                 child_parent_field = child.id_field
+                child_name = child.name
 
                 child_view_args = {child_parent_field: item_data['id']}
                 child_hateoas_builder = HATEOASBuilder(
@@ -286,10 +292,10 @@ class HATEOASBuilder:
 
                 child_params = child_hateoas_builder._build_params(use_id=False)
 
-                insert_links = child_hateoas_builder._build_method_links(child_view.INSERT_REQUEST, child_params)                
+                insert_links = child_hateoas_builder._build_method_links(child_view.INSERT_REQUEST, child_params, rel=child_name)                
                 child_links.extend(insert_links)
 
-                paginate_links = child_hateoas_builder._build_method_links(child_view.PAGINATE_REQUEST, child_params)
+                paginate_links = child_hateoas_builder._build_method_links(child_view.PAGINATE_REQUEST, child_params, rel=child_name)
                 child_links.extend(paginate_links)
 
             return child_links

@@ -5,7 +5,7 @@ from flask_classful import route
 from ipsum.service.crud_service import CRUDService
 from ipsum.view.ipsum_view import DELETE, PATCH, POST, IpsumView
 
-CollectionView = namedtuple('CollectionView', 'view id_field')
+CollectionView = namedtuple('CollectionView', 'view id_field name')
 
 
 class CRUDView(IpsumView):

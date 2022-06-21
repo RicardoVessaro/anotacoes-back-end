@@ -3,7 +3,7 @@ from flask import Blueprint
 from api.annotation.data.model.comment import Comment
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
 from api.annotation.service.note.note_service import NoteService
-from api.annotation.view.comment_view import CommentView
+from api.annotation.view.comment_view import CommentView, comment_view_name
 from ipsum.view.crud_view import CollectionView
 from ipsum.view.detail_crud_view import DetailCRUDView
 from api.annotation.service.note.picture.picture_service import PictureService
@@ -20,7 +20,7 @@ class PictureView(DetailCRUDView):
 
     def __init__(self) -> None:
         child_collections = [
-            CollectionView(CommentView, Comment.parent_field)
+            CollectionView(CommentView, Comment.parent_field, comment_view_name)
         ]
     
         super().__init__(

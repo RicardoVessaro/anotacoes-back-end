@@ -1,6 +1,7 @@
 
 import json
 from this import d
+from ipsum.tests.resources.service.fake_detail_crud_service import FakeDetailCRUDService
 from ipsum.util.data.pagination import Pagination
 from ipsum.util.enviroment_variable import get_api_url
 from ipsum.util.view.hateoas_builder import HATEOASBuilder
@@ -62,8 +63,8 @@ class TestHATEOASBuilder:
         child_id = '629fdb22fcce704dad685089'
         bytes_response = b'{\n "id": "629fdb19fcce704dad685088", \n  "code": "1", \n  "title": "test"\n}\n'
         
-        child_view = FakeDetailCRUDView()
-        child_collections = [CollectionView(child_view, self.PARENT_ID_PARAM)]
+        child_view = FakeDetailCRUDView
+        child_collections = [CollectionView(child_view, self.PARENT_ID_PARAM, FakeDetailCRUDService.NAME)]
 
         fake_crud_view = FakeCRUDView()
         fake_crud_view.child_collections = child_collections
@@ -71,7 +72,7 @@ class TestHATEOASBuilder:
         
 
         parent_href = self._get_expected_href(child_view, parent_id=id)
-        child_name = child_view.service.NAME
+        child_name = FakeDetailCRUDService.NAME
 
         expected_links = [
             {
@@ -409,37 +410,37 @@ class TestHATEOASBuilder:
         expected_links = {
             'insert': {
                 'name': 'insert',
-                'rel': test_view.service.NAME,
+                'rel': HATEOASBuilder.SELF,
                 'href': expected_href,
                 'action': [POST]
             },
             'update': {
                 'name': 'update',
-                'rel': test_view.service.NAME,
+                'rel': HATEOASBuilder.SELF,
                 'href': expected_href_with_id,
                 'action': [PATCH]
             },
             'delete': {
                 'name': 'delete',
-                'rel': test_view.service.NAME,
+                'rel': HATEOASBuilder.SELF,
                 'href': expected_href_with_id,
                 'action': [DELETE]
             },
             'find_by_id': {
                 'name': 'find_by_id',
-                'rel': test_view.service.NAME,
+                'rel': HATEOASBuilder.SELF,
                 'href': expected_href_with_id,
                 'action': [GET]
             },
             'find': {
                 'name': 'find',
-                'rel': test_view.service.NAME,
+                'rel': HATEOASBuilder.SELF,
                 'href': expected_href,
                 'action': [GET]
             },
             'paginate': {
                 'name': 'paginate',
-                'rel': test_view.service.NAME,
+                'rel': HATEOASBuilder.SELF,
                 'href': expected_href+'/paginate',
                 'action': [GET]
             },
@@ -449,7 +450,7 @@ class TestHATEOASBuilder:
             name = link['name']
             rel = link['rel']
 
-            if rel == test_view.service.NAME:
+            if rel == HATEOASBuilder.SELF:
                 assert name not in ['insert', 'find', 'paginate']
 
                 assert link == expected_links[name]

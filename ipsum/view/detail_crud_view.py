@@ -1,6 +1,6 @@
 
 from flask import request
-from ipsum.view.ipsum_view import GET, PATCH, POST
+from ipsum.view.ipsum_view import GET, ID, PATCH, POST
 from ipsum.view.crud_view import CRUDView
 from flask_classful import route
 
@@ -26,7 +26,7 @@ class DetailCRUDView(CRUDView):
 
         return super().insert(**kwargs)
     
-    @route('<id>', methods=[PATCH])
+    @route(f'<{ID}>', methods=[PATCH])
     def update(self, id, **kwargs):
         collection_tree = request.collection_tree
         parent = collection_tree.parent

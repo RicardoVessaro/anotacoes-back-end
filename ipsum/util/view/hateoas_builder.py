@@ -3,6 +3,7 @@ from ast import Is
 import copy
 from functools import singledispatchmethod
 import json
+from ipsum.data.dao.dao import ID
 from ipsum.util.data.pagination import Pagination
 from ipsum.util.list_util import list_equals
 from ipsum.util.view.route_parser import  get_route_params, parse_route
@@ -282,8 +283,8 @@ class HATEOASBuilder:
     def _get_view_args_without_id(self):
         view_args_without_id = copy.deepcopy(self.view_args)
         
-        if 'id' in view_args_without_id:
-            view_args_without_id.pop('id')
+        if ipsum_view.ID in view_args_without_id:
+            view_args_without_id.pop(ipsum_view.ID)
 
         return view_args_without_id
 
@@ -296,7 +297,7 @@ class HATEOASBuilder:
                 child_parent_field = child.id_field
                 child_name = child.name
 
-                child_view_args = {child_parent_field: item_data['id']}
+                child_view_args = {child_parent_field: item_data[ID]}
                 child_hateoas_builder = HATEOASBuilder(
                     view=child_view, response_data=[], host_url=self.host_url,
                     view_args=child_view_args, request_name='', query_string=''
@@ -315,15 +316,14 @@ class HATEOASBuilder:
         return None
 
     def _build_params(self, item_data=None, use_id=True):
-        ID_KEY = 'id'
 
         args = self.view_args
 
         if is_none_or_empty(self.view_args) and not self._is_paginate_request_name():
-            args = {'id': None}
+            args = {ipsum_view.ID: None}
 
-        elif ID_KEY not in args and use_id:
-            args[ID_KEY] = None
+        elif ipsum_view.ID not in args and use_id:
+            args[ipsum_view.ID] = None
 
         if is_none_or_empty(item_data):
             return args

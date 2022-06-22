@@ -2,6 +2,7 @@
 from api.annotation.data.dao.link_dao import LinkDAO
 from api.annotation.data.model.link import Link
 from api.annotation.service.note.link.link_validator import LinkValidator
+from ipsum.data.dao.dao import ID
 from ipsum.service.detail_crud_service import DetailCRUDService
 from api.annotation.data.dao.note_dao import NoteDAO
 from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
@@ -29,7 +30,7 @@ class LinkService(DetailCRUDService):
                 parent_field=link_dao.model.parent_field,
                 id=None,
                 dao=link_dao,
-                field='id'
+                field=ID
             )
         )
 

@@ -10,7 +10,7 @@ from ipsum.tests.resources.view.fake_crud_view import FakeCRUDView
 from ipsum.tests.resources.view.fake_detail_crud_view import FakeDetailCRUDView
 from ipsum.util.view.route_parser import parse_route
 from ipsum.view.crud_view import CollectionView
-from ipsum.view.ipsum_view import DELETE, GET, PATCH, POST, QUERY_OFFSET, IpsumView
+from ipsum.view.ipsum_view import DELETE, GET, ID, PATCH, POST, QUERY_OFFSET, IpsumView
 
 class TestHATEOASBuilder:
 
@@ -25,7 +25,7 @@ class TestHATEOASBuilder:
     PARENT_ID_PARAM = 'ipsum_model_id'
     PARENT_ID = '629fdb22fcce704dad685089'
 
-    ID_PARAM = 'id'
+    ID_PARAM = ID
     ID = '629fdb19fcce704dad685088'
 
     view_args = {PARENT_ID_PARAM: PARENT_ID, ID_PARAM: ID}
@@ -255,7 +255,7 @@ class TestHATEOASBuilder:
         def _test_with_empty_view_args_and_empty_item_data():
             _hateoas_builder = HATEOASBuilder(FakeCRUDView(), {}, self.host_url, {}, 'test', query_string='')
 
-            assert _hateoas_builder._build_params({}) == {'id': None}
+            assert _hateoas_builder._build_params({}) == {ID: None}
         _test_with_empty_view_args_and_empty_item_data()
 
         def _test_view_args_without_id():
@@ -356,9 +356,9 @@ class TestHATEOASBuilder:
         def _assert(hateoas_builder):
             expected_rules = {
                 'insert': [''], 
-                'update': ['<id>'], 
-                'delete': ['<id>'], 
-                'find_by_id': ['<id>'], 
+                'update': [f'<{ID}>'], 
+                'delete': [f'<{ID}>'], 
+                'find_by_id': [f'<{ID}>'], 
                 'find': [''], 
                 'paginate': ['paginate']
             }

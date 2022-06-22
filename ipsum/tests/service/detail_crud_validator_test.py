@@ -1,6 +1,7 @@
 
 from pytest import raises
 from ipsum.data.dao.crud_dao import CRUDDAO
+from ipsum.data.dao.dao import ID
 from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.exception.exception_message import CHILD_NOT_FOUND_IN_PARENT, PARENT_OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
@@ -142,7 +143,7 @@ class TestDetailCRUDValidator:
         @database_test.persistence_test()
         def _():
             ipsum_model_item = CollectionItem(name='ipsum_model', parent_field=None, id=parent_doc.id, dao=self.parent_dao, field=self.model.parent_field)
-            detail_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=None, dao=self.detail_child_dao, field='id')
+            detail_model_item = CollectionItem(name='detail_child_model', parent_field=self.detail_child_model.parent_field, id=None, dao=self.detail_child_dao, field=ID)
 
             collection_tree = CollectionTree(parent=ipsum_model_item, child=detail_model_item)
         

@@ -22,7 +22,8 @@ STATUS_NO_CONTENT = 204
 
 FIND_BY_ID = 'find_by_id'
 
-# TODO rename id enum 'ID'
+ID = 'id'
+
 class IpsumView(FlaskView):
 
     PAGINATE_REQUEST = 'find'
@@ -55,7 +56,7 @@ class IpsumView(FlaskView):
     def service(self):
         return self._service
 
-    @route('<id>', methods=[GET])
+    @route(f'<{ID}>', methods=[GET])
     def find_by_id(self, id, **kwargs):
         return self._to_response(self._service.find_by_id(id))
 

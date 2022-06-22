@@ -1,4 +1,5 @@
 
+from ipsum.data.dao.dao import ID
 from ipsum.service.detail_crud_service import DetailCRUDService
 from ipsum.tests.resources.data.dao.fake_crud_dao import FakeCRUDDAO
 from ipsum.tests.resources.data.dao.fake_detail_crud_dao import FakeDetailCRUDDAO
@@ -26,7 +27,7 @@ class FakeDetailCRUDService(DetailCRUDService):
                 parent_field=dao.model.parent_field,
                 dao=dao,
                 id=None,
-                field='id'
+                field=ID
             )
         )
 

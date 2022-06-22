@@ -3,7 +3,7 @@ from collections import namedtuple
 from flask import request
 from flask_classful import route
 from ipsum.service.crud_service import CRUDService
-from ipsum.view.ipsum_view import DELETE, PATCH, POST, IpsumView
+from ipsum.view.ipsum_view import DELETE, ID, PATCH, POST, IpsumView
 
 CollectionView = namedtuple('CollectionView', 'view id_field name')
 
@@ -29,7 +29,7 @@ class CRUDView(IpsumView):
         return self._to_response(model)
 
 
-    @route('<id>', methods=[PATCH])
+    @route(f'<{ID}>', methods=[PATCH])
     def update(self, id, **kwargs):
         body = request.json
 
@@ -37,7 +37,7 @@ class CRUDView(IpsumView):
         
         return self._to_response(update_response)
 
-    @route('<id>', methods=[DELETE])
+    @route(f'<{ID}>', methods=[DELETE])
     def delete(self, id, **kwargs):
         self._service.delete(id)
 

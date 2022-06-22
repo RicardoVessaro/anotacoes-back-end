@@ -2,6 +2,7 @@
 from unicodedata import name
 from api.annotation.data.dao.picture_dao import PictureDAO
 from api.annotation.service.note.picture.picture_service import PictureService
+from ipsum.data.dao.dao import ID
 from ipsum.service.detail_crud_service import DetailCRUDService
 from api.annotation.data.model.comment import Comment
 from api.annotation.data.dao.comment_dao import CommentDAO
@@ -31,7 +32,7 @@ class CommentService(DetailCRUDService):
                 parent_field=comment_dao.model.parent_field,
                 dao=comment_dao,
                 id=None,
-                field='id'
+                field=ID
             )
         )
 

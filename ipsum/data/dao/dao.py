@@ -9,6 +9,9 @@ from ipsum.util.data.mongo_query import MongoQuery
 from ipsum.util.data.pagination import Pagination
 from ipsum.util.data.dao_query import DAOQuery
 
+ID = 'id'
+_ID = '_id'
+
 class DAO:
 
     def __init__(self, model:Document, cascade=None, dependent=None) -> None:

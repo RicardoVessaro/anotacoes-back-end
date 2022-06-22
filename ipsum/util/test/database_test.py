@@ -2,6 +2,7 @@
 import functools
 from mongoengine import connect, disconnect
 from collections import namedtuple
+from ipsum.data.dao.dao import ID, _ID
 from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 
 from ipsum.util.object_util import is_none_or_empty
@@ -130,7 +131,7 @@ class DatabaseTest:
     def _refresh_data(self, data):
         model_data = data.model
         model_data = model_data.to_mongo()
-        model_data['id'] = model_data.pop('_id')
+        model_data[ID] = model_data.pop(_ID)
         model_data = data.dao.model(**model_data)
 
         return self._data(dao=data.dao, model=model_data, data_id=None, parent_ids=data.parent_ids)

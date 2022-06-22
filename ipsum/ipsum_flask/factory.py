@@ -2,12 +2,12 @@
 from ipsum.exception.ipsum_exception import IpsumException, error_handler
 from ipsum.ipsum_flask.ipsum_flask import IpsumFlask
 from ipsum.service.enum.ipsum_enum import save_enums
-from ipsum.util.enviroment_variable import get_database_url, get_test_database_url, is_test_enviroment
+from ipsum.util.enviroment_variable import get_database_url, get_test_database_url, is_test_enviroment, set_config_variables
 from ipsum.util.logger import Logger
 
 class IpsumFlaskFactory:
 
-    def __init__(self, name, database_object, blueprints) -> None:
+    def __init__(self, name, database_object, blueprints, config_env_var='FLASK_CONFIG') -> None:
         self.name = name
         self.database_object = database_object
         self.blueprints = blueprints
@@ -15,6 +15,10 @@ class IpsumFlaskFactory:
         self._logger = Logger(self)
 
         self.app = IpsumFlask(self.name)
+
+        self.app.config.from_envvar(config_env_var, silent=True)
+
+        set_config_variables(self.app.config.get_namespace('', lowercase=False))
 
         self._create_flask_app()
 

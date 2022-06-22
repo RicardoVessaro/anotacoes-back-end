@@ -1,11 +1,9 @@
 
-import os
-
 from api.db import db
 from api.annotation.view import note_view, tag_view, mood_view, picture_view, comment_view, link_view
 from ipsum.ipsum_flask.factory import IpsumFlaskFactory
 
-def create_flask_app():
+def create_flask_app(config_env_var='FLASK_CONFIG'):
 
     blueprints = [
         note_view.note_blueprint, 
@@ -19,7 +17,8 @@ def create_flask_app():
     api = IpsumFlaskFactory(
         name=__name__,
         database_object=db,
-        blueprints=blueprints
+        blueprints=blueprints,
+        config_env_var=config_env_var
     ).app
 
     return api

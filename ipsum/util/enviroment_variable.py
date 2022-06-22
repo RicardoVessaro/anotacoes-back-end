@@ -22,9 +22,21 @@ TEST_MONGODB_URL_OPTIONS = 'TEST_MONGODB_URL_OPTIONS'
 
 _MONGODB_ATLAS_SERVER_PREFIX = 'mongodb+srv://'
 
+config_variables = {}
+
+def set_config_variables(app_config):
+    global config_variables
+
+    config_variables = app_config
+    
+
 def get_enviroment_variable(enviroment_variable_name):
+
     if enviroment_variable_name in os.environ:
         return os.environ[enviroment_variable_name]
+
+    elif enviroment_variable_name in config_variables:
+        return config_variables[enviroment_variable_name]
     
     return None
         
@@ -55,8 +67,6 @@ def get_test_database_url():
     
     return f'{_MONGODB_ATLAS_SERVER_PREFIX}{test_mongodb_user}:{test_mongodb_password}@{test_mongodb_atlas_prefix}/{test_mongodb_database}?{test_mongodb_url_options}'
 
+# TODO remove is test enviroment
 def is_test_enviroment():
-    if TEST_ENVIROMENT in os.environ:
-        return str(os.environ[TEST_ENVIROMENT]) == '1'
-    
-    return False
+    return get_enviroment_variable(TEST_ENVIROMENT) == '1'

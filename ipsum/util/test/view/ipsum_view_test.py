@@ -8,9 +8,9 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.exception.exception_message import PAGINATION_OFFSET_GREATER_THAN_TOTAL
 from ipsum.service.enum.enum_service import EnumService
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.enviroment_variable import get_api_url, get_test_database_url
+from ipsum.util.enviroment_variable import get_api_url, get_database_url
 from ipsum.util.object_util import is_none_or_empty
-from ipsum.util.test.database_test import DatabaseTest, clean_enums, insert_enums
+from ipsum.util.test.database_test import DatabaseTest
 from ipsum.util.view.hateoas_builder import HATEOASBuilder
 from ipsum.util.view.view_encoder import ViewEncoder
 from mongoengine import connect, disconnect
@@ -50,7 +50,8 @@ class IpsumViewTest(ABC):
 
     @property
     def INTEGRATION_TEST_DB_URI(self):
-        return get_test_database_url()
+        
+        return get_database_url()
 
     @property        
     def view_name(self):

@@ -4,12 +4,12 @@ from api.annotation.data.model.note import Note
 from api.annotation.data.model.tag import Tag
 from api.annotation.service.note.note_service import NoteService
 from api.annotation.service.tag.tag_service import TagService
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest, clean_enums, insert_enums
 
 class TestNoteService:
 
-    DB_URI = get_test_database_url()
+    DB_URI = get_database_url()
 
     service = NoteService()
 

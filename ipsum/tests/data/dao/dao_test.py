@@ -12,7 +12,7 @@ from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.util.data.mongo_query import MongoQuery
 from ipsum.util.data.pagination import Pagination
 from ipsum.util.data.dao_query import DAOQuery
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
@@ -23,7 +23,7 @@ class TestDao:
 
     KEY_ID = "_id"
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     dao = DAO(model=IpsumTestModel)
 

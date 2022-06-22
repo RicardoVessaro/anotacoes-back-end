@@ -6,13 +6,13 @@ from ipsum.exception.exception_message import DETAIL_CRUD_DAO_MODEL_WITHOUT_PARE
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
 
 class TestDetailCRUDDAO:
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     FAKE_ID = '6248620366564103f229595f'
 

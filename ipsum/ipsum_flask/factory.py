@@ -2,7 +2,7 @@
 from ipsum.exception.ipsum_exception import IpsumException, error_handler
 from ipsum.ipsum_flask.ipsum_flask import IpsumFlask
 from ipsum.service.enum.ipsum_enum import save_enums
-from ipsum.util.enviroment_variable import get_database_url, get_test_database_url, is_test_enviroment, set_config_variables
+from ipsum.util.enviroment_variable import get_database_url, set_config_variables
 from ipsum.util.logger import Logger
 
 class IpsumFlaskFactory:
@@ -41,16 +41,9 @@ class IpsumFlaskFactory:
         MONGODB_HOST = self._get_database_config()
 
         self.app.config.update(**{"MONGODB_HOST": MONGODB_HOST})
-
+    
     def _get_database_config(self):
-        MONGODB_HOST = None
-
-        if not is_test_enviroment():
-            MONGODB_HOST = get_database_url()
-        
-        else:
-            self._logger.info("     Using Test database...")
-            MONGODB_HOST = get_test_database_url()
+        MONGODB_HOST = get_database_url()
         
         return MONGODB_HOST
 
@@ -63,7 +56,7 @@ class IpsumFlaskFactory:
             self.app.register_blueprint(blueprint)
 
     def _init_database(self):
-        self._logger.info("Inniting database...")
+        self._logger.info("Initing database...")
 
         self.database_object.init_app(self.app)
 

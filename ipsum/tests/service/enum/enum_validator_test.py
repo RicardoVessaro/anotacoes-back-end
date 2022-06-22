@@ -6,12 +6,12 @@ from ipsum.exception.exception_message import DUPLICATED_ENUM_CODE, REQUIRED_FIE
 from ipsum.service.enum.enum_validator import EnumValidator
 from ipsum.tests.resources.data.model.enum_test_model import EnumTestModel
 from ipsum.exception.ipsum_exception import IpsumException
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestEnumValidator:
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     enum_validator = EnumValidator(dao=CRUDDAO(model=EnumTestModel))
 

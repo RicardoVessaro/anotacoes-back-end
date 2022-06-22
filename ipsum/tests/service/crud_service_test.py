@@ -6,12 +6,12 @@ from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.service.crud_service import CRUDService
 from ipsum.service.crud_validator import CRUDValidator
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestCRUDServices:
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     dao = CRUDDAO(model=IpsumTestModel)
 

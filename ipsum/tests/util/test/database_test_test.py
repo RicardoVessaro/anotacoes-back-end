@@ -1,7 +1,7 @@
 
 from bson import ObjectId
 from ipsum.tests.resources.service.enum.fake_enum_test_service import FakeEnumTestService
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest, insert_enums
 from ipsum.data.dao.dao import DAO
 from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
@@ -10,7 +10,7 @@ from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 
 class TestDatabaseTest:
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     dao = DAO(model=IpsumTestModel)
 

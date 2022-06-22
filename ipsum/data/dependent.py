@@ -5,7 +5,6 @@ from ipsum.data.dao.dao import DAO
 from ipsum.exception.exception_message import DEPENDENCY_DAO_IS_NOT_DAO_TYPE, DEPENDENT_DEPENDENCY_HAS_DATA, DEPENDENT_DEPENDENCY_IS_NOT_DEPENDENCY_TYPE
 
 from ipsum.exception.ipsum_exception import IpsumException
-from ipsum.util.enviroment_variable import is_test_enviroment
 
 class Dependent:
 
@@ -22,9 +21,6 @@ class Dependent:
         self._validate_dependents_type()
 
     def check_dependents_data(self, id):
-
-        if is_test_enviroment():
-            return
 
         _id = id 
 

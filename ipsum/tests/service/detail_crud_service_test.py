@@ -12,7 +12,7 @@ from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
 from ipsum.util.test.database_test import DatabaseTest
 
@@ -25,7 +25,7 @@ class TestDetailCRUDService:
 
     OTHER_FAKE_ID = '624786f6590c79c2fb3af557'
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     parent_dao = CRUDDAO(model=IpsumTestModel)
     parent = parent_dao.model

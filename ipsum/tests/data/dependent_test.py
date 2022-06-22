@@ -7,15 +7,12 @@ from ipsum.data.dependent import Dependent
 from ipsum.exception.exception_message import DEPENDENCY_DAO_IS_NOT_DAO_TYPE, DEPENDENT_DEPENDENCY_HAS_DATA, DEPENDENT_DEPENDENCY_IS_NOT_DEPENDENCY_TYPE
 from ipsum.exception.ipsum_exception import IpsumException
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestDependent:
 
-    TEST_DATABASE_URL = get_test_database_url()
-
-    
-    mock_is_test_enviroment = patch('ipsum.util.enviroment_variable.is_test_enviroment')
+    TEST_DATABASE_URL = get_database_url()
 
     def test_validate_dependents_type(self):
 
@@ -57,10 +54,7 @@ class TestDependent:
         with raises(IpsumException, match=DEPENDENCY_DAO_IS_NOT_DAO_TYPE.format(Dependent.DEPENDENCY_DAO_ATTRIBUTE, Dependent.Dependency, DAO, NotDAO)):
             Dependent('dependent', dependents=[dependency, custom_dependency, dependency_not_dao])
 
-    @patch('ipsum.data.dependent.is_test_enviroment')
-    def test_must_not_raise_exception_when_not_exists_data(self, mock_is_test_enviroment):
-
-        mock_is_test_enviroment.return_value = False
+    def test_must_not_raise_exception_when_not_exists_data(self):
 
         database_test = DatabaseTest(host=self.TEST_DATABASE_URL)
         @database_test.persistence_test()
@@ -74,10 +68,7 @@ class TestDependent:
 
         _()
 
-    @patch('ipsum.data.dependent.is_test_enviroment')
-    def test_must_raise_exception_when_exists_data(self, mock_is_test_enviroment):
-
-        mock_is_test_enviroment.return_value = False
+    def test_must_raise_exception_when_exists_data(self):
 
         dependency_id = str(ObjectId())
         
@@ -99,10 +90,7 @@ class TestDependent:
 
         _()
 
-    @patch('ipsum.data.dependent.is_test_enviroment')
-    def test_must_not_raise_exception_when_exists_data_with_diferent_id(self, mock_is_test_enviroment):
-
-        mock_is_test_enviroment.return_value = False
+    def test_must_not_raise_exception_when_exists_data_with_diferent_id(self):
 
         dependency_id = str(ObjectId())
 
@@ -122,29 +110,5 @@ class TestDependent:
             dependent = Dependent('dependent', dependents=[dependency])
 
             dependent.check_dependents_data(other_id)
-
-        _()
-    
-    @patch('ipsum.data.dependent.is_test_enviroment')
-    def test_must_not_raise_exception_when_exists_data_but_is_an_test_enviroment(self, mock_is_test_enviroment):
-
-        mock_is_test_enviroment.return_value = True
-
-        dependency_id = str(ObjectId())
-        
-        dao = DAO(IpsumTestModel)
-        model = dao.model(code=1, dependency_id=dependency_id)
-
-        database_test = DatabaseTest(host=self.TEST_DATABASE_URL)
-        database_test.add_data(dao, model)
-
-        @database_test.persistence_test()
-        def _():
-
-            dependency = Dependent.Dependency(dao, 'DAO', 'dependency_id')
-
-            dependent = Dependent('dependent', dependents=[dependency])
-
-            dependent.check_dependents_data(dependency_id)
 
         _()

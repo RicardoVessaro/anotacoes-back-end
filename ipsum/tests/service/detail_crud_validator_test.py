@@ -8,7 +8,7 @@ from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 from ipsum.service.detail_crud_validator import DetailCRUDValidator
-from ipsum.util.enviroment_variable import get_test_database_url
+from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
@@ -19,7 +19,7 @@ class TestDetailCRUDValidator:
 
     FAKE_DETAIL_ID = '627ffd74ee52c2e97a757b86'
 
-    TEST_DB_URI = get_test_database_url()
+    TEST_DB_URI = get_database_url()
 
     parent_dao = CRUDDAO(model=IpsumTestModel)
     parent = parent_dao.model

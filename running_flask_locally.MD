@@ -29,6 +29,15 @@ To run the applicatin using other configuration use (for example FLASK_CONFIG_TE
 
     python -m run FLASK_CONFIG_TEST
 
+
+To run the development enviroment you can use the script:
+
+    source run-desenv.sh
+
+To run the test enviroment you can use the script:
+
+    source run-test.sh
+
 Flask config file parameters.
 
 ```

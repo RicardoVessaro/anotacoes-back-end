@@ -25,7 +25,7 @@ class NoteService(CRUDService):
         )
     
     def insert(self, body):
-        body[CREATED_IN] = datetime.datetime.today()
+        body[CREATED_IN] = datetime.datetime.today().date()
 
         if TAG not in body:
             body[TAG] = TagService().find_by_code(code=OK.code).id

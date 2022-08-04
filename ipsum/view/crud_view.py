@@ -3,7 +3,7 @@ from collections import namedtuple
 from flask import request
 from flask_classful import route
 from ipsum.service.crud_service import CRUDService
-from ipsum.view.ipsum_view import DELETE, ID, PATCH, POST, IpsumView
+from ipsum.view.ipsum_view import DELETE, ID, PATCH, POST, STATUS_CREATED, IpsumView
 
 CollectionView = namedtuple('CollectionView', 'view id_field name')
 
@@ -26,7 +26,7 @@ class CRUDView(IpsumView):
 
         model = self._service.insert(body)
 
-        return self._to_response(model)
+        return self._to_response(model, status=STATUS_CREATED)
 
 
     @route(f'<{ID}>', methods=[PATCH])

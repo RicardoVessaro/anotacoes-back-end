@@ -18,7 +18,12 @@ QUERY_LIMIT = '_limit'
 QUERY_OFFSET = '_offset'
 QUERY_SORT = DAOQuery.SORT
 
+STATUS_OK = 200
+STATUS_CREATED = 201
 STATUS_NO_CONTENT = 204
+
+STATUS_BAD_REQUEST = 400
+STATUS_NOT_FOUND = 404
 
 FIND_BY_ID = 'find_by_id'
 
@@ -88,10 +93,13 @@ class IpsumView(FlaskView):
     def _get_parsed_query_string(self):
         return QueryStringParser().parse_string(request.query_string)
 
-    def _to_response(self, object=None):
+    def _to_response(self, object=None, status=None):
         answer = ViewEncoder().default(object)
 
         if answer is None:
             answer = ('', STATUS_NO_CONTENT)
+
+        if not status is None:
+            return make_response(answer, status)
 
         return make_response(answer)

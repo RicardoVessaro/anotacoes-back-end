@@ -1,13 +1,13 @@
 
 from flask import Blueprint
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
-from ipsum.view.crud_view import CRUDView
 from api.annotation.service.mood.mood_service import MoodService
+from ipsum.view.ipsum_view import IpsumView
 
 mood_view_name = MoodService.NAME
 mood_blueprint = Blueprint(mood_view_name, __name__)
 
-class MoodView(CRUDView):
+class MoodView(IpsumView):
 
     route_prefix = REST_API_V1_BASE_URL
 

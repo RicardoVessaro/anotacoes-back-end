@@ -3,12 +3,13 @@ from flask import Blueprint
 from api.annotation.general.module_constants import REST_API_V1_BASE_URL
 from api.annotation.service.tag.tag_service import TagService
 from ipsum.view.crud_view import CRUDView
+from ipsum.view.ipsum_view import IpsumView
 
 
 tag_view_name = TagService.NAME
 tag_blueprint = Blueprint(tag_view_name, __name__)
 
-class TagView(CRUDView):
+class TagView(IpsumView):
 
     route_prefix = REST_API_V1_BASE_URL
 

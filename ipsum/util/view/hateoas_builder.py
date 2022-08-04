@@ -17,6 +17,10 @@ class HATEOASBuilder:
 
     _RULE_CACHE_ATTRIBUTE = '_rule_cache'
 
+    _CHILD_COLLECTIONS = 'child_collections'
+
+    _INSERT_REQUEST = 'INSERT_REQUEST'
+
     HATEOAS_LINKS = '_links'
 
     SELF = 'self'
@@ -138,10 +142,11 @@ class HATEOASBuilder:
 
                     paginate_links.append(paginate_link)
 
-        insert_args = self._get_view_args_without_id()
-        insert_links = self._build_method_links(self.view.INSERT_REQUEST, insert_args)
+        if hasattr(self.view, self._INSERT_REQUEST):
+            insert_args = self._get_view_args_without_id()
+            insert_links = self._build_method_links(self.view.INSERT_REQUEST, insert_args)
 
-        paginate_links.extend(insert_links)
+            paginate_links.extend(insert_links)
 
         return paginate_links
 
@@ -289,7 +294,7 @@ class HATEOASBuilder:
         return view_args_without_id
 
     def _build_child_links(self, item_data):
-        if not is_none_or_empty(self.view.child_collections):
+        if hasattr(self.view, self._CHILD_COLLECTIONS) and not is_none_or_empty(self.view.child_collections):
             child_links = []
 
             for child in self.view.child_collections:

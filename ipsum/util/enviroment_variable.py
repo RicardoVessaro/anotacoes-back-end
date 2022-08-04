@@ -13,6 +13,8 @@ INTEGRATION_TEST_HOST = 'INTEGRATION_TEST_HOST'
 INTEGRATION_TEST_PORT = 'INTEGRATION_TEST_PORT' 
 
 _MONGODB_ATLAS_SERVER_PREFIX = 'mongodb+srv://'
+_LOCAL_HOST = 'http://localhost'
+_DEFAULT_PORT = '5000'
 
 config_variables = {}
 
@@ -35,7 +37,14 @@ def get_enviroment_variable(enviroment_variable_name):
 def get_api_url():
 
     integration_test_host = get_enviroment_variable(INTEGRATION_TEST_HOST)
+
+    if integration_test_host is None:
+        integration_test_host = _LOCAL_HOST
+
     integration_test_port = get_enviroment_variable(INTEGRATION_TEST_PORT)
+
+    if integration_test_port is None:
+        integration_test_port = _DEFAULT_PORT
 
     return f'{integration_test_host}:{integration_test_port}'
 

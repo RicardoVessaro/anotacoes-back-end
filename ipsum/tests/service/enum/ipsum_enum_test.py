@@ -56,8 +56,6 @@ class IpsumEnumServiceWithArgs(EnumService):
 
 class TestIpsumEnum:
 
-    TEST_DB_URI = get_database_url()
-
     def test_must_add_decorated_enums(self):
 
         IpsumEnumServiceToInsert = EnumToInsert(clazz=IpsumEnumService, args=(), kwargs={})

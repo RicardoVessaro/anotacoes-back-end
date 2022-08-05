@@ -2,7 +2,7 @@
 from bson import ObjectId
 from ipsum.tests.resources.service.enum.fake_enum_test_service import FakeEnumTestService
 from ipsum.util.enviroment_variable import get_database_url
-from ipsum.util.test.database_test import DatabaseTest, insert_enums
+from ipsum.util.test.database_test import DatabaseTest
 from ipsum.data.dao.dao import DAO
 from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
@@ -270,7 +270,8 @@ class TestDatabaseTest:
             enum_test_service_fake_1 = FakeEnumTestService()
             enum_test_service_fake_2 = FakeEnumTestService()
 
-            insert_enums(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1, enum_test_service_fake_2])
+            database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1, enum_test_service_fake_2])
+            database_test._insert_enums()
 
             assert enum_test_service_fake_1.save_enums_called == True
             assert enum_test_service_fake_2.save_enums_called == True
@@ -282,7 +283,8 @@ class TestDatabaseTest:
             enum_test_service_fake_1 = FakeEnumTestService()
             enum_test_service_fake_2 = FakeEnumTestService()
 
-            insert_enums(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1])
+            database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1])
+            database_test._insert_enums()
 
             assert enum_test_service_fake_1.save_enums_called == True
             assert enum_test_service_fake_2.save_enums_called == False

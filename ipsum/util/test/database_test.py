@@ -7,49 +7,10 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 
 from ipsum.util.object_util import is_none_or_empty
 
-def insert_enums(host, enum_services_to_insert):
-    host='mongomock://localhost'
-    connect(host=host)
-
-    _insert_enums(enum_services_to_insert)
-
-    disconnect()
-
-def clean_enums(host, enum_services_to_insert):
-    connect(host=host)
-
-    _clean_enums(enum_services_to_insert)
-
-    disconnect()
-
-def _insert_enums(enum_services_to_insert):
-    _clean_enums(enum_services_to_insert)
-    
-    if not is_none_or_empty(enum_services_to_insert):
-        for enum_service in enum_services_to_insert:
-            enum_service.save_enums()
-
-def _clean_enums(enum_services_to_insert):
-    if not is_none_or_empty(enum_services_to_insert):
-        for enum_service in enum_services_to_insert:
-            _delete_dao_data(enum_service._dao)
-
-def _delete_dao_data(dao, parent_ids=None):
-    data_to_delete_list = []
-
-    if is_none_or_empty(parent_ids):
-        data_to_delete_list = dao.find()
-    else:
-        for parent_id in parent_ids:
-            data_to_delete_list.extend(dao.find(parent_id))
-
-    for data_to_delete in data_to_delete_list:
-        dao.delete(data_to_delete.id)
-
 class DatabaseTest:
 
     def __init__(self, host, daos_to_clean=[], parent_ids_to_clean=[], enum_services_to_insert=[]) -> None:
-        self.host = 'mongomock://localhost'#host
+        self.host = 'mongomock://localhost'
         self.data_to_insert = []
         self._data = namedtuple('Data', ['dao', 'model', 'data_id', 'parent_ids'])
         self.daos_to_clean = daos_to_clean
@@ -77,7 +38,7 @@ class DatabaseTest:
                 if clean_database:
                     self._clean_existing_data()
                 
-                _insert_enums(self.enum_services_to_insert)
+                self._insert_enums()
 
                 self._insert_data()
 
@@ -86,14 +47,14 @@ class DatabaseTest:
 
                 except Exception as e:
                     self._delete_data()
-                    _clean_enums(self.enum_services_to_insert)
+                    self._clean_enums()
 
                     raise e
                     
                 finally:
                     if clean_database:
                         self._delete_data()
-                        _clean_enums(self.enum_services_to_insert)
+                        self._clean_enums()
 
                     self._disconnect()
 
@@ -157,7 +118,31 @@ class DatabaseTest:
             already_deleted.append(dao)
 
     def _delete_dao_data(self, dao, parent_ids=None):
-        _delete_dao_data(dao, parent_ids)
+        self._delete_dao_data(dao, parent_ids)
+
+    def _insert_enums(self):
+        self._clean_enums()
+        
+        if not is_none_or_empty(self.enum_services_to_insert):
+            for enum_service in self.enum_services_to_insert:
+                enum_service.save_enums()
+
+    def _clean_enums(self):
+        if not is_none_or_empty(self.enum_services_to_insert):
+            for enum_service in self.enum_services_to_insert:
+                self._delete_dao_data(enum_service._dao)
+
+    def _delete_dao_data(self, dao, parent_ids=None):
+        data_to_delete_list = []
+
+        if is_none_or_empty(parent_ids):
+            data_to_delete_list = dao.find()
+        else:
+            for parent_id in parent_ids:
+                data_to_delete_list.extend(dao.find(parent_id))
+
+        for data_to_delete in data_to_delete_list:
+            dao.delete(data_to_delete.id)
 
     def _connect(self):
         connect(host=self.host)

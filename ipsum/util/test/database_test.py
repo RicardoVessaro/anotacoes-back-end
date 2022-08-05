@@ -8,6 +8,7 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.util.object_util import is_none_or_empty
 
 def insert_enums(host, enum_services_to_insert):
+    host='mongomock://localhost'
     connect(host=host)
 
     _insert_enums(enum_services_to_insert)
@@ -48,7 +49,7 @@ def _delete_dao_data(dao, parent_ids=None):
 class DatabaseTest:
 
     def __init__(self, host, daos_to_clean=[], parent_ids_to_clean=[], enum_services_to_insert=[]) -> None:
-        self.host = host
+        self.host = 'mongomock://localhost'#host
         self.data_to_insert = []
         self._data = namedtuple('Data', ['dao', 'model', 'data_id', 'parent_ids'])
         self.daos_to_clean = daos_to_clean

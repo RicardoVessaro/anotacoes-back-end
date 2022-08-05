@@ -8,7 +8,6 @@ from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 from ipsum.service.detail_crud_validator import DetailCRUDValidator
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
@@ -18,8 +17,6 @@ class TestDetailCRUDValidator:
     FAKE_PARENT_ID = '6248620366564103f229595f'
 
     FAKE_DETAIL_ID = '627ffd74ee52c2e97a757b86'
-
-    TEST_DB_URI = get_database_url()
 
     parent_dao = CRUDDAO(model=IpsumTestModel)
     parent = parent_dao.model
@@ -33,7 +30,7 @@ class TestDetailCRUDValidator:
 
 
     def test_must_raise_exception_when_parent_not_exists(self):
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         @database_test.persistence_test()
         def validate_on_insert():
             
@@ -46,7 +43,7 @@ class TestDetailCRUDValidator:
         validate_on_insert()
 
         doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID)
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
         def validate_on_update():
@@ -61,7 +58,7 @@ class TestDetailCRUDValidator:
     def test_not_must_raise_exception_when_parent_not_exists(self):
         parent_doc = self.parent(code=1, title='Parent')
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
 
         @database_test.persistence_test()
@@ -76,7 +73,7 @@ class TestDetailCRUDValidator:
         doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID)
         parent_doc = self.parent(code=1, title='Parent')
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
@@ -91,7 +88,7 @@ class TestDetailCRUDValidator:
         doc = self.model(code=1, title='Detail', ipsum_model_id='624786f6590c79c2fb3af557')
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()
@@ -119,7 +116,7 @@ class TestDetailCRUDValidator:
         
         detail_child_doc = self.detail_child_model(code=1, title='Detail', detail_parent_id=self.FAKE_DETAIL_ID)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[self.FAKE_DETAIL_ID])
@@ -137,7 +134,7 @@ class TestDetailCRUDValidator:
         doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[self.FAKE_PARENT_ID])
         @database_test.persistence_test()

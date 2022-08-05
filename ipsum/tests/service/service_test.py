@@ -27,7 +27,7 @@ class TestService:
     def test_insert(self):
         ipsum_test_model = IpsumTestModel(code=1, title='test_insert_TestService')
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+        database_test = DatabaseTest(daos_to_clean=[self.dao])
         @database_test.persistence_test()
         def _():
             
@@ -89,7 +89,7 @@ class TestService:
         ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestService_2', boolean=False, tags=['A', 'B', 'D'], day=today)
         ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestService_3', boolean=True, tags=['B', 'C', 'D'], day=today)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, ipsum_test_model_1)
         database_test.add_data(self.dao, ipsum_test_model_2)
         database_test.add_data(self.dao, ipsum_test_model_3)
@@ -158,7 +158,7 @@ class TestService:
     def test_sort(self):
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
         @ipsum_database_test.persistence_test()
         def _():
@@ -265,7 +265,7 @@ class TestService:
 
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
         @ipsum_database_test.persistence_test()
         def _():
@@ -291,7 +291,7 @@ class TestService:
     def test_paginate(self):
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, ipsum_test_model_list)
         @database_test.persistence_test()
         def _():
@@ -448,7 +448,7 @@ class TestService:
     def _build_default_model_and_ipsum_test(self, code, title):
         ipsum_test_model = IpsumTestModel(code=code, title=title)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, ipsum_test_model)
         
         return ipsum_test_model, database_test

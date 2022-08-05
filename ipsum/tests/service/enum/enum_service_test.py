@@ -7,12 +7,9 @@ from ipsum.service.enum.enum_service import EnumService
 from ipsum.data.dao.crud_dao import CRUDDAO
 from ipsum.tests.resources.data.model.enum_test_model import EnumTestModel
 from ipsum.service.enum.enum_validator import EnumValidator
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestEnumService:
-
-    TEST_DB_URI = get_database_url()
 
     def test_must_raise_exception_when_required_field_is_none_on_insert(self):
 
@@ -22,7 +19,7 @@ class TestEnumService:
 
             enum_service = self._get_enum_service(enums)
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+            database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
             @database_test.persistence_test()
             def _():
                 with raises(IpsumException, match=REQUIRED_FIELD_EXCEPTION_MESSAGE.format(CODE)):
@@ -36,7 +33,7 @@ class TestEnumService:
 
                 enum_service = self._get_enum_service(enums)
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+                database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
                 @database_test.persistence_test()
                 def _():
 
@@ -55,7 +52,7 @@ class TestEnumService:
 
                 enum_service = self._get_enum_service(enums, required_fields=[INTEGER])
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+                database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
                 @database_test.persistence_test()
                 def _():
 
@@ -72,7 +69,7 @@ class TestEnumService:
 
                 enum_service = self._get_enum_service(enums)
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+                database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
                 @database_test.persistence_test()
                 def _():
 
@@ -91,7 +88,7 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums)
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test = DatabaseTest()
                 database_test.add_data(enum_service._dao, db_enum)
                 
                 @database_test.persistence_test()
@@ -108,7 +105,7 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums)
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test = DatabaseTest()
                 database_test.add_data(enum_service._dao, db_enum)
                 
                 @database_test.persistence_test()
@@ -130,7 +127,7 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums, required_fields=[INTEGER])
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test = DatabaseTest()
                 database_test.add_data(enum_service._dao, db_enum)
                 
                 @database_test.persistence_test()
@@ -148,7 +145,7 @@ class TestEnumService:
                 enum_service = self._get_enum_service(enums)
 
                 db_enum = EnumTestModel(code=1, name="Test", integer=10)
-                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test = DatabaseTest()
                 database_test.add_data(enum_service._dao, db_enum)
                 
                 @database_test.persistence_test()
@@ -167,7 +164,7 @@ class TestEnumService:
         ]
 
         enum_service = self._get_enum_service(enums)
-        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[enum_service._dao])
+        database_test = DatabaseTest(daos_to_clean=[enum_service._dao])
 
         @database_test.persistence_test()
         def _():
@@ -192,7 +189,7 @@ class TestEnumService:
 
         enum_service = self._get_enum_service(enums)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(enum_service._dao, enums)
 
         @database_test.persistence_test()

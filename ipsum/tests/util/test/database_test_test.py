@@ -19,7 +19,7 @@ class TestDatabaseTest:
     def test_add_data(self):
 
         def test_using_one_item():
-            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest()
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
             database_test.add_data(self.dao, model)
@@ -49,7 +49,7 @@ class TestDatabaseTest:
             model_0 = IpsumTestModel(code=0, title="test_using_one_item")
             model_1 = IpsumTestModel(code=1, title="test_using_one_item")
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest()
             database_test.add_data(self.dao, [model_0, model_1])
             assert len(database_test.data_to_insert) == 2
 
@@ -83,7 +83,7 @@ class TestDatabaseTest:
         def test_method():
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest()
             database_test.add_data(self.dao, model)
 
             database_test._connect()
@@ -106,7 +106,7 @@ class TestDatabaseTest:
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest()
             database_test.add_data(self.dao, model)
             
             @database_test.persistence_test()
@@ -130,7 +130,7 @@ class TestDatabaseTest:
                 model = IpsumTestModel(code=1, title="test_using_one_item")
                 detail = DetailTestModel(code=1, title="detail_test_using_one_item", ipsum_model_id=fake_parent_id)
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test = DatabaseTest()
                 database_test.add_data(self.dao, model)
                 database_test.add_data(self.detail_crud_dao, detail, parent_ids=[fake_parent_id])
 
@@ -157,7 +157,7 @@ class TestDatabaseTest:
                 model = IpsumTestModel(code=1, title="test_using_one_item")
                 detail = DetailTestModel(code=1, title="detail_test_using_one_item", ipsum_model_id=fake_parent_id)
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao, self.detail_crud_dao], parent_ids_to_clean=[fake_parent_id])
+                database_test = DatabaseTest(daos_to_clean=[self.dao, self.detail_crud_dao], parent_ids_to_clean=[fake_parent_id])
                 database_test._connect()
                 database_test._clean_existing_data()
 
@@ -186,7 +186,7 @@ class TestDatabaseTest:
 
                 model = IpsumTestModel(code=1, title="test_using_one_item")
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI)
+                database_test = DatabaseTest()
                 database_test.add_data(self.dao, model)
                 
                 @database_test.persistence_test()
@@ -204,7 +204,7 @@ class TestDatabaseTest:
             def _test_cleaning_daos_to_clean():
                 model = IpsumTestModel(code=1, title="test_using_one_item")
 
-                database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+                database_test = DatabaseTest(daos_to_clean=[self.dao])
                 @database_test.persistence_test()
                 def _():
                     self.dao.insert(model)
@@ -226,7 +226,7 @@ class TestDatabaseTest:
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest()
             database_test.add_data(self.dao, model)
 
             database_test._connect()
@@ -249,7 +249,7 @@ class TestDatabaseTest:
 
             model = IpsumTestModel(code=1, title="test_using_one_item")
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI)
+            database_test = DatabaseTest()
             database_test.add_data(self.dao, model)
             
             @database_test.persistence_test()
@@ -270,7 +270,7 @@ class TestDatabaseTest:
             enum_test_service_fake_1 = FakeEnumTestService()
             enum_test_service_fake_2 = FakeEnumTestService()
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1, enum_test_service_fake_2])
+            database_test = DatabaseTest(enum_services_to_insert=[enum_test_service_fake_1, enum_test_service_fake_2])
             database_test._insert_enums()
 
             assert enum_test_service_fake_1.save_enums_called == True
@@ -283,7 +283,7 @@ class TestDatabaseTest:
             enum_test_service_fake_1 = FakeEnumTestService()
             enum_test_service_fake_2 = FakeEnumTestService()
 
-            database_test = DatabaseTest(host=self.TEST_DB_URI, enum_services_to_insert=[enum_test_service_fake_1])
+            database_test = DatabaseTest(enum_services_to_insert=[enum_test_service_fake_1])
             database_test._insert_enums()
 
             assert enum_test_service_fake_1.save_enums_called == True
@@ -295,7 +295,7 @@ class TestDatabaseTest:
 
         model = IpsumTestModel(code=1, title="test_using_one_item")
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, model)
         
         @database_test.persistence_test()
@@ -318,7 +318,7 @@ class TestDatabaseTest:
 
         model = IpsumTestModel(code=1, title="test_using_one_item")
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, model)
         
         @database_test.persistence_test()
@@ -344,7 +344,7 @@ class TestDatabaseTest:
 
         model = IpsumTestModel(id=id, code=1, title="test_using_one_item")
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, model)
         
         @database_test.persistence_test()

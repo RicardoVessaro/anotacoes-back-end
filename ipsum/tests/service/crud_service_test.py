@@ -6,12 +6,9 @@ from ipsum.exception.exception_message import OBJECT_NOT_FOUND_EXCEPTION_MESSAGE
 from ipsum.service.crud_service import CRUDService
 from ipsum.service.crud_validator import CRUDValidator
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestCRUDServices:
-
-    TEST_DB_URI = get_database_url()
 
     dao = CRUDDAO(model=IpsumTestModel)
 
@@ -24,7 +21,7 @@ class TestCRUDServices:
     def test_insert(self):
         ipsum_test_model = IpsumTestModel(code=1, title='test_insert_TestDao')
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+        ipsum_database_test = DatabaseTest(daos_to_clean=[self.dao])
         def _():
             
             @ipsum_database_test.persistence_test()
@@ -164,7 +161,7 @@ class TestCRUDServices:
     def _build_default_model_and_ipsum_test(self, code, title, boolean=False):
         ipsum_test_model = IpsumTestModel(code=code, title=title, boolean=boolean)
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model)
         
         return ipsum_test_model, ipsum_database_test

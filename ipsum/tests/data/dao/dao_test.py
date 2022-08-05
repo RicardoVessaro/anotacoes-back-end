@@ -9,10 +9,8 @@ from ipsum.data.dao.detail_crud_dao import DetailCRUDDAO
 from ipsum.data.dependent import Dependent
 from ipsum.exception.exception_message import PAGINATION_OFFSET_GREATER_THAN_TOTAL
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
-from ipsum.util.data.mongo_query import MongoQuery
 from ipsum.util.data.pagination import Pagination
 from ipsum.util.data.dao_query import DAOQuery
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.object_util import is_none_or_empty
 from ipsum.util.test.database_test import DatabaseTest
 from ipsum.exception.ipsum_exception import IpsumException
@@ -23,8 +21,6 @@ class TestDao:
 
     KEY_ID = "_id"
 
-    TEST_DB_URI = get_database_url()
-
     dao = DAO(model=IpsumTestModel)
 
     model = dao.model
@@ -32,7 +28,7 @@ class TestDao:
     def test_insert(self):
         ipsum_test_model = IpsumTestModel(code=1, title='test_insert_TestDao')
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+        ipsum_database_test = DatabaseTest(daos_to_clean=[self.dao])
         @ipsum_database_test.persistence_test()
         def _():
             
@@ -141,7 +137,7 @@ class TestDao:
         ipsum_test_model_1 = IpsumTestModel(code=1, title="model 1")
         ipsum_test_model_2 = IpsumTestModel(code=2, title="model 2")
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.dao, [ipsum_test_model_1, ipsum_test_model_2])
 
         @database_test.persistence_test()
@@ -194,7 +190,7 @@ class TestDao:
         ipsum_test_model_2 = IpsumTestModel(code=2, title='test_find_TestDao_2', boolean=False, tags=['A', 'B', 'D'], day=today)
         ipsum_test_model_3 = IpsumTestModel(code=3, title='test_find_TestDao_3', boolean=True, tags=['B', 'C', 'D'], day=today)
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model_1)
         ipsum_database_test.add_data(self.dao, ipsum_test_model_2)
         ipsum_database_test.add_data(self.dao, ipsum_test_model_3)
@@ -263,7 +259,7 @@ class TestDao:
     def test_sort(self):
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
         @ipsum_database_test.persistence_test()
         def _():
@@ -371,7 +367,7 @@ class TestDao:
 
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
         @ipsum_database_test.persistence_test()
         def _():
@@ -397,7 +393,7 @@ class TestDao:
     def test_paginate(self):
         ipsum_test_model_list = self._build_ipsum_test_model_list()
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model_list)
         @ipsum_database_test.persistence_test()
         def _():
@@ -562,7 +558,7 @@ class TestDao:
     def _build_default_model_and_ipsum_test(self, code, title):
         ipsum_test_model = IpsumTestModel(code=code, title=title)
 
-        ipsum_database_test = DatabaseTest(host=self.TEST_DB_URI)
+        ipsum_database_test = DatabaseTest()
         ipsum_database_test.add_data(self.dao, ipsum_test_model)
         
         return ipsum_test_model, ipsum_database_test

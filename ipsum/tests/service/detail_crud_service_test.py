@@ -12,7 +12,6 @@ from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 from ipsum.util.data.pagination import Pagination
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.service.collection_tree import CollectionItem, CollectionTree
 from ipsum.util.test.database_test import DatabaseTest
 
@@ -24,8 +23,6 @@ class TestDetailCRUDService:
     FAKE_DETAIL_ID = '627ffd74ee52c2e97a757b86'
 
     OTHER_FAKE_ID = '624786f6590c79c2fb3af557'
-
-    TEST_DB_URI = get_database_url()
 
     parent_dao = CRUDDAO(model=IpsumTestModel)
     parent = parent_dao.model
@@ -40,7 +37,7 @@ class TestDetailCRUDService:
 
     def test_find_by_parent_id(self):
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
 
         parent_doc = self.parent(
             id=self.FAKE_PARENT_ID,
@@ -97,7 +94,7 @@ class TestDetailCRUDService:
 
     def test_paginate_by_parent_id(self):
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
 
         parent_doc = self.parent(
             id=self.FAKE_PARENT_ID,
@@ -164,7 +161,7 @@ class TestDetailCRUDService:
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         detail_child_doc = self.detail_child_model(code=1, title='Detail', detail_parent_id=self.FAKE_DETAIL_ID)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[doc.ipsum_model_id])
         database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[detail_child_doc.detail_parent_id])
@@ -195,7 +192,7 @@ class TestDetailCRUDService:
         
         detail_child_doc = self.detail_child_model(code=1, title='Detail', detail_parent_id=self.FAKE_DETAIL_ID)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[doc.ipsum_model_id])
         database_test.add_data(self.detail_child_dao, detail_child_doc, parent_ids=[detail_child_doc.detail_parent_id])
@@ -215,7 +212,7 @@ class TestDetailCRUDService:
         doc = self.model(code=1, title='Detail', ipsum_model_id=self.FAKE_PARENT_ID, id=self.FAKE_DETAIL_ID)
         parent_doc = self.parent(code=1, title='Parent', id=self.FAKE_PARENT_ID)
         
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.parent_dao, parent_doc)
         database_test.add_data(self.dao, doc, parent_ids=[doc.ipsum_model_id])
         @database_test.persistence_test()

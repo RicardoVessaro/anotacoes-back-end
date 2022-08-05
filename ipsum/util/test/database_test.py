@@ -9,13 +9,17 @@ from ipsum.util.object_util import is_none_or_empty
 
 class DatabaseTest:
 
-    def __init__(self, host, daos_to_clean=[], parent_ids_to_clean=[], enum_services_to_insert=[]) -> None:
-        self.host = 'mongomock://localhost'
+    def __init__(self, daos_to_clean=[], parent_ids_to_clean=[], enum_services_to_insert=[]) -> None:
+        self._host = 'mongomock://localhost'
         self.data_to_insert = []
         self._data = namedtuple('Data', ['dao', 'model', 'data_id', 'parent_ids'])
         self.daos_to_clean = daos_to_clean
         self.parent_ids_to_clean = parent_ids_to_clean
         self.enum_services_to_insert = enum_services_to_insert
+
+    @property
+    def host(self):
+        return self._host
 
     def add_data(self, dao, model, parent_ids=[]):
         if type(model) is list:

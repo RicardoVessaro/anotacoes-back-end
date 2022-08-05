@@ -7,12 +7,9 @@ from ipsum.data.dependent import Dependent
 from ipsum.exception.exception_message import DEPENDENCY_DAO_IS_NOT_DAO_TYPE, DEPENDENT_DEPENDENCY_HAS_DATA, DEPENDENT_DEPENDENCY_IS_NOT_DEPENDENCY_TYPE
 from ipsum.exception.ipsum_exception import IpsumException
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestDependent:
-
-    TEST_DATABASE_URL = get_database_url()
 
     def test_validate_dependents_type(self):
 
@@ -56,7 +53,7 @@ class TestDependent:
 
     def test_must_not_raise_exception_when_not_exists_data(self):
 
-        database_test = DatabaseTest(host=self.TEST_DATABASE_URL)
+        database_test = DatabaseTest()
         @database_test.persistence_test()
         def _():
 
@@ -75,7 +72,7 @@ class TestDependent:
         dao = DAO(IpsumTestModel)
         model = dao.model(code=1, dependency_id=dependency_id)
 
-        database_test = DatabaseTest(host=self.TEST_DATABASE_URL)
+        database_test = DatabaseTest()
         database_test.add_data(dao, model)
 
         @database_test.persistence_test()
@@ -99,7 +96,7 @@ class TestDependent:
         dao = DAO(IpsumTestModel)
         model = dao.model(code=1, dependency_id=dependency_id)
 
-        database_test = DatabaseTest(host=self.TEST_DATABASE_URL)
+        database_test = DatabaseTest()
         database_test.add_data(dao, model)
 
         @database_test.persistence_test()

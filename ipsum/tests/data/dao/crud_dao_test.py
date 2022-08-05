@@ -10,8 +10,6 @@ from ipsum.util.test.database_test import DatabaseTest
 
 class TestCRUDDao:
 
-    TEST_DB_URI = get_database_url()
-
     crud_dao = CRUDDAO(model=IpsumTestModel)
 
     model = crud_dao.model
@@ -19,7 +17,7 @@ class TestCRUDDao:
     def test_insert(self):
         ipsum_test_model = IpsumTestModel(code=1, title='test_insert_TestCRUDDao')
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.crud_dao])
+        database_test = DatabaseTest(daos_to_clean=[self.crud_dao])
         def _():
             
             @database_test.persistence_test()
@@ -126,7 +124,7 @@ class TestCRUDDao:
     def _build_default_model_and_ipsum_test(self, code, title, boolean=False):
         ipsum_test_model = IpsumTestModel(code=code, title=title, boolean=boolean)
 
-        database_test = DatabaseTest(host=self.TEST_DB_URI)
+        database_test = DatabaseTest()
         database_test.add_data(self.crud_dao, ipsum_test_model)
         
         return ipsum_test_model, database_test

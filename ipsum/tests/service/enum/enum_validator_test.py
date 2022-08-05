@@ -18,7 +18,7 @@ class TestEnumValidator:
     dao = enum_validator._dao
 
     def test_duplicated_enum_codes(self):
-        database_test = DatabaseTest(host=self.TEST_DB_URI, daos_to_clean=[self.dao])
+        database_test = DatabaseTest(daos_to_clean=[self.dao])
 
         @database_test.persistence_test()
         def _must_raise_exception_when_code_is_duplicated():

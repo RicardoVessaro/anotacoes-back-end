@@ -10,7 +10,6 @@ from ipsum.exception.ipsum_exception import IpsumException
 from ipsum.tests.resources.data.model.ipsum_test_model import IpsumTestModel
 from ipsum.tests.resources.data.model.detail_test_model import DetailTestModel
 from ipsum.tests.resources.data.model.detail_child_test_model import DetailChildTestModel
-from ipsum.util.enviroment_variable import get_database_url
 from ipsum.util.test.database_test import DatabaseTest
 
 class TestCascade:
@@ -76,7 +75,7 @@ class TestCascade:
             ipsum_model_id=id_fake_parent
         )
 
-        database_test = DatabaseTest(host=get_database_url())
+        database_test = DatabaseTest()
         database_test.add_data(fake_parent_dao, fake_parent)
         database_test.add_data(fake_detail_dao, fake_detail, [id_fake_parent])
 
@@ -483,7 +482,7 @@ class TestCascade:
             ipsum_model_id=id_fake_parent_2
         )
 
-        database_test = DatabaseTest(host=get_database_url())
+        database_test = DatabaseTest()
 
         database_test.add_data(fake_parent_dao, fake_parent_1)
         database_test.add_data(fake_detail_dao_1, [fake_detail_111, fake_detail_112], [id_fake_parent_1])
